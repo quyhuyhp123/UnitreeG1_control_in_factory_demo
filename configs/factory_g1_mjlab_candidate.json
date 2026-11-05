@@ -1,0 +1,63 @@
+{
+  "factory_usd": "assets/factory/factory_physics.usd",
+  "locomotion_config": "configs/locomotion_mjlab.yaml",
+  "checkpoint": "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx",
+  "robot_spawn": {
+    "marker_prefix": "Robot_Spawn",
+    "position_override_m": [
+      0.0,
+      -4.0,
+      0.0
+    ],
+    "heading_deg": 90.0
+  },
+  "physics_dt": 0.005,
+  "floor_contact": {
+    "contact_offset_m": 0.02,
+    "rest_offset_m": 0.0
+  },
+  "control_hz": 50,
+  "rendering": {
+    "renderer": "RaytracedLighting",
+    "graphics_api": "d3d12",
+    "width": 960,
+    "height": 640,
+    "limit_fps": 50,
+    "low_quality": true
+  },
+  "camera": {
+    "mode": "free",
+    "free_eye_m": [
+      -0.8,
+      -6.0,
+      2.2
+    ],
+    "free_target_m": [
+      0,
+      -3.0,
+      0.8
+    ],
+    "offset_world_m": [
+      0.0,
+      -2.7,
+      1.7
+    ],
+    "look_height_m": 0.65,
+    "focal_length_mm": 19,
+    "overview_eye_m": [
+      0,
+      -4.65,
+      3.8
+    ],
+    "overview_target_m": [
+      0,
+      1.5,
+      1
+    ]
+  },
+  "gpu_sample_interval_s": 2.0,
+  "note": "One factory, one G1, one viewport. Frequencies must match the verified policy contract. No RTX sensors or training.",
+  "keyboard_overrides": {
+    "max_yaw_rate": 0.6
+  }
+}

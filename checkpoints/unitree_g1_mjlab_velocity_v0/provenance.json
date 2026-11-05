@@ -1,0 +1,34 @@
+{
+  "repository": "https://github.com/unitreerobotics/unitree_rl_mjlab",
+  "commit": "1425b15f73bd4095f0df53709d7c389c3eb9e790",
+  "sha256": "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28",
+  "onnx_path": "deploy/robots/g1/config/policy/velocity/v0/exported/policy.onnx",
+  "status": "validated_in_Isaac_Sim_6.1_PhysX_project_tests",
+  "SDK_joint_order_matches_source": true,
+  "onnx_input_shape": [
+    1,
+    98
+  ],
+  "onnx_output_shape": [
+    1,
+    29
+  ],
+  "physics_hz": 200,
+  "control_hz": 50,
+  "phase_period_s": 0.6,
+  "phase_zero_command_threshold": 0.1,
+  "validated_runs": [
+    "logs/keyboard_runs/20261105_231222",
+    "logs/keyboard_runs/20261105_231617"
+  ],
+  "local_file_sha256": {
+    "deploy.json": "c7c9b49b059a1424f5920043620060a28a9dfba3b7ba6bbabeb2711884e4ddea",
+    "deploy.yaml": "01e1cf3f6ec44e9942494fbb4a9904df07201e14e5551a277f38d7c7d1bda28d",
+    "g1_constants.py": "136b59af97082a74fd3a2a4250bc2e290b3ba6a26533b1492be52114dd844c5d",
+    "g1_source.xml": "56539bc76eadb05dd439c47de94df52130ea8fa243d08bdddd9cbc32dd4c78a0",
+    "observations.h": "6b3fb08a75ef44600aa222ef131b66d4404968c0f2b0f9879bd091920a4ee5e5",
+    "observation_manager.h": "0198290eb4b90d46f39a6c21615be1e714719762f843723649eec3c653423b8e",
+    "policy.onnx": "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28",
+    "velocity_env_cfg.py": "87a58574713e66c406ee5defd33240c30646092be495480249c84646799e8bc3"
+  }
+}

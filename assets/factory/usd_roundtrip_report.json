@@ -1,0 +1,15 @@
+{
+  "revision": 2,
+  "import_result": [
+    "FINISHED"
+  ],
+  "mesh_count": 263,
+  "expected_mesh_count": 263,
+  "floor_dimensions_m": [
+    10.0,
+    10.0,
+    0.20000000298023224
+  ],
+  "floor_top_z": 0.0,
+  "workers_present": true
+}

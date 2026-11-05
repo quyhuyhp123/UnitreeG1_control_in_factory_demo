@@ -1,0 +1,104 @@
+{
+  "checkpoint": "checkpoints/unitree_g1_velocity_v0/policy.onnx",
+  "checkpoint_sha256": "610c27e463a8f666aa50a06346678c00b4df3859f10b54bcc1f817c28251406f",
+  "deploy_config": "checkpoints/unitree_g1_velocity_v0/deploy.json",
+  "upstream_commit": "4960b84732b0c2ec593dccbfe963fda1bcd7b1e3",
+  "policy_joint_names": [
+    "left_hip_pitch_joint",
+    "right_hip_pitch_joint",
+    "waist_yaw_joint",
+    "left_hip_roll_joint",
+    "right_hip_roll_joint",
+    "waist_roll_joint",
+    "left_hip_yaw_joint",
+    "right_hip_yaw_joint",
+    "waist_pitch_joint",
+    "left_knee_joint",
+    "right_knee_joint",
+    "left_shoulder_pitch_joint",
+    "right_shoulder_pitch_joint",
+    "left_ankle_pitch_joint",
+    "right_ankle_pitch_joint",
+    "left_shoulder_roll_joint",
+    "right_shoulder_roll_joint",
+    "left_ankle_roll_joint",
+    "right_ankle_roll_joint",
+    "left_shoulder_yaw_joint",
+    "right_shoulder_yaw_joint",
+    "left_elbow_joint",
+    "right_elbow_joint",
+    "left_wrist_roll_joint",
+    "right_wrist_roll_joint",
+    "left_wrist_pitch_joint",
+    "right_wrist_pitch_joint",
+    "left_wrist_yaw_joint",
+    "right_wrist_yaw_joint"
+  ],
+  "physics_hz": 200,
+  "control_hz": 50,
+  "decimation": 4,
+  "observation_dim": 480,
+  "history_layout": "term_major_oldest_to_newest",
+  "reset_history": "repeat_first_observation",
+  "normalization": "deploy scaling only; no extra empirical normalization",
+  "self_collision": true,
+  "use_supplemental_box_proxies": true,
+  "test_phases": [
+    {
+      "name": "stand",
+      "duration_s": 3.0,
+      "command": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "forward",
+      "duration_s": 6.0,
+      "command": [
+        0.35,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "stop_after_forward",
+      "duration_s": 2.0,
+      "command": [
+        0,
+        0,
+        0
+      ]
+    },
+    {
+      "name": "turn_left",
+      "duration_s": 3.0,
+      "command": [
+        0.35,
+        0,
+        0.2
+      ]
+    },
+    {
+      "name": "turn_right",
+      "duration_s": 3.0,
+      "command": [
+        0.35,
+        0,
+        -0.2
+      ]
+    },
+    {
+      "name": "final_stop",
+      "duration_s": 3.0,
+      "command": [
+        0,
+        0,
+        0
+      ]
+    }
+  ],
+  "floor_size_m": 12.0,
+  "turn_test_mode": "walking_arc; in-place turns are a separate diagnostic with known failed result"
+}

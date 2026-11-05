@@ -1,0 +1,32 @@
+[
+  {
+    "path": "G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_base.usd",
+    "url": "https://huggingface.co/datasets/unitreerobotics/unitree_model/resolve/323e350252b9c3aee9c40acbfdad84f6ce46a5ac/G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_base.usd",
+    "bytes": 28337485,
+    "sha256": "D9768C942783AE0932F0C3DB3558D5283B9A93BA0E561D15D8984F548AA2A65D"
+  },
+  {
+    "path": "G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_physics.usd",
+    "url": "https://huggingface.co/datasets/unitreerobotics/unitree_model/resolve/323e350252b9c3aee9c40acbfdad84f6ce46a5ac/G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_physics.usd",
+    "bytes": 10366,
+    "sha256": "CDE4FF0378183E4E2063DF1FDCAD4060DF8247EAF1DA777F45E2ADEA0B6DDE22"
+  },
+  {
+    "path": "G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_sensor.usd",
+    "url": "https://huggingface.co/datasets/unitreerobotics/unitree_model/resolve/323e350252b9c3aee9c40acbfdad84f6ce46a5ac/G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_sensor.usd",
+    "bytes": 656,
+    "sha256": "5115364B53BFFBB37007AF0FD1038336679B66ABDAE134BC87D0FCA9829F9B60"
+  },
+  {
+    "path": "G1/29dof/usd/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd",
+    "url": "https://huggingface.co/datasets/unitreerobotics/unitree_model/resolve/323e350252b9c3aee9c40acbfdad84f6ce46a5ac/G1/29dof/usd/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd",
+    "bytes": 1603,
+    "sha256": "CFED730BB043C42708260F25BF3BDF49AC80DEED5D5A49384721B8E01059A96E"
+  },
+  {
+    "path": "README.md",
+    "url": "https://huggingface.co/datasets/unitreerobotics/unitree_model/resolve/323e350252b9c3aee9c40acbfdad84f6ce46a5ac/README.md",
+    "bytes": 652,
+    "sha256": "1A71D42D5E15C6C0E0427B5B88CAE32A404304B0A1C944561405A0FB3496F426"
+  }
+]

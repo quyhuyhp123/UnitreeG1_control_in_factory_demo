@@ -1,0 +1,146 @@
+{
+  "_id": "6874a99f041d137f50ba2a52",
+  "id": "unitreerobotics/unitree_model",
+  "author": "unitreerobotics",
+  "sha": "323e350252b9c3aee9c40acbfdad84f6ce46a5ac",
+  "lastModified": "2026-05-20T17:10:40Z",
+  "private": false,
+  "gated": false,
+  "disabled": false,
+  "tags": [
+    "region:us"
+  ],
+  "description": "\n\t\n\t\t\n\t\n\t\n\t\tunitree_model\n\t\n\nThis is a repository providing Unitree's robot 3D models for different environments.\nFor more information about robots model, please visit unitree_ros.\n\n\t\n\t\t\n\t\n\t\n\t\tGenerate from urdf\n\t\n\nPlease follow import_urdf tutorial to convert URDF. \nDue to some bugs in the python script in version 4.5, please use Direct Import.\nSpecify the settings as follows:\n\nSelect Movebale Base in Links\nSelect Stiffness in Joint Configuration\nSelect Force in Drive Type\nAllow… See the full description on the dataset page: https://huggingface.co/datasets/unitreerobotics/unitree_model.",
+  "downloads": 1443,
+  "likes": 41,
+  "siblings": [
+    {
+      "rfilename": ".gitattributes"
+    },
+    {
+      "rfilename": "B2/usd/b2.usd"
+    },
+    {
+      "rfilename": "B2/usd/configuration/b2_description_base.usd"
+    },
+    {
+      "rfilename": "B2/usd/configuration/b2_description_physics.usd"
+    },
+    {
+      "rfilename": "B2/usd/configuration/b2_description_sensor.usd"
+    },
+    {
+      "rfilename": "G1/23dof/usd/g1_23dof_rev_1_0/configuration/g1_23dof_rev_1_0_base.usd"
+    },
+    {
+      "rfilename": "G1/23dof/usd/g1_23dof_rev_1_0/configuration/g1_23dof_rev_1_0_physics.usd"
+    },
+    {
+      "rfilename": "G1/23dof/usd/g1_23dof_rev_1_0/configuration/g1_23dof_rev_1_0_sensor.usd"
+    },
+    {
+      "rfilename": "G1/23dof/usd/g1_23dof_rev_1_0/g1_23dof_rev_1_0.usd"
+    },
+    {
+      "rfilename": "G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_base.usd"
+    },
+    {
+      "rfilename": "G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_physics.usd"
+    },
+    {
+      "rfilename": "G1/29dof/usd/g1_29dof_rev_1_0/configuration/g1_29dof_rev_1_0_sensor.usd"
+    },
+    {
+      "rfilename": "G1/29dof/usd/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd"
+    },
+    {
+      "rfilename": "Go2/usd/configuration/go2_description_base.usd"
+    },
+    {
+      "rfilename": "Go2/usd/configuration/go2_description_physics.usd"
+    },
+    {
+      "rfilename": "Go2/usd/configuration/go2_description_sensor.usd"
+    },
+    {
+      "rfilename": "Go2/usd/go2.usd"
+    },
+    {
+      "rfilename": "Go2W/usd/configuration/go2w_description_base.usd"
+    },
+    {
+      "rfilename": "Go2W/usd/configuration/go2w_description_physics.usd"
+    },
+    {
+      "rfilename": "Go2W/usd/configuration/go2w_description_sensor.usd"
+    },
+    {
+      "rfilename": "Go2W/usd/go2w.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2/configuration/h1_2_base.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2/configuration/h1_2_physics.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2/configuration/h1_2_sensor.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2/h1_2.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2_handless/.asset_hash"
+    },
+    {
+      "rfilename": "H1-2/h1_2_handless/config.yaml"
+    },
+    {
+      "rfilename": "H1-2/h1_2_handless/configuration/h1_2_handless_base.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2_handless/configuration/h1_2_handless_physics.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2_handless/configuration/h1_2_handless_robot.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2_handless/configuration/h1_2_handless_sensor.usd"
+    },
+    {
+      "rfilename": "H1-2/h1_2_handless/h1_2_handless.usd"
+    },
+    {
+      "rfilename": "H1/h1/usd/configuration/h1_base.usd"
+    },
+    {
+      "rfilename": "H1/h1/usd/configuration/h1_physics.usd"
+    },
+    {
+      "rfilename": "H1/h1/usd/configuration/h1_sensor.usd"
+    },
+    {
+      "rfilename": "H1/h1/usd/h1.usd"
+    },
+    {
+      "rfilename": "H2/H2_dae.usd"
+    },
+    {
+      "rfilename": "H2/configuration/H2_dae_base.usd"
+    },
+    {
+      "rfilename": "H2/configuration/H2_dae_physics.usd"
+    },
+    {
+      "rfilename": "H2/configuration/H2_dae_robot.usd"
+    },
+    {
+      "rfilename": "H2/configuration/H2_dae_sensor.usd"
+    },
+    {
+      "rfilename": "README.md"
+    }
+  ],
+  "createdAt": "2025-07-14T06:54:23Z",
+  "usedStorage": 441530773
+}

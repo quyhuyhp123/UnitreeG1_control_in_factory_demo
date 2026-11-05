@@ -1,0 +1,147 @@
+[
+  {
+    "runtime_index": 0,
+    "name": "left_hip_pitch_joint",
+    "sdk_index": 0
+  },
+  {
+    "runtime_index": 1,
+    "name": "right_hip_pitch_joint",
+    "sdk_index": 6
+  },
+  {
+    "runtime_index": 2,
+    "name": "waist_yaw_joint",
+    "sdk_index": 12
+  },
+  {
+    "runtime_index": 3,
+    "name": "left_hip_roll_joint",
+    "sdk_index": 1
+  },
+  {
+    "runtime_index": 4,
+    "name": "right_hip_roll_joint",
+    "sdk_index": 7
+  },
+  {
+    "runtime_index": 5,
+    "name": "waist_roll_joint",
+    "sdk_index": 13
+  },
+  {
+    "runtime_index": 6,
+    "name": "left_hip_yaw_joint",
+    "sdk_index": 2
+  },
+  {
+    "runtime_index": 7,
+    "name": "right_hip_yaw_joint",
+    "sdk_index": 8
+  },
+  {
+    "runtime_index": 8,
+    "name": "waist_pitch_joint",
+    "sdk_index": 14
+  },
+  {
+    "runtime_index": 9,
+    "name": "left_knee_joint",
+    "sdk_index": 3
+  },
+  {
+    "runtime_index": 10,
+    "name": "right_knee_joint",
+    "sdk_index": 9
+  },
+  {
+    "runtime_index": 11,
+    "name": "left_shoulder_pitch_joint",
+    "sdk_index": 15
+  },
+  {
+    "runtime_index": 12,
+    "name": "right_shoulder_pitch_joint",
+    "sdk_index": 22
+  },
+  {
+    "runtime_index": 13,
+    "name": "left_ankle_pitch_joint",
+    "sdk_index": 4
+  },
+  {
+    "runtime_index": 14,
+    "name": "right_ankle_pitch_joint",
+    "sdk_index": 10
+  },
+  {
+    "runtime_index": 15,
+    "name": "left_shoulder_roll_joint",
+    "sdk_index": 16
+  },
+  {
+    "runtime_index": 16,
+    "name": "right_shoulder_roll_joint",
+    "sdk_index": 23
+  },
+  {
+    "runtime_index": 17,
+    "name": "left_ankle_roll_joint",
+    "sdk_index": 5
+  },
+  {
+    "runtime_index": 18,
+    "name": "right_ankle_roll_joint",
+    "sdk_index": 11
+  },
+  {
+    "runtime_index": 19,
+    "name": "left_shoulder_yaw_joint",
+    "sdk_index": 17
+  },
+  {
+    "runtime_index": 20,
+    "name": "right_shoulder_yaw_joint",
+    "sdk_index": 24
+  },
+  {
+    "runtime_index": 21,
+    "name": "left_elbow_joint",
+    "sdk_index": 18
+  },
+  {
+    "runtime_index": 22,
+    "name": "right_elbow_joint",
+    "sdk_index": 25
+  },
+  {
+    "runtime_index": 23,
+    "name": "left_wrist_roll_joint",
+    "sdk_index": 19
+  },
+  {
+    "runtime_index": 24,
+    "name": "right_wrist_roll_joint",
+    "sdk_index": 26
+  },
+  {
+    "runtime_index": 25,
+    "name": "left_wrist_pitch_joint",
+    "sdk_index": 20
+  },
+  {
+    "runtime_index": 26,
+    "name": "right_wrist_pitch_joint",
+    "sdk_index": 27
+  },
+  {
+    "runtime_index": 27,
+    "name": "left_wrist_yaw_joint",
+    "sdk_index": 21
+  },
+  {
+    "runtime_index": 28,
+    "name": "right_wrist_yaw_joint",
+    "sdk_index": 28
+  }
+]

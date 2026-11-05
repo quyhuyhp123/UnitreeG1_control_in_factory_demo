@@ -1,0 +1,31 @@
+{
+  "repository": "https://github.com/unitreerobotics/unitree_rl_lab",
+  "commit": "4960b84732b0c2ec593dccbfe963fda1bcd7b1e3",
+  "files": [
+    {
+      "file": "policy.onnx",
+      "bytes": 1658204,
+      "sha256": "610c27e463a8f666aa50a06346678c00b4df3859f10b54bcc1f817c28251406f"
+    },
+    {
+      "file": "deploy.yaml",
+      "bytes": 2403,
+      "sha256": "64b04c0596a7010f39f8ac6e9ec46dc750141063cdcf2d42c83ecc444e57bc63"
+    },
+    {
+      "file": "deploy.json",
+      "bytes": 4905,
+      "sha256": "aa3d954f48dd4e6a23dd97aeb899240a54a8ff53b107f6e01e8466360dfd007f"
+    },
+    {
+      "file": "velocity_env_cfg.py",
+      "bytes": 13948,
+      "sha256": "22deed51bf779bb9730cdbb48df3b098ec64dab15984942153f0073d40840b8f"
+    },
+    {
+      "file": "extension.toml",
+      "bytes": 933,
+      "sha256": "01018ec7aae35cd2c3bdce38c94b7ba4f1b5b40c95bfbac859d64cb11d355ef5"
+    }
+  ]
+}

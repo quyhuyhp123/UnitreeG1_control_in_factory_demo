@@ -1,0 +1,17 @@
+{
+  "errors": [],
+  "mesh_count": 263,
+  "polygons": 3519,
+  "worker_count": 3,
+  "worker_animation": false,
+  "aisle_width_m": 2.2,
+  "spawn_clear_m": [
+    2,
+    2
+  ],
+  "wall_panel_height_m": 3,
+  "upper_wall_height_m": 4.6,
+  "ridge_height_m": 5.15,
+  "intersection_note": "Human joints, steel and pipe connections intentionally intersect. Checks cover empty mesh, scale, finite transforms, spawn and aisle; no global no-intersection claim.",
+  "physics_note": "Static colliders not configured in Isaac Sim."
+}

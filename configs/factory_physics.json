@@ -1,0 +1,18 @@
+{
+  "source": "assets/factory/factory.usd",
+  "output": "assets/factory/factory_physics.usd",
+  "gravity_m_s2": 9.81,
+  "physics_hz": 120,
+  "floor_material": {"static_friction": 0.8, "dynamic_friction": 0.6, "restitution": 0.0},
+  "collider_types": ["floor", "wall", "machine", "table_part", "shelf_part", "storage_bin", "structure", "roof", "door", "pipe", "pallet", "crate", "prop", "human"],
+  "spawn_half_size_m": 1.0,
+  "spawn_clear_height_m": 2.1,
+  "camera_eye_m": [0.0, -4.65, 3.8],
+  "camera_target_m": [0.0, 1.5, 1.0],
+  "render_width": 960,
+  "render_height": 640,
+  "lighting": {"dome_intensity": 500.0, "ceiling_intensity": 35000.0, "ceiling_z_m": 3.9},
+  "test_cube_size_m": 0.3,
+  "test_cube_center_z_m": 2.0,
+  "test_steps": 480
+}

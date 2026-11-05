@@ -1,0 +1,9 @@
+{
+  "project_root": "D:\\unitree_g1",
+  "blender_exe": "D:\\Blender\\blender.exe",
+  "isaac_sim_root": "C:\\isaacsim",
+  "isaac_sim_version": "6.1.0-rc.26+release.49347.2d230af4.gl",
+  "isaac_lab_root": null,
+  "unitree_rl_lab_root": null,
+  "checkpoint": null
+}

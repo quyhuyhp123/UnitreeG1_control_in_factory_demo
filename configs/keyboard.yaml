@@ -1,0 +1,22 @@
+{
+  "max_forward_velocity": 0.35,
+  "max_backward_velocity": 0.35,
+  "max_lateral_velocity": 0.3,
+  "max_yaw_rate": 0.2,
+  "acceleration_limit": [0.6, 0.5, 0.5],
+  "deceleration_limit": [1.0, 1.0, 0.8],
+  "keyboard_mapping": {
+    "W": "forward", "UP": "forward",
+    "S": "backward", "DOWN": "backward",
+    "A": "turn_left", "LEFT": "turn_left",
+    "D": "turn_right", "RIGHT": "turn_right",
+    "Q": "lateral_left", "E": "lateral_right",
+    "SPACE": "stop", "R": "reset"
+  },
+  "reset_max_linear_speed": 0.15,
+  "reset_max_angular_speed": 0.5,
+  "reset_settle_seconds": 0.3,
+  "input_subscription_order": 0,
+  "capture_keys_on_start": true,
+  "note": "JSON subset of YAML 1.2. A/D and arrows request pure yaw; no hidden forward velocity is added. This checkpoint has a known in-place-turn limitation."
+}
