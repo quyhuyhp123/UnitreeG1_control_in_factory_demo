@@ -1,0 +1,18 @@
+{
+  "simulation_clock_frozen": true,
+  "wall_clock_advances_while_paused": true,
+  "no_robot_steps_while_paused": true,
+  "gui_waypoints_valid": true,
+  "start_callback": true,
+  "pause_callback": true,
+  "resume_callback": true,
+  "return_to_a_callback": true,
+  "top_view_active": true,
+  "head_camera_present": true,
+  "camera_modes_preserved": true,
+  "top_view_survives_reset": true,
+  "status": "passed",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_234604",
+  "patrol_directory": "D:\\unitree_g1\\logs\\patrol_runs\\20261108_234604",
+  "scope": "Programmatic UI callbacks and actual GUI rendering; native clicks separately documented"
+}

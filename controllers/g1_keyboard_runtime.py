@@ -107,6 +107,7 @@ class G1KeyboardRuntime:
                     'A/D alone: in-place turning not achieved.\nHold W+A or W+D for walking turns.')
                 ui.Label('W/Up forward | S/Down backward\nA/Left yaw+ | D/Right yaw- | Q/E sideways\n'+turning+'\nSPACE: stop + follow camera. Release to brake.',word_wrap=True,height=70 if compact else 90)
                 if hasattr(self,'build_camera_controls'): self.build_camera_controls()
+                if hasattr(self,'build_controller_controls'): self.build_controller_controls()
 
     def _surface_focused(self):
         import omni.appwindow
@@ -186,7 +187,7 @@ class G1KeyboardRuntime:
         if not running or self.fault:
             self.update_status()
             return None
-        command=self.keys.tick(dt)
+        command=self.select_motion_command(dt)
         state=self.policy.step(command)
         up=inverse_rotate_wxyz(state['base_orientation_wxyz'],[0,0,1])
         tilt=math.degrees(math.acos(float(np.clip(up[2],-1,1))))
@@ -214,6 +215,10 @@ class G1KeyboardRuntime:
         if self.steps%10==0: self.telemetry_file.flush()
         self.update_status()
         return state
+
+    def select_motion_command(self,dt):
+        """One command source; subclasses may select navigation before policy inference."""
+        return self.keys.tick(dt)
 
     def snapshot(self):
         running=self.timeline.is_playing()

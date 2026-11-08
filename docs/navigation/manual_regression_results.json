@@ -1,0 +1,502 @@
+{
+  "status": "passed_automated_checks",
+  "mode": "factory",
+  "input_source": "Carb logical keyboard, not physical OS keyboard",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_233419",
+  "scene": {
+    "referenced_physics_scene_deactivated": true,
+    "spawn_marker": "/World/FactoryScene/Factory/Robot_Spawn_001",
+    "entrance_apron": {
+      "path": "/World/EntranceApron",
+      "size_m": [
+        3.0,
+        2.0,
+        0.2
+      ],
+      "top_z_m": 0,
+      "y_range_m": [
+        -7.0,
+        -5.0
+      ],
+      "overlaps_factory_floor": false
+    },
+    "floor_contact_override": {
+      "contact_offset_m": 0.02,
+      "rest_offset_m": 0.0
+    },
+    "factory_reference_loaded": true,
+    "factory_meshes": 263,
+    "source_names_transforms_preserved": true,
+    "floor_top_z_m": 0.0,
+    "no_duplicate_ground": true,
+    "spawn_xyz_m": [
+      0.0,
+      -4.0,
+      0.0
+    ],
+    "base_spawn_height_m": 0.7862021756598827,
+    "spawn_blockers": [],
+    "spawn_heading_deg": 90.0,
+    "policy_backend": "unitree_mjlab",
+    "checkpoint": "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx",
+    "physics_scene": "/World/PhysicsScene",
+    "gravity": [
+      0,
+      0,
+      -9.81
+    ],
+    "physics_hz": 200,
+    "robot_count": 1,
+    "robot_dof": 29,
+    "flat_mode": false,
+    "head_camera": {
+      "path": "/World/G1/torso_link/HeadCamera",
+      "resolution": [
+        320,
+        180
+      ],
+      "horizontal_fov_deg": 80.0
+    }
+  },
+  "tests": {
+    "A": {
+      "passed": true,
+      "meaning": "Factory reference opened"
+    },
+    "B": {
+      "passed": true,
+      "position_m": [
+        1.0949734132736921e-06,
+        -4.000192165374756,
+        0.7838170528411865
+      ],
+      "spawn_marker": "/World/FactoryScene/Factory/Robot_Spawn_001"
+    },
+    "C": {
+      "passed": true,
+      "samples": 200,
+      "max_tilt_deg": 0.9210277605068425,
+      "floor_contact_points": 14400,
+      "fault": null
+    },
+    "D": {
+      "passed": true,
+      "displacement_m": [
+        -0.10164132143836468,
+        0.995476484298706,
+        -0.0015426278114318848
+      ],
+      "displacement_body_m": [
+        0.9947389707786929,
+        0.10785935437624361,
+        -0.012942503764733382
+      ],
+      "yaw_change_rad": 0.12222307455817405,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        0.023448936641216278,
+        0.020465554669499397,
+        0.005444615613669157
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.04069693386554718,
+        -0.046191390603780746,
+        -0.0013825608184561133
+      ],
+      "final_held_command": [
+        0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "E": {
+      "passed": true,
+      "displacement_m": [
+        -0.07179409440141171,
+        -0.9533686637878418,
+        -0.0014230608940124512
+      ],
+      "displacement_body_m": [
+        -0.9537482574493724,
+        0.0658415812466,
+        0.009867815212840763
+      ],
+      "yaw_change_rad": 0.01615893512464739,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        0.008950372226536274,
+        0.04892287775874138,
+        0.010631393641233444
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.1139121875166893,
+        -0.0557749979197979,
+        0.03821306303143501
+      ],
+      "final_held_command": [
+        -0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "G": {
+      "passed": true,
+      "command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured_velocity_m_s": [
+        0.008950372226536274,
+        0.04892287775874138,
+        0.010631393641233444
+      ]
+    },
+    "F_left": {
+      "passed": true,
+      "displacement_m": [
+        -0.0891857388196513,
+        0.011527061462402344,
+        0.0003916025161743164
+      ],
+      "displacement_body_m": [
+        0.010975905552826126,
+        0.0892549505591017,
+        0.00045365767213511395
+      ],
+      "yaw_change_rad": 1.8052218493713825,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        -0.025342194363474846,
+        0.0265915859490633,
+        0.005809361580759287
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.017259513959288597,
+        -0.017399972304701805,
+        0.014210443012416363
+      ],
+      "final_held_command": [
+        0.0,
+        0.0,
+        0.6
+      ]
+    },
+    "F_right": {
+      "passed": true,
+      "displacement_m": [
+        -0.046506205457262695,
+        0.07705187797546387,
+        0.00013393163681030273
+      ],
+      "displacement_body_m": [
+        0.07675742542288033,
+        0.04698611207459967,
+        -0.000663247937322642
+      ],
+      "yaw_change_rad": -1.4707044262244668,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        -0.017097357660531998,
+        -0.043847303837537766,
+        0.009982865303754807
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.004885304253548384,
+        -0.014955814927816391,
+        0.0091127660125494
+      ],
+      "final_held_command": [
+        0.0,
+        0.0,
+        -0.6
+      ]
+    },
+    "F_walking_left": {
+      "passed": true,
+      "displacement_m": [
+        -0.6665075885830447,
+        0.5442287921905518,
+        -0.002610445022583008
+      ],
+      "displacement_body_m": [
+        0.540004969400788,
+        0.6698974633236722,
+        -0.00749532962258679
+      ],
+      "yaw_change_rad": 1.6917429203412144,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        -0.016704564914107323,
+        0.014073466882109642,
+        0.004855287726968527
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.01151206437498331,
+        -0.003957361914217472,
+        0.033333584666252136
+      ],
+      "final_held_command": [
+        0.35,
+        0.0,
+        0.6
+      ]
+    },
+    "F_walking_right": {
+      "passed": true,
+      "displacement_m": [
+        0.6466032398166135,
+        0.6723272800445557,
+        -0.003057420253753662
+      ],
+      "displacement_body_m": [
+        0.6762543717909734,
+        -0.6423838169224851,
+        -0.012333914291681344
+      ],
+      "yaw_change_rad": -1.4461779474988175,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        -0.005167474038898945,
+        -0.04128313437104225,
+        0.008676521480083466
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.008207029663026333,
+        0.0017571408534422517,
+        0.00028407241916283965
+      ],
+      "final_held_command": [
+        0.35,
+        0.0,
+        -0.6
+      ]
+    },
+    "H": {
+      "passed": true,
+      "contact_points": 489,
+      "contact_examples": [
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 2
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_hip_roll_link/ProjectCollisionProxy",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_hip_roll_link/ProjectCollisionProxy",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_hip_roll_link/ProjectCollisionProxy",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_hip_roll_link/ProjectCollisionProxy",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_hip_roll_link/ProjectCollisionProxy",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_hip_roll_link/ProjectCollisionProxy",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_hip_roll_link/ProjectCollisionProxy",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        },
+        {
+          "colliders": [
+            "/World/G1/left_hip_roll_link/ProjectCollisionProxy",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 2
+        },
+        {
+          "colliders": [
+            "/World/G1/left_wrist_yaw_link/collisions/left_rubber_hand/mesh",
+            "/World/FactoryScene/Factory/Machine_01_001/Machine_01_Mesh_004"
+          ],
+          "contact_count": 3
+        }
+      ],
+      "trajectory_end_m": [
+        -2.1639137268066406,
+        2.659851551055908,
+        0.7823634147644043
+      ],
+      "base_stayed_inside_factory": true,
+      "fault": null,
+      "scope": "Actual G1/factory contact reports and base trajectory; not an exhaustive geometric penetration proof"
+    },
+    "I": {
+      "passed": true,
+      "reset": {
+        "source": "R",
+        "paused_before_reset": true,
+        "safe_before_reset": true,
+        "position_after_reset": [
+          -3.637978807091713e-12,
+          -4.0,
+          0.7854665517807007
+        ],
+        "orientation_after_reset_wxyz": [
+          0.7071068286895752,
+          0.0,
+          0.0,
+          0.7071068286895752
+        ],
+        "joint_positions_after_reset": [
+          -0.10000000149011612,
+          -0.10000000149011612,
+          -7.117122863276037e-11,
+          -5.353064928717392e-14,
+          -9.381665583285681e-12,
+          1.1518135750732128e-10,
+          -3.1299695474329425e-11,
+          -5.796143079384031e-11,
+          1.1400967669938922e-10,
+          0.30000001192092896,
+          0.30000001192092896,
+          0.3499999940395355,
+          0.3499999940395355,
+          -0.20000000298023224,
+          -0.20000000298023224,
+          0.17999999225139618,
+          -0.17999999225139618,
+          2.9956913685791342e-12,
+          3.299040944940157e-12,
+          -9.604123052397995e-12,
+          -7.671233093198282e-11,
+          0.8700000047683716,
+          0.8700000047683716,
+          -3.7664104474144366e-11,
+          7.280598866843402e-12,
+          -4.1406430367763036e-11,
+          1.098642617852752e-11,
+          -7.80814475576097e-12,
+          -3.361858708084142e-11
+        ],
+        "history_terms_after_reset": 0,
+        "policy_steps_after_reset": 0,
+        "gait_phase_after_reset": 0.0
+      },
+      "spawn_heading_restored": true
+    },
+    "J": {
+      "passed": true,
+      "performance_samples": 94,
+      "average_loop_fps": 32.593707287852354,
+      "average_physics_steps_per_wall_second": 130.37482915140941,
+      "peak_device_total_used_mib": 6179.0,
+      "gpu_total_mib": 12227.0,
+      "vram_scope": "Whole GPU including other applications, not process-only VRAM",
+      "fps_scope": "App loop/render requests, accelerated self-test without pacing; not GPU present-time profiling"
+    }
+  },
+  "manual_native_keyboard_required": true,
+  "failed_tests": []
+}

@@ -1,0 +1,8 @@
+{
+  "resolution_m": 0.1,
+  "footprint": {"body_radius_m": 0.45, "step_sway_m": 0.08, "pose_error_m": 0.04, "margin_m": 0.1},
+  "allowed_lanes": [{"name": "AllowedLane_CentralAisle", "polygon": [[-1.125,-4.8],[1.125,-4.8],[1.125,4.8],[-1.125,4.8]]}],
+  "forbidden_zones": [], "static_obstacles": [],
+  "obstacle_height_range_m": [0.06,1.9],
+  "note": "AllowedLane follows inner edges of existing yellow aisle paint. JSON overlay only; original USD unchanged. B intentionally unset."
+}

@@ -1,6 +1,6 @@
 """One-command factory + G1 + verified ONNX + keyboard. Windows, Isaac Sim 6.1."""
 from pathlib import Path
-import argparse,json,sys,time,traceback,hashlib
+import argparse,json,sys,time,traceback,hashlib,math
 ROOT=Path(r'D:\unitree_g1')
 sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
@@ -24,6 +24,8 @@ def preflight(cfg,flat):
     return loco
 
 def classify(error):
+    from controllers.controller_interface import ControllerUnavailable
+    if isinstance(error,ControllerUnavailable): return 'CONTROLLER_UNAVAILABLE'
     s=str(error).lower()
     if 'out of memory' in s or 'cuda_error_out_of_memory' in s: return 'CUDA_OUT_OF_MEMORY'
     if isinstance(error,FileNotFoundError): return 'MISSING_ASSET_OR_CHECKPOINT'
@@ -139,9 +141,12 @@ def main():
     parser.add_argument('--flat',action='store_true'); parser.add_argument('--self-test',action='store_true')
     parser.add_argument('--headless',action='store_true'); parser.add_argument('--duration',type=float,default=0)
     parser.add_argument('--overview',action='store_true')
+    parser.add_argument('--controller',choices=['locomotion','sonic'],default='locomotion')
     args,_=parser.parse_known_args()
     app=runtime=None
     try:
+        from controllers.controller_selector import validate_selection
+        validate_selection(args.controller)
         cfg=json.loads(args.config.read_text(encoding='utf-8-sig'))
         if args.overview: cfg['camera']['mode']='overview'
         preflight(cfg,args.flat)
@@ -155,6 +160,11 @@ def main():
                 '--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
         import carb
         settings=carb.settings.get_settings()
+        if not args.self_test:
+            # Verified settings in Isaac Sim's bundled .kit applications.
+            # Let Kit pace app updates; patrol scheduling never sleeps the loop.
+            settings.set('/app/runLoops/main/rateLimitEnabled',True)
+            settings.set('/app/runLoops/main/rateLimitFrequency',render['limit_fps'])
         if render['low_quality']:
             for key in ['/rtx/reflections/enabled','/rtx/indirectDiffuse/enabled','/rtx/ambientOcclusion/enabled']:
                 settings.set(key,False)
@@ -163,14 +173,10 @@ def main():
         print('FACTORY_READY '+str(runtime.directory),flush=True)
         if args.self_test: validation(runtime)
         else:
-            started=time.perf_counter(); next_tick=started
+            started=time.perf_counter()
             while app.is_running():
                 app.update(); runtime.tick()
                 if args.duration and time.perf_counter()-started>=args.duration: break
-                next_tick+=1/render['limit_fps']
-                delay=next_tick-time.perf_counter()
-                if delay>0: time.sleep(min(delay,.02))
-                elif delay<-.1: next_tick=time.perf_counter()
             if args.duration:
                 runtime.context['capture'](runtime.directory/'factory_g1_gui.png')
                 runtime.capture_head_preview(runtime.directory/'head_camera.png')
@@ -180,6 +186,9 @@ def main():
         record={'status':'failed','category':classify(error),'message':str(error),'traceback':traceback.format_exc()}
         (ROOT/'logs/factory_g1_error.json').write_text(json.dumps(record,indent=2),encoding='utf-8')
         print('FACTORY_ERROR '+json.dumps(record),flush=True)
+        if record['category']=='CONTROLLER_UNAVAILABLE':
+            print('CONTROLLER_UNAVAILABLE '+str(error),flush=True)
+            raise SystemExit(2)
         raise
     finally:
         if runtime: runtime.close()

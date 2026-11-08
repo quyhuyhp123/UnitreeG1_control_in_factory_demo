@@ -1,0 +1,46 @@
+{
+  "dynamic_crossing": {
+    "passed": true,
+    "waits": 201,
+    "minimum_inflated_clearance_m": 0.23564218081090693,
+    "final_state": "MOVING_TO_B",
+    "reason": "Following collision-checked path",
+    "source": "Actual kinematic collision cube; human flag is scene metadata, not AI",
+    "resumed_after_clear": true,
+    "run_directory": "D:\\unitree_g1\\logs\\patrol_runs\\20261108_233009"
+  },
+  "human_crossing": {
+    "passed": true,
+    "waits": 197,
+    "minimum_inflated_clearance_m": 0.39285539187047724,
+    "final_state": "MOVING_TO_B",
+    "reason": "Following collision-checked path",
+    "source": "Actual kinematic collision cube; human flag is scene metadata, not AI",
+    "resumed_after_clear": true,
+    "run_directory": "D:\\unitree_g1\\logs\\patrol_runs\\20261108_233009"
+  },
+  "fully_blocked_lane": {
+    "passed": true,
+    "state": "WAITING_FOR_CLEAR_PATH",
+    "reason": "NO_VALID_PATH: endpoint footprint outside lane or obstructed"
+  },
+  "clear_path_replan": {
+    "passed": true,
+    "states": [
+      "MOVING_TO_B",
+      "WAITING_FOR_CLEAR_PATH"
+    ]
+  },
+  "stale_data_fault": {
+    "passed": true,
+    "reason": "Missing/stale/nonfinite feedback"
+  },
+  "fault_latched": {
+    "passed": true,
+    "state": "FAULT"
+  },
+  "fault_acknowledge": {
+    "passed": true,
+    "mode": "MANUAL"
+  }
+}

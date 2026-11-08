@@ -1,5 +1,36 @@
 # G1_factory_keyboard
 
+## Automatic Patrol Navigation
+
+Chạy `./run_sim.bat -Controller locomotion`, mở panel **G1 PATROL NAVIGATION**.
+Mặc định vẫn MANUAL, A lấy từ robot, B chưa đặt. Nhập A/B, nhấn **Apply A/B + Validate Route**,
+cấu hình lịch rồi **START PATROL**. Bộ điểm đã thử: A gần `(0,-4)`, B `(0,-2.5)`.
+Mặc định chờ 5 giây, đến B chờ 10 giây, về A rồi nghỉ 120 giây trước lượt tiếp theo.
+SPACE trong AUTO tạm dừng và giữ camera Follow; Resume phải chủ động trên UI.
+
+Patrol dùng A* và footprint trong làn cho phép, phản hồi PhysX và Locomotion RL hiện tại.
+Vật cản/người được đọc từ **SIM GROUND TRUTH**, chưa có AI perception. SONIC vẫn bị khóa.
+Xem [hướng dẫn GUI](docs/navigation/gui_manual.md), [kiến trúc](docs/navigation/architecture.md),
+[lịch tuần tra](docs/navigation/patrol_schedule.md), [kết quả kiểm thử](docs/navigation/navigation_test_report.md).
+Các test dùng Python Isaac Sim: `scripts/test_patrol.py`, `test_patrol_obstacles.py`, `test_patrol_gui.py`.
+
+## SONIC integration status (2026-11-08)
+
+**PARTIALLY IMPLEMENTED. SONIC does not yet control G1 in PhysX.**
+Default `run_sim.bat` continues using the verified Locomotion RL backend.
+`run_sim.bat -Controller locomotion` selects it explicitly.
+`run_sim.bat -Controller sonic` currently rejects before simulation startup with
+`CONTROLLER_UNAVAILABLE`; model sessions and offline idle planner inference are
+verified, but full observation/reference and actuator parity are unresolved.
+The G1 CONTROLLER MANAGER panel reports this limitation and blocks hot switching.
+
+See [run instructions](docs/sonic_integration/run_instructions.md),
+[compatibility](docs/sonic_integration/compatibility_report.md),
+[baseline evidence](docs/sonic_integration/baseline_report.md), and
+[test report](docs/sonic_integration/test_report.md).
+Large SONIC weights stay local and are reproducibly downloaded with
+`scripts/download_sonic.py`; existing locomotion weights and factory assets are preserved.
+
 Giao diện G1 Keyboard Control/Head Camera là **Isaac Sim**. Blender dùng để sửa mô hình tại blender/factory.blend, sau đó xuất USD để Isaac chạy mô phỏng. Hướng dẫn hai ứng dụng và cập nhật mô hình: docs/blender_isaac_workflow.md. Gizmo biên tập được ẩn riêng khỏi khung head camera.
 
 Một nhà xưởng Blender 10×10 m, một Unitree G1 29-DOF, policy velocity ONNX chính thức của Unitree và điều khiển bàn phím trên NVIDIA Isaac Sim. Chỉ mô phỏng bằng PhysX; không robot thật, ROS, Navigation hoặc training.

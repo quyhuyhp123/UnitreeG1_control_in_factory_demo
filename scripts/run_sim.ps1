@@ -1,4 +1,5 @@
-param([switch]$Flat,[switch]$SelfTest,[switch]$Headless,[switch]$Overview,[double]$Duration=0)
+param([switch]$Flat,[switch]$SelfTest,[switch]$Headless,[switch]$Overview,[double]$Duration=0,
+    [ValidateSet('locomotion','sonic')][string]$Controller='locomotion')
 $ErrorActionPreference='Stop'
 $projectRoot='D:\unitree_g1'
 $cfg=Get-Content (Join-Path $projectRoot 'configs\environment.json') -Raw | ConvertFrom-Json
@@ -6,6 +7,7 @@ $launcher=Join-Path $cfg.isaac_sim_root 'python.bat'
 if (-not (Test-Path -LiteralPath $launcher)) { throw "Missing Isaac launcher: $launcher" }
 $log=Join-Path $projectRoot ('logs\factory_g1_'+(Get-Date -Format yyyyMMdd_HHmmss)+'.log')
 $runArgs=@((Join-Path $projectRoot 'scripts\run_factory_g1.py'),'--no-ros-env')
+$runArgs+=@('--controller',$Controller)
 if ($Flat) { $runArgs+='--flat' }; if ($SelfTest) { $runArgs+='--self-test' }
 if ($Headless) { $runArgs+='--headless' }; if ($Overview) { $runArgs+='--overview' }
 if ($Duration -gt 0) { $runArgs+=@('--duration',"$Duration") }
@@ -27,6 +29,8 @@ try {
     $summary['native_stderr_diagnostics']=@(Select-String -LiteralPath $log -Pattern 'Unsupported:|NativeCommandError').Count
     $summary['finished_marker_seen']=[bool](Select-String -LiteralPath $log -Pattern '^FACTORY_FINISHED ')
     $summary['status']=if ($exitCode -eq 0 -and $errors.Count -eq 0 -and $summary['finished_marker_seen']) {'completed'} else {'failed_or_crashed'}
+    if (Select-String -LiteralPath $log -Pattern '^CONTROLLER_UNAVAILABLE ') { $summary['status']='controller_unavailable' }
+    $summary['controller']=$Controller
     if ($SelfTest) {
         $resultName=if ($Flat) {'factory_g1_flat_results.json'} else {'factory_g1_results.json'}
         $resultPath=Join-Path $projectRoot "logs\$resultName"

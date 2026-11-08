@@ -1,0 +1,326 @@
+{
+  "tests": {
+    "map_spawn": {
+      "passed": true,
+      "floor": [
+        [
+          -5.0,
+          -5.0
+        ],
+        [
+          5.0,
+          5.0
+        ]
+      ],
+      "colliders": 134,
+      "human_collider_parts": 57,
+      "a": [
+        1.0949734132736921e-06,
+        -4.000192165374756,
+        1.5707900491034312
+      ],
+      "b": null
+    },
+    "measured_braking": {
+      "passed": true,
+      "validated": true,
+      "initial_speed_m_s": 0.45978628199787347,
+      "max_base_displacement_after_zero_m": 0.11500186127219865,
+      "sample_seconds": 3,
+      "control_hz": 50,
+      "conservative_deceleration_m_s2": 0.32030460669271194,
+      "source": "Measured real PhysX G1 base displacement after command zero; factor-two distance conservatism",
+      "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_233917",
+      "date": "2026-11-08",
+      "scope": "Straight flat factory floor; not certified, not all-contact worst-case braking",
+      "checkpoint_sha256": "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28",
+      "physics_dt": 0.005
+    },
+    "route_valid": {
+      "passed": true,
+      "path": [
+        [
+          -0.002356403274461627,
+          -4.012230396270752
+        ],
+        [
+          0.0,
+          -2.5
+        ]
+      ]
+    },
+    "two_cycles_a_b_a": {
+      "passed": true,
+      "completed": 2,
+      "state": "STOPPED",
+      "reason": "Goal settled",
+      "position": [
+        -0.0762050449848175,
+        -3.8922648429870605,
+        0.7843918800354004
+      ],
+      "transitions": [
+        {
+          "state": "STOPPED",
+          "time": 8.98,
+          "reason": "Reset cancels patrol",
+          "completed": 0
+        },
+        {
+          "state": "WAITING_START",
+          "time": 9.98,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "PLANNING",
+          "time": 10.18,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "MOVING_TO_B",
+          "time": 10.18,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "WAITING_FOR_CLEAR_PATH",
+          "time": 10.82,
+          "reason": "Predicted trajectory/footprint blocked",
+          "completed": 0
+        },
+        {
+          "state": "MOVING_TO_B",
+          "time": 11.18,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "WAITING_AT_B",
+          "time": 19.8,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "REPLANNING",
+          "time": 20.8,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "MOVING_TO_A",
+          "time": 20.8,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "WAITING_FOR_CLEAR_PATH",
+          "time": 31.82,
+          "reason": "Predicted trajectory/footprint blocked",
+          "completed": 0
+        },
+        {
+          "state": "MOVING_TO_A",
+          "time": 31.84,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "WAITING_FOR_CLEAR_PATH",
+          "time": 31.84,
+          "reason": "Predicted trajectory/footprint blocked",
+          "completed": 0
+        },
+        {
+          "state": "MOVING_TO_A",
+          "time": 32.84,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "CYCLE_COMPLETE",
+          "time": 34.38,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "PLANNING",
+          "time": 36.38,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "MOVING_TO_B",
+          "time": 36.38,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "WAITING_AT_B",
+          "time": 44.58,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "REPLANNING",
+          "time": 45.58,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "MOVING_TO_A",
+          "time": 45.58,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "WAITING_FOR_CLEAR_PATH",
+          "time": 56.0,
+          "reason": "Predicted trajectory/footprint blocked",
+          "completed": 1
+        },
+        {
+          "state": "MOVING_TO_A",
+          "time": 56.02,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "WAITING_FOR_CLEAR_PATH",
+          "time": 56.02,
+          "reason": "Predicted trajectory/footprint blocked",
+          "completed": 1
+        },
+        {
+          "state": "MOVING_TO_A",
+          "time": 57.02,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "WAITING_FOR_CLEAR_PATH",
+          "time": 57.78,
+          "reason": "Predicted trajectory/footprint blocked",
+          "completed": 1
+        },
+        {
+          "state": "MOVING_TO_A",
+          "time": 58.02,
+          "reason": "",
+          "completed": 1
+        },
+        {
+          "state": "STOPPED",
+          "time": 59.48,
+          "reason": "Configured cycles complete",
+          "completed": 2
+        },
+        {
+          "state": "STOPPED",
+          "time": 59.48,
+          "reason": "Explicit control mode change",
+          "completed": 2
+        },
+        {
+          "state": "STOPPED",
+          "time": 59.48,
+          "reason": "Reset cancels patrol",
+          "completed": 2
+        },
+        {
+          "state": "WAITING_START",
+          "time": 60.48,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "PLANNING",
+          "time": 60.5,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "MOVING_TO_B",
+          "time": 60.5,
+          "reason": "",
+          "completed": 0
+        },
+        {
+          "state": "PAUSED",
+          "time": 61.7,
+          "reason": "Explicit Resume required",
+          "completed": 0
+        },
+        {
+          "state": "STOPPED",
+          "time": 61.98,
+          "reason": "Explicit control mode change",
+          "completed": 0
+        }
+      ],
+      "trajectory_samples": 248,
+      "fault": null
+    },
+    "repeat_interval_after_completion": {
+      "passed": true,
+      "completions": [
+        34.38
+      ],
+      "starts": [
+        10.18,
+        36.38
+      ]
+    },
+    "lane_trajectory": {
+      "passed": true,
+      "samples": 248
+    },
+    "auto_ignores_wasd": {
+      "passed": true,
+      "auto_command": [
+        0.21987675134256776,
+        -0.007363030560756078,
+        -0.040169486422609424
+      ]
+    },
+    "space_pauses_auto": {
+      "passed": true,
+      "state": "PAUSED"
+    },
+    "pause_clock": {
+      "passed": true,
+      "clock_before": 61.8,
+      "clock_after": 61.8
+    },
+    "no_auto_resume": {
+      "passed": true,
+      "state": "PAUSED"
+    },
+    "manual_takeover": {
+      "passed": true,
+      "mode": "MANUAL"
+    },
+    "persistence": {
+      "passed": true,
+      "path": "D:\\unitree_g1\\logs\\patrol_runs\\20261108_233917\\persistence_test.json"
+    }
+  },
+  "input_source": "Carb logical device and programmatic UI; no physical OS keyboard",
+  "robot_bounds_world": [
+    [
+      -0.26839719888033675,
+      -4.11059040864186,
+      -0.0004090758731487565
+    ],
+    [
+      0.26838807761418587,
+      -3.8260882072374964,
+      1.3144276823114907
+    ]
+  ],
+  "head_preview_enabled": false,
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_233917",
+  "patrol_directory": "D:\\unitree_g1\\logs\\patrol_runs\\20261108_233917",
+  "status": "passed"
+}

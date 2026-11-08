@@ -1,0 +1,14 @@
+{
+  "patrol": {
+    "log": "D:\\unitree_g1\\logs\\patrol_baseline\\patrol_physics_final.log",
+    "error_fatal_traceback_lines": 0
+  },
+  "obstacles": {
+    "log": "D:\\unitree_g1\\logs\\patrol_baseline\\obstacles_v2.log",
+    "error_fatal_traceback_lines": 0
+  },
+  "gui": {
+    "log": "D:\\unitree_g1\\logs\\patrol_baseline\\gui_reset_binding_fixed.log",
+    "error_fatal_traceback_lines": 0
+  }
+}

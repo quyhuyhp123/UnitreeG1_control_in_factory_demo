@@ -1,0 +1,41 @@
+{
+  "repository": "nvidia/GEAR-SONIC",
+  "revision": "6733128a3d8a523b1418b06bca3cdf61c8b0987f",
+  "files": [
+    {
+      "name": "config.json",
+      "bytes": 2428,
+      "sha256": "326dcc509ad93509cf262871256a74f508f43a8430f61ec6abe8034e985ce948",
+      "upstream_lfs_sha256": null,
+      "url": "https://huggingface.co/nvidia/GEAR-SONIC/resolve/6733128a3d8a523b1418b06bca3cdf61c8b0987f/config.json"
+    },
+    {
+      "name": "observation_config.yaml",
+      "bytes": 2336,
+      "sha256": "466d05947c78af6c76388adfb86e3a2a77b2a1d921a64883ed3d085ebf58de1b",
+      "upstream_lfs_sha256": null,
+      "url": "https://huggingface.co/nvidia/GEAR-SONIC/resolve/6733128a3d8a523b1418b06bca3cdf61c8b0987f/observation_config.yaml"
+    },
+    {
+      "name": "model_encoder.onnx",
+      "bytes": 50100513,
+      "sha256": "013ab0287236aa2721e13f1e936d699db982302d0de0bfcdae76d5c3245362d3",
+      "upstream_lfs_sha256": "013ab0287236aa2721e13f1e936d699db982302d0de0bfcdae76d5c3245362d3",
+      "url": "https://huggingface.co/nvidia/GEAR-SONIC/resolve/6733128a3d8a523b1418b06bca3cdf61c8b0987f/model_encoder.onnx"
+    },
+    {
+      "name": "model_decoder.onnx",
+      "bytes": 40900688,
+      "sha256": "c7241a123eaa36b5d64bad19540efde93cac1ad443bd4572fd12ca99898118ed",
+      "upstream_lfs_sha256": "c7241a123eaa36b5d64bad19540efde93cac1ad443bd4572fd12ca99898118ed",
+      "url": "https://huggingface.co/nvidia/GEAR-SONIC/resolve/6733128a3d8a523b1418b06bca3cdf61c8b0987f/model_decoder.onnx"
+    },
+    {
+      "name": "planner_sonic.onnx",
+      "bytes": 773952989,
+      "sha256": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea",
+      "upstream_lfs_sha256": "39b553e197f62f077975ba38512bc04781a3fc37c2af7c6756e04629f760edea",
+      "url": "https://huggingface.co/nvidia/GEAR-SONIC/resolve/6733128a3d8a523b1418b06bca3cdf61c8b0987f/planner_sonic.onnx"
+    }
+  ]
+}

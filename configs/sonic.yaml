@@ -1,0 +1,15 @@
+{
+  "status": "PARTIALLY IMPLEMENTED",
+  "physx_control_enabled": false,
+  "source_commit": "1e1ec4f5f27e6c3e03048f693bd7c60cce04afda",
+  "hf_revision": "6733128a3d8a523b1418b06bca3cdf61c8b0987f",
+  "variant": "default",
+  "directory": "checkpoints/sonic",
+  "control_hz": 50,
+  "encoder_input_dim": 1762,
+  "token_dim": 64,
+  "decoder_input_dim": 994,
+  "action_dim": 29,
+  "provider": "CPUExecutionProvider",
+  "note": "Session loading/offline planner verification does not authorize SONIC articulation control."
+}

@@ -1,0 +1,8 @@
+# Official default model validation
+Downloaded only default encoder, decoder, planner, observation_config.yaml and release config.json, plus license. No training dataset or PyTorch weights. Download source is pinned nvidia/GEAR-SONIC revision 6733128a3d8a523b1418b06bca3cdf61c8b0987f. Upstream download_from_hf.py list audited, but not executed because huggingface_hub is absent; scripts/download_sonic.py implements the same minimal list with stdlib and immutable URLs.
+
+checkpoints/sonic/provenance.json records URLs, exact byte sizes, SHA256 and matching HF LFS hashes for all three ONNX files. Metadata files have locally computed hashes; no claim of upstream cryptographic hash for them. Large weights are excluded from Git. Model license retained in checkpoints/sonic/LICENSE.
+
+Default real sessions: encoder float32 [1,1762] -> [1,64]; decoder float32 [1,994] -> [1,29]. Planner has 11 inputs; exact names/dtypes/shapes in model_validation.json. All loaded using existing Isaac ORT 1.26 CPU provider. Three offline idle planner inferences passed, valid count 44, finite values and normalized quaternion. Recorded input is in JSON and tied to fresh flat baseline telemetry.
+
+NOT TESTED: encoder/decoder inference with validated complete reference/state, policy stability, locomotion through SONIC, CUDA/TensorRT provider execution, low_latency and sonic_v1_1 checkpoint shapes. Metadata lists low latency 4 SMPL future frames / 80ms and v1.1 10 frames / 200ms; both use 64-D tokens and 50Hz. Their configurations are not interchangeable with default. No dummy tensors were used to claim policy success.

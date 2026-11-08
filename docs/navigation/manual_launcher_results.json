@@ -1,0 +1,16 @@
+﻿{
+    "exit_code":  0,
+    "error_lines":  0,
+    "log":  "D:\\unitree_g1\\logs\\factory_g1_20261108_233359.log",
+    "flat_mode":  false,
+    "self_test":  true,
+    "checked_at":  "2026-11-08T23:35:58.7752978+07:00",
+    "native_stderr_diagnostics":  0,
+    "finished_marker_seen":  true,
+    "status":  "completed",
+    "controller":  "locomotion",
+    "test_status":  "passed_automated_checks",
+    "failed_tests":  [
+
+                     ]
+}

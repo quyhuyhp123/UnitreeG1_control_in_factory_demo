@@ -1,0 +1,328 @@
+{
+  "status": "passed_automated_checks",
+  "mode": "flat",
+  "input_source": "Carb logical keyboard, not physical OS keyboard",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_121312",
+  "scene": {
+    "flat_comparison_mode": true,
+    "spawn_xyz_m": [
+      0.0,
+      -4.0,
+      0.0
+    ],
+    "base_spawn_height_m": 0.7862021756598827,
+    "spawn_blockers": [],
+    "spawn_heading_deg": 90.0,
+    "policy_backend": "unitree_mjlab",
+    "checkpoint": "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx",
+    "physics_scene": "/World/PhysicsScene",
+    "gravity": [
+      0,
+      0,
+      -9.81
+    ],
+    "physics_hz": 200,
+    "robot_count": 1,
+    "robot_dof": 29,
+    "flat_mode": true,
+    "head_camera": {
+      "path": "/World/G1/torso_link/HeadCamera",
+      "resolution": [
+        320,
+        180
+      ],
+      "horizontal_fov_deg": 80.0
+    }
+  },
+  "tests": {
+    "A": {
+      "passed": true,
+      "meaning": "Flat comparison stage opened"
+    },
+    "B": {
+      "passed": true,
+      "position_m": [
+        9.92862624116242e-07,
+        -4.000192642211914,
+        0.7838169932365417
+      ],
+      "spawn_marker": null
+    },
+    "C": {
+      "passed": true,
+      "samples": 200,
+      "max_tilt_deg": 0.918911436380824,
+      "floor_contact_points": 8000,
+      "fault": null
+    },
+    "D": {
+      "passed": true,
+      "displacement_m": [
+        -0.10101362352725118,
+        0.995586633682251,
+        -0.0015385150909423828
+      ],
+      "displacement_body_m": [
+        0.9948440377054713,
+        0.10729154010855257,
+        -0.013142693656810159
+      ],
+      "yaw_change_rad": 0.12332769185669346,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        0.02461652085185051,
+        0.01861931011080742,
+        0.00804254598915577
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.039389148354530334,
+        -0.02269892208278179,
+        0.002830024342983961
+      ],
+      "final_held_command": [
+        0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "E": {
+      "passed": true,
+      "displacement_m": [
+        -0.07583405857440084,
+        -0.9518418312072754,
+        -0.0014674067497253418
+      ],
+      "displacement_body_m": [
+        -0.9522495080237542,
+        0.0698342315129945,
+        0.009994195113272528
+      ],
+      "yaw_change_rad": 0.01112744151459899,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        0.015812117606401443,
+        0.0396742969751358,
+        0.01011025719344616
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.10782187432050705,
+        -0.05737244710326195,
+        0.03975170478224754
+      ],
+      "final_held_command": [
+        -0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "G": {
+      "passed": true,
+      "command": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "measured_velocity_m_s": [
+        0.015812117606401443,
+        0.0396742969751358,
+        0.01011025719344616
+      ]
+    },
+    "F_left": {
+      "passed": true,
+      "displacement_m": [
+        -0.0907797965919599,
+        0.012835979461669922,
+        0.0003815293312072754
+      ],
+      "displacement_body_m": [
+        0.012269261214447144,
+        0.09085794523112604,
+        0.00042239824569159266
+      ],
+      "yaw_change_rad": 1.8074648727810427,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        -0.025136999785900116,
+        0.026028217747807503,
+        0.00613625580444932
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.017674582079052925,
+        -0.01668010652065277,
+        0.016603557392954826
+      ],
+      "final_held_command": [
+        0.0,
+        0.0,
+        0.6
+      ]
+    },
+    "F_right": {
+      "passed": true,
+      "displacement_m": [
+        -0.04951034521218389,
+        0.08320140838623047,
+        0.00015729665756225586
+      ],
+      "displacement_body_m": [
+        0.08288483800158497,
+        0.050033501959008006,
+        -0.0007250475083482543
+      ],
+      "yaw_change_rad": -1.4623036604405508,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        -0.016559213399887085,
+        -0.04291614517569542,
+        0.010124077089130878
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.0047595384530723095,
+        -0.014510800130665302,
+        0.007228274364024401
+      ],
+      "final_held_command": [
+        0.0,
+        0.0,
+        -0.6
+      ]
+    },
+    "F_walking_left": {
+      "passed": true,
+      "displacement_m": [
+        -0.6693835112964734,
+        0.5451772212982178,
+        -0.002839803695678711
+      ],
+      "displacement_body_m": [
+        0.540890516539292,
+        0.6728118629578757,
+        -0.007886601554690481
+      ],
+      "yaw_change_rad": 1.6927961036692316,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        -0.016824757680296898,
+        0.014676687307655811,
+        0.0054735238663852215
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.009791508316993713,
+        -0.0044279140420258045,
+        0.028166193515062332
+      ],
+      "final_held_command": [
+        0.35,
+        0.0,
+        0.6
+      ]
+    },
+    "F_walking_right": {
+      "passed": true,
+      "displacement_m": [
+        0.6366042044246569,
+        0.6730022430419922,
+        -0.003065049648284912
+      ],
+      "displacement_body_m": [
+        0.6769028556805142,
+        -0.6323407654188464,
+        -0.012409960560856229
+      ],
+      "yaw_change_rad": -1.4487049472518962,
+      "fault": null,
+      "obstacle_contacts_total": 0,
+      "velocity_after_release_m_s": [
+        -0.005187797360122204,
+        -0.044025029987096786,
+        0.008507438004016876
+      ],
+      "angular_velocity_after_release_rad_s": [
+        -0.006652290001511574,
+        0.004041564650833607,
+        -0.002892295131459832
+      ],
+      "final_held_command": [
+        0.35,
+        0.0,
+        -0.6
+      ]
+    },
+    "H": {
+      "passed": null,
+      "reason": "No obstacles in flat comparison mode"
+    },
+    "I": {
+      "passed": true,
+      "reset": {
+        "source": "R",
+        "paused_before_reset": true,
+        "safe_before_reset": true,
+        "position_after_reset": [
+          -3.637978807091713e-12,
+          -4.0,
+          0.7854665517807007
+        ],
+        "orientation_after_reset_wxyz": [
+          0.7071068286895752,
+          0.0,
+          0.0,
+          0.7071068286895752
+        ],
+        "joint_positions_after_reset": [
+          -0.10000000149011612,
+          -0.10000000149011612,
+          -7.117122863276037e-11,
+          -5.353064928717392e-14,
+          -9.381665583285681e-12,
+          1.1518135750732128e-10,
+          -3.1299695474329425e-11,
+          -5.796143079384031e-11,
+          1.1400967669938922e-10,
+          0.30000001192092896,
+          0.30000001192092896,
+          0.3499999940395355,
+          0.3499999940395355,
+          -0.20000000298023224,
+          -0.20000000298023224,
+          0.17999999225139618,
+          -0.17999999225139618,
+          2.9956913685791342e-12,
+          3.299040944940157e-12,
+          -9.604123052397995e-12,
+          -7.671233093198282e-11,
+          0.8700000047683716,
+          0.8700000047683716,
+          -3.7664104474144366e-11,
+          7.280598866843402e-12,
+          -4.1406430367763036e-11,
+          1.098642617852752e-11,
+          -7.80814475576097e-12,
+          -3.361858708084142e-11
+        ],
+        "history_terms_after_reset": 0,
+        "policy_steps_after_reset": 0,
+        "gait_phase_after_reset": 0.0
+      },
+      "spawn_heading_restored": true
+    },
+    "J": {
+      "passed": true,
+      "performance_samples": 56,
+      "average_loop_fps": 34.79315631061128,
+      "average_physics_steps_per_wall_second": 139.17262524244512,
+      "peak_device_total_used_mib": 4125.0,
+      "gpu_total_mib": 12227.0,
+      "vram_scope": "Whole GPU including other applications, not process-only VRAM",
+      "fps_scope": "App loop/render requests, accelerated self-test without pacing; not GPU present-time profiling"
+    }
+  },
+  "manual_native_keyboard_required": true,
+  "failed_tests": []
+}

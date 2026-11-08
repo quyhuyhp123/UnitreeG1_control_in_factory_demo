@@ -1,0 +1,6 @@
+{
+  "start_delay_seconds": 5.0, "repeat_interval_seconds": 120.0,
+  "dwell_at_b_seconds": 10.0, "repeat_enabled": true, "max_cycles": 0,
+  "movement_timeout_seconds": 180.0, "obstacle_wait_timeout_seconds": 60.0,
+  "clock_mode": "simulation"
+}

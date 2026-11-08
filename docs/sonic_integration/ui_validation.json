@@ -1,0 +1,10 @@
+{
+  "status": "passed",
+  "policy_unchanged": true,
+  "switch_blocked": true,
+  "head_preview_present": true,
+  "camera_modes_preserved": true,
+  "scope": "Programmatic UI callbacks and rendering; no physical mouse/keyboard input",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_122052",
+  "fault": null
+}

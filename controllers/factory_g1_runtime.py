@@ -6,6 +6,30 @@ from controllers.g1_keyboard_runtime import G1KeyboardRuntime
 ROOT=Path(r'D:\unitree_g1')
 
 class FactoryG1Runtime(G1KeyboardRuntime):
+    def build_controller_controls(self):
+        import omni.ui as ui
+        from controllers.controller_selector import ControllerSelector
+        self.controller_selector=ControllerSelector()
+        self.controller_window=ui.Window('G1 CONTROLLER MANAGER',width=350,height=350)
+        self.controller_window.position_x=16
+        self.controller_window.position_y=64
+        with self.controller_window.frame:
+            with ui.VStack(spacing=4):
+                ui.Label('Keyboard Manual | Locomotion RL active',height=22)
+                self.controller_choice=ui.ComboBox(0,'Locomotion RL','SONIC (blocked)',height=24)
+                self.controller_message=ui.Label('Policy loaded | Planner: N/A\nSONIC motion modes unavailable until validated.',
+                                                 height=130,word_wrap=True)
+                self.controller_metrics=ui.Label('Waiting for runtime metrics',height=60,word_wrap=True)
+                ui.Button('Apply Controller (restart required)',height=24,clicked_fn=self.apply_controller_selection)
+                with ui.HStack(height=24):
+                    ui.Button('Reset',clicked_fn=self.keys.request_reset)
+                    ui.Button('Pause',clicked_fn=self.timeline.pause)
+                    ui.Button('Resume',clicked_fn=self.timeline.play)
+
+    def apply_controller_selection(self):
+        index=self.controller_choice.model.get_item_value_model().as_int
+        self.controller_message.text=self.controller_selector.request('sonic' if index else 'locomotion')
+
     def __init__(self,app,cfg,flat=False,self_test=False):
         self.factory_cfg=cfg
         self.flat=flat
@@ -35,6 +59,16 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         (self.directory/'scene_checks.json').write_text(json.dumps(self.scene_checks,indent=2),encoding='utf-8')
         self.update_camera()
         self._build_head_preview()
+        self.navigation=None
+        if not flat:
+            from navigation.patrol_controller import PatrolController
+            from navigation.patrol_ui import PatrolPanel
+            self.navigation=PatrolController(self)
+            self.patrol_panel=PatrolPanel(self.navigation)
+
+    def select_motion_command(self,dt):
+        nav=getattr(self,'navigation',None)
+        return nav.command(dt) if nav is not None else super().select_motion_command(dt)
 
     def _compose(self,runtime):
         from pxr import Usd,UsdGeom,UsdPhysics,PhysxSchema,Gf,UsdLux,UsdShade
@@ -213,7 +247,10 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         if not omni.appwindow.get_default_app_window().is_focused(): return False
         from omni.kit.viewport.window import get_viewport_window_instances
         main_focused=any(w.viewport_api==self.context['viewport'] and w.focused for w in get_viewport_window_instances())
-        return bool(main_focused or (self.hud is not None and self.hud.focused) or (self.head_window is not None and self.head_window.focused))
+        return bool(main_focused or (self.hud is not None and self.hud.focused) or (self.head_window is not None and self.head_window.focused)
+                    or (getattr(self,'controller_window',None) is not None and self.controller_window.focused)
+                    or (getattr(self,'patrol_panel',None) is not None and self.patrol_panel.window.focused
+                        and self.navigation.mode=='AUTO PATROL'))
 
     def _contacts(self,headers,data):
         from pxr import PhysicsSchemaTools
@@ -287,6 +324,10 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         self.label_camera.text='Camera: '+mode.upper()+' | mouse navigation'
 
     def safe_reset(self,source='R'):
+        top_view=str(self.context['viewport'].camera_path)=='/World/Navigation/TopCamera'
+        nav=getattr(self,'navigation',None)
+        if nav is not None:
+            nav.stop('Reset cancels patrol'); nav.selector.select('MANUAL')
         from pxr import UsdGeom
         free=self.factory_cfg['camera']['mode']=='free'
         view=None
@@ -294,6 +335,12 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             prim=self.stage.GetPrimAtPath(str(self.context['viewport'].camera_path))
             if prim and prim.IsA(UsdGeom.Camera):
                 view=(UsdGeom.XformCache().GetLocalToWorldTransform(prim),UsdGeom.Camera(prim).GetFocalLengthAttr().Get())
+        if top_view:
+            # The navigation camera is session-only and disappears when the
+            # initial layer is imported. Retire its viewport binding first.
+            self.context['viewport'].camera_path=str(self.context['camera'].GetPath())
+            self._bind_render_camera(self.context['viewport'])
+            for _ in range(2): self.app.update()
         state=self.last_state
         safe=not self.timeline.is_playing() or (
             np.linalg.norm(state['base_linear_velocity_world_m_s'])<self.key_cfg['reset_max_linear_speed'] and
@@ -313,6 +360,8 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             camera.CreateFocalLengthAttr(view[1])
             self.context['viewport'].camera_path=str(camera.GetPath())
         if rebuild_head: self._build_head_preview()
+        if result and top_view and getattr(self,'patrol_panel',None) is not None:
+            self.patrol_panel.top_view()
         self._bind_render_camera(self.context['viewport'])
         return result
 
@@ -327,6 +376,11 @@ class FactoryG1Runtime(G1KeyboardRuntime):
 
     def update_status(self,force=False):
         super().update_status(force)
+        if hasattr(self,'controller_metrics'):
+            gpu=self.gpu_samples[-1].get('gpu_device_total_used_mib') if self.gpu_samples else None
+            self.controller_metrics.text=(f'Robot: {self.policy_status} | FPS(loop): {self.fps:.1f}\n'
+                f'Inference: {getattr(self,"last_inference_ms",0):.2f} ms | GPU total used: {gpu} MiB\n'
+                f'Configured: {self.loco_cfg["physics_hz"]} Hz physics / {self.loco_cfg["control_hz"]} Hz control')
         if self.hud is not None:
             warning=self.turn_warning()
             self.label_note.text=self.keys.reason+('\n'+warning if warning else '')+f'\nFPS(loop): {self.fps:.1f} | physics steps/s(wall): {self.physics_rate:.1f}'
@@ -338,10 +392,22 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             camera_path=str(self.context['viewport'].camera_path),camera_mode=self.factory_cfg['camera']['mode'],
             camera_world_transform=[list(row) for row in UsdGeom.XformCache().GetLocalToWorldTransform(self.context['camera'].GetPrim())])
         value['head_camera_path']=getattr(self,'head_camera_path',None)
+        nav=getattr(self,'navigation',None)
+        if nav is not None and nav.mode=='AUTO PATROL':
+            value['applied_command']=nav.last_command
+            value['desired_command']=nav.last_command
+            value['navigation_state']=nav.scheduler.state
         return value
 
     def tick(self):
-        result=super().tick()
+        nav=getattr(self,'navigation',None)
+        if nav is not None: nav.before_tick(self.timeline.is_playing())
+        try: result=super().tick()
+        except Exception as error:
+            if nav is not None: nav.fail('Policy/feedback/runtime error: '+str(error))
+            raise
+        if nav is not None and hasattr(self,'patrol_panel'): self.patrol_panel.update()
+        if result is not None: self.last_inference_ms=result.get('inference_ms',0)
         if self.keys.stop_generation!=self.last_stop_generation:
             self.last_stop_generation=self.keys.stop_generation
             self.set_camera_mode('follow')
@@ -387,6 +453,10 @@ class FactoryG1Runtime(G1KeyboardRuntime):
 
     def close(self):
         self.contact_subscription=None
+        if getattr(self,'patrol_panel',None) is not None: self.patrol_panel.close(); self.patrol_panel=None
+        if getattr(self,'navigation',None) is not None: self.navigation.close(); self.navigation=None
+        if getattr(self,'controller_window',None) is not None:
+            self.controller_window.destroy(); self.controller_window=None
         if self.head_widget is not None: self.head_widget.destroy(); self.head_widget=None; self.head_window=None
         if hasattr(self,'metric_file'): self.metric_file.close()
         super().close()

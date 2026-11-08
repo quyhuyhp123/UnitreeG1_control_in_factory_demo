@@ -1,0 +1,31 @@
+{
+  "patrol": {
+    "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_233917",
+    "telemetry_samples": 3175,
+    "mean_inference_ms": 0.12176182671719575,
+    "max_inference_ms": 0.4078999991179444,
+    "mean_loop_fps": 34.34235300725007,
+    "mean_physics_steps_per_wall_second": 137.36941202900027,
+    "peak_whole_gpu_mib": 6109.0,
+    "maximum_tilt_deg": 2.572773680856607,
+    "max_path_deviation_m": 0.1658323305718537,
+    "cycle_durations_seconds": [
+      24.200000000000003,
+      23.099999999999994
+    ],
+    "approximate_base_distance_m": 6.545219158340605,
+    "maximum_reported_planner_ms": 0.6982000049902126,
+    "maximum_reported_map_update_ms": 39.51719999895431,
+    "final_goal_error_m": 0.14087354562559543
+  },
+  "manual": {
+    "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_233419",
+    "telemetry_samples": 3153,
+    "mean_inference_ms": 0.1204076435866574,
+    "max_inference_ms": 0.3952999977627769,
+    "mean_loop_fps": 32.59370728785235,
+    "mean_physics_steps_per_wall_second": 130.3748291514094,
+    "peak_whole_gpu_mib": 6179.0,
+    "maximum_tilt_deg": 2.788372610830275
+  }
+}

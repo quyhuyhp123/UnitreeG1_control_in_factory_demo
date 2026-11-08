@@ -1,0 +1,60 @@
+{
+  "navigation": "IMPLEMENTED_AND_VERIFIED_FOR_RECORDED_SCENARIOS",
+  "physical_patrol": "passed",
+  "manual_regression": "passed_automated_checks",
+  "obstacle_tests_passed": true,
+  "gui_callbacks": "passed",
+  "native_desktop_acceptance": "BLOCKED: Computer Use native pipe unavailable; programmatic GUI passed",
+  "sonic": "BLOCKED: existing SONIC PhysX backend not validated; never selected for patrol",
+  "protected_files_unchanged": true,
+  "protected_files": {
+    "run_sim.bat": {
+      "current_blob": "20980f61c7e5cfabc6be725b22e145a639634161",
+      "baseline_blob": "20980f61c7e5cfabc6be725b22e145a639634161"
+    },
+    "configs/factory_g1.json": {
+      "current_blob": "6ed2ca3fb6fcb0853e6db6c9cc0c5ebf22302105",
+      "baseline_blob": "6ed2ca3fb6fcb0853e6db6c9cc0c5ebf22302105"
+    },
+    "configs/g1_robot.yaml": {
+      "current_blob": "94c748bd9e3c58ac228776fda70e8c7faeb6a4c2",
+      "baseline_blob": "94c748bd9e3c58ac228776fda70e8c7faeb6a4c2"
+    },
+    "configs/keyboard.yaml": {
+      "current_blob": "a469ee1f41307b89edb6665077f6ba79c26f95ac",
+      "baseline_blob": "a469ee1f41307b89edb6665077f6ba79c26f95ac"
+    },
+    "configs/locomotion_mjlab.yaml": {
+      "current_blob": "1d6ee2e93315d54339e3cbd278b6816f59c87dcd",
+      "baseline_blob": "1d6ee2e93315d54339e3cbd278b6816f59c87dcd"
+    },
+    "controllers/keyboard_controller.py": {
+      "current_blob": "207fc27f38de2f910e1c3e45e3952fae88566507",
+      "baseline_blob": "207fc27f38de2f910e1c3e45e3952fae88566507"
+    },
+    "controllers/g1_mjlab_locomotion.py": {
+      "current_blob": "4a3aef1e44ccae28bfd7ebd1dea845b1e1c40850",
+      "baseline_blob": "4a3aef1e44ccae28bfd7ebd1dea845b1e1c40850"
+    },
+    "controllers/g1_joint_targets.py": {
+      "current_blob": "1a37f83e9d973a8d958ab704c8f529e1193aeb93",
+      "baseline_blob": "1a37f83e9d973a8d958ab704c8f529e1193aeb93"
+    },
+    "assets/factory/factory.usd": {
+      "current_blob": "b9a47f5eb44342fc19d9dc23d1bd3d01509976f9",
+      "baseline_blob": "b9a47f5eb44342fc19d9dc23d1bd3d01509976f9"
+    },
+    "assets/factory/factory_physics.usd": {
+      "current_blob": "9b12b2284b53a7e7ff616658c6dce8cd827444c7",
+      "baseline_blob": "9b12b2284b53a7e7ff616658c6dce8cd827444c7"
+    },
+    "assets/robot/unitree_model/G1/29dof/usd/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd": {
+      "current_blob": "4e5a6caea63909e23ff8629d96ba0cd7dce92756",
+      "baseline_blob": "4e5a6caea63909e23ff8629d96ba0cd7dce92756"
+    },
+    "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx": {
+      "current_blob": "b5fc25b7fefd34e59f5b659c6f410c6515e69619",
+      "baseline_blob": "b5fc25b7fefd34e59f5b659c6f410c6515e69619"
+    }
+  }
+}

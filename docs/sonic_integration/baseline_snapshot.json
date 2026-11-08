@@ -1,0 +1,50 @@
+﻿{
+    "date":  "2026-11-08T12:18:02.0382468+07:00",
+    "baseline_commit":  "77929fb97e0365b17df17e11693c5766f35d54d2",
+    "branch":  "feature/g1-sonic-controller",
+    "initial_worktree":  "clean",
+    "files":  [
+                  {
+                      "path":  "configs/factory_g1.json",
+                      "sha256":  "09b8bbc8087253070440668384855eaf0e6cd18592d1a2a4a4891dc58838ca6f",
+                      "git_blob":  "6ed2ca3fb6fcb0853e6db6c9cc0c5ebf22302105",
+                      "baseline_git_blob":  "6ed2ca3fb6fcb0853e6db6c9cc0c5ebf22302105"
+                  },
+                  {
+                      "path":  "configs/locomotion_mjlab.yaml",
+                      "sha256":  "641791d7434fb6e429136bd281190127331878d7f374d61033e3f6ed484e48ed",
+                      "git_blob":  "1d6ee2e93315d54339e3cbd278b6816f59c87dcd",
+                      "baseline_git_blob":  "1d6ee2e93315d54339e3cbd278b6816f59c87dcd"
+                  },
+                  {
+                      "path":  "configs/g1_robot.yaml",
+                      "sha256":  "4ed1dd2a0c4a94fb6d78e2bce35b3bb863c3157d39b28132e0f16a4d0887c2c3",
+                      "git_blob":  "94c748bd9e3c58ac228776fda70e8c7faeb6a4c2",
+                      "baseline_git_blob":  "94c748bd9e3c58ac228776fda70e8c7faeb6a4c2"
+                  },
+                  {
+                      "path":  "configs/keyboard.yaml",
+                      "sha256":  "6f812851ee72b0458ea0558539e8eb1453aa303354bd4a3511dafc2cea3ab48d",
+                      "git_blob":  "a469ee1f41307b89edb6665077f6ba79c26f95ac",
+                      "baseline_git_blob":  "a469ee1f41307b89edb6665077f6ba79c26f95ac"
+                  },
+                  {
+                      "path":  "assets/factory/factory.usd",
+                      "sha256":  "52ff6f2d765df7ad43f665eac214eaaa3bd442e2d86e2b25d0553f2cd78252b5",
+                      "git_blob":  "b9a47f5eb44342fc19d9dc23d1bd3d01509976f9",
+                      "baseline_git_blob":  "b9a47f5eb44342fc19d9dc23d1bd3d01509976f9"
+                  },
+                  {
+                      "path":  "assets/factory/factory_physics.usd",
+                      "sha256":  "c27388dca162662b3adaf5a8c2a984bc894b2ba57cb97ec75020b9eac4e22590",
+                      "git_blob":  "9b12b2284b53a7e7ff616658c6dce8cd827444c7",
+                      "baseline_git_blob":  "9b12b2284b53a7e7ff616658c6dce8cd827444c7"
+                  },
+                  {
+                      "path":  "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx",
+                      "sha256":  "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28",
+                      "git_blob":  "b5fc25b7fefd34e59f5b659c6f410c6515e69619",
+                      "baseline_git_blob":  "b5fc25b7fefd34e59f5b659c6f410c6515e69619"
+                  }
+              ]
+}

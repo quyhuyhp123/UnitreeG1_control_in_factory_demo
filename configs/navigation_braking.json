@@ -1,0 +1,14 @@
+{
+  "validated": true,
+  "initial_speed_m_s": 0.45978628199787347,
+  "max_base_displacement_after_zero_m": 0.11500186127219865,
+  "sample_seconds": 3,
+  "control_hz": 50,
+  "conservative_deceleration_m_s2": 0.32030460669271194,
+  "source": "Measured real PhysX G1 base displacement after command zero; factor-two distance conservatism",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261108_233917",
+  "date": "2026-11-08",
+  "scope": "Straight flat factory floor; not certified, not all-contact worst-case braking",
+  "checkpoint_sha256": "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28",
+  "physics_dt": 0.005
+}

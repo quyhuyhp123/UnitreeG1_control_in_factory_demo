@@ -24,3 +24,8 @@ logs/*
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# Official SONIC weights are downloaded and hash-verified locally.
+checkpoints/sonic/*.onnx
+checkpoints/sonic/*.pt
+checkpoints/sonic/*.part
