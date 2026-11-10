@@ -18,6 +18,16 @@ class PatrolScheduler:
     def transition(self,state,now,reason=''):
         self.state=state; self.entered=now; self.reason=reason
         self.events.append({'state':state,'time':now,'reason':reason,'completed':self.completed})
+    def configure(self,config,now):
+        validate_schedule(config)
+        if self.state not in ('IDLE','STOPPED','CYCLE_COMPLETE'): raise ValueError('STOP or wait at A before editing schedule')
+        if self.state=='CYCLE_COMPLETE' and config['clock_mode']!=self.config['clock_mode']:
+            raise ValueError('STOP before changing clock mode')
+        self.config=dict(config)
+        if self.state=='CYCLE_COMPLETE':
+            if not config['repeat_enabled'] or (config['max_cycles'] and self.completed>=config['max_cycles']):
+                self.transition('STOPPED',now,'Configured cycles complete')
+            else: self.deadline=self.entered+config['repeat_interval_seconds']
     def start(self,now):
         self.completed=0; self.goal='B'; self.transition('WAITING_START',now); self.deadline=now+self.config['start_delay_seconds']
     def update(self,now):

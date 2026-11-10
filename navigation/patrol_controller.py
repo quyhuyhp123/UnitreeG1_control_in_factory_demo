@@ -17,7 +17,7 @@ def validate_navigation(config):
     for group in ['local','safety']:
         if not all(isinstance(v,(int,float)) and math.isfinite(v) and v>0 for v in config[group].values()):
             raise ValueError('Navigation limits must be finite and positive')
-    if not .12<=config['local']['max_speed_m_s']<=.25 or config['local']['max_yaw_rate']>.6:
+    if not .12<=config['local']['max_speed_m_s']<=.35 or config['local']['max_yaw_rate']>.6:
         raise ValueError('Navigation velocity outside tested limits')
     if config['safety']['reaction_latency_seconds']<config['obstacle_update_seconds']+.2:
         raise ValueError('Reaction latency must include obstacle scan and velocity-filter delay')
@@ -155,9 +155,12 @@ class PatrolController:
     def plan_current(self,state):
         goal=self.b if self.scheduler.goal=='B' else self.a
         begin=time.perf_counter(); self.path=self.planner.plan(pose(state)[:2],goal[:2])
-        self.local.reset(self.path); self.planner_latency_ms=(time.perf_counter()-begin)*1000
-        self.scheduler.transition('MOVING_TO_'+self.scheduler.goal,self.now)
         leg=(self.scheduler.completed,self.scheduler.goal,self.return_only)
+        hold=self.active_leg==leg and self.local.position_reached and math.dist(pose(state)[:2],goal[:2])<.5
+        self.local.reset(self.path)
+        self.local.position_reached=hold
+        self.planner_latency_ms=(time.perf_counter()-begin)*1000
+        self.scheduler.transition('MOVING_TO_'+self.scheduler.goal,self.now)
         if self.active_leg!=leg:
             self.movement_started=self.now; self.progress_time=self.now
             self.best_distance=math.dist(pose(state)[:2],goal[:2]); self.progress_yaw=pose(state)[2]
@@ -232,8 +235,12 @@ class PatrolController:
             'goal':self.scheduler.goal,'point_a':self.a,'point_b':self.b,'position':state['base_position_m'],
             'heading_rad':pose(state)[2],'command':self.last_command,'actual_velocity':state['base_linear_velocity_world_m_s'],
             'distance_to_goal':self.last_distance,'path_deviation_m':self.deviation,'active_waypoint':self.local.index,
+            'arrival_position_hold':self.local.position_reached,
             'path_length_m':sum(math.dist(a,b) for a,b in zip(self.path,self.path[1:])),
             'completed_cycles':self.scheduler.completed,'cycle_index':self.scheduler.completed+1,
+            'max_cycles':self.scheduler.config['max_cycles'],'repeat_enabled':self.scheduler.config['repeat_enabled'],
+            'repeat_interval_seconds':self.scheduler.config['repeat_interval_seconds'],
+            'max_speed_m_s':self.config['local']['max_speed_m_s'],
             'cycle_durations_seconds':list(self.cycle_durations),
             'next_cycle_seconds':max(0,self.scheduler.deadline-self.now) if self.scheduler.state in ('WAITING_START','CYCLE_COMPLETE','WAITING_AT_B') else None,
             'nearest_obstacle_m':min((box_distance(point,o['bounds'])-self.grid.map.radius for o in self.detector.obstacles),default=None),

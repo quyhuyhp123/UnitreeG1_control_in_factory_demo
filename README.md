@@ -5,7 +5,11 @@
 Chạy `./run_sim.bat -Controller locomotion`, mở panel **G1 PATROL NAVIGATION**.
 Mặc định vẫn MANUAL, A lấy từ robot, B chưa đặt. Nhập A/B, nhấn **Apply A/B + Validate Route**,
 cấu hình lịch rồi **START PATROL**. Bộ điểm đã thử: A gần `(0,-4)`, B `(0,-2.5)`.
-Mặc định chờ 5 giây, đến B chờ 10 giây, về A rồi nghỉ 120 giây trước lượt tiếp theo.
+Mặc định chờ 5 giây, đến B chờ 10 giây, về A rồi nghỉ 5 giây trước lượt tiếp theo.
+Bật Repeat và đặt Max Cycles = 10 để chạy mười vòng A→B→A. Max Speed mặc định 0.35 m/s,
+cho phép 0.12–0.35 m/s; vẫn giảm tốc gần đích. Thời gian chờ dùng clock đã chọn;
+simulation chậm sẽ kéo dài thời gian chờ ngoài đời. Khi đang chờ tại A có thể sửa
+Interval/Speed rồi nhấn **Apply schedule / speed (while waiting)**.
 SPACE trong AUTO tạm dừng và giữ camera Follow; Resume phải chủ động trên UI.
 
 Patrol dùng A* và footprint trong làn cho phép, phản hồi PhysX và Locomotion RL hiện tại.

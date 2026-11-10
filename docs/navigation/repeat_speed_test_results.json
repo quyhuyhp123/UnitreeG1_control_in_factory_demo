@@ -1,0 +1,731 @@
+{
+  "status": "passed",
+  "checks": {
+    "cycle_complete": true,
+    "repeat_after_interval": true,
+    "return_has_in_place_turn": true,
+    "return_has_forward_walking": true,
+    "no_reverse_travel_command": true,
+    "turn_before_forward": true,
+    "forward_faces_a": true,
+    "no_runtime_fault": true
+  },
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_072202",
+  "patrol_directory": "D:\\unitree_g1\\logs\\patrol_runs\\20261110_072202",
+  "completed": 2,
+  "state": "STOPPED",
+  "reason": "Goal settled",
+  "configured_speed_m_s": 0.35,
+  "max_forward_command_m_s": 0.3499996997567418,
+  "configured_cycles": 2,
+  "repeat_interval_seconds": 5.0,
+  "transitions": [
+    {
+      "state": "WAITING_START",
+      "time": 1.98,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "PLANNING",
+      "time": 2.18,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_B",
+      "time": 2.18,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_AT_B",
+      "time": 9.2,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "REPLANNING",
+      "time": 10.2,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 10.2,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 23.34,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 23.36,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 23.36,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 24.36,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 27.62,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 27.64,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 27.64,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 28.64,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 29.14,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 29.64,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 31.22,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 31.24,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 31.24,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 32.24,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 32.72,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 33.24,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 34.86,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 34.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 34.88,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 35.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 36.74,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 36.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 36.88,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 37.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 38.24,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 38.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 39.0,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 39.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 40.56,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 40.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 40.9,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 41.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 42.7,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 42.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 42.88,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 43.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 44.28,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 44.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 45.62,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 45.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 45.88,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 46.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 47.2,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 47.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 47.94,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 48.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 49.18,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 49.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 49.92,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 50.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 51.66,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 51.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 51.88,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 52.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 53.18,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 53.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 54.04,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 54.88,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 56.56,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 56.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 56.58,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 57.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 58.18,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 58.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 58.92,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 59.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 59.96,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 60.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 61.14,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 61.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 62.44,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 62.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 62.58,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 63.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 64.38,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 64.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 65.52,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 0
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 65.58,
+      "reason": "",
+      "completed": 0
+    },
+    {
+      "state": "CYCLE_COMPLETE",
+      "time": 69.52,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "PLANNING",
+      "time": 74.52,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_B",
+      "time": 74.52,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 74.98,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_B",
+      "time": 75.52,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_AT_B",
+      "time": 83.74,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "REPLANNING",
+      "time": 84.74,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 84.74,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 85.18,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 85.74,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 86.48,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 86.74,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 99.14,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 99.16,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 99.16,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 100.16,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 101.36,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 101.38,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 101.38,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 102.38,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 104.32,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 104.34,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 104.34,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 105.34,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 105.92,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 106.34,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 114.16,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 114.18,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 114.26,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 115.18,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "WAITING_FOR_CLEAR_PATH",
+      "time": 115.92,
+      "reason": "Predicted trajectory/footprint blocked",
+      "completed": 1
+    },
+    {
+      "state": "MOVING_TO_A",
+      "time": 116.18,
+      "reason": "",
+      "completed": 1
+    },
+    {
+      "state": "STOPPED",
+      "time": 116.84,
+      "reason": "Configured cycles complete",
+      "completed": 2
+    }
+  ],
+  "return_rotation_samples": 241,
+  "return_forward_samples": 129,
+  "max_return_heading_error_rad": 0.19169223714333228,
+  "final_a_distance_m": 0.10533847351239486,
+  "fault": null
+}

@@ -44,6 +44,41 @@ class PlanningTests(unittest.TestCase):
 
 
 class ScheduleTests(unittest.TestCase):
+    def test_ten_cycles_repeat_exactly(self):
+        c=schedule(); c.update(max_cycles=10,start_delay_seconds=0,dwell_at_b_seconds=0,repeat_interval_seconds=5)
+        s=PatrolScheduler(c); now=0; s.start(now); s.update(now)
+        for index in range(10):
+            self.assertEqual(s.state,'PLANNING')
+            s.arrived(now+1); s.update(now+1); self.assertEqual(s.goal,'A')
+            s.arrived(now+2); self.assertEqual(s.completed,index+1)
+            if index<9:
+                self.assertEqual(s.state,'CYCLE_COMPLETE'); s.update(now+6.99)
+                self.assertEqual(s.state,'CYCLE_COMPLETE'); s.update(now+7)
+                self.assertEqual(s.state,'PLANNING')
+            now+=7
+        self.assertEqual(s.state,'STOPPED')
+    def test_wait_interval_can_be_shortened_without_restart(self):
+        c=schedule(); c['max_cycles']=10
+        s=PatrolScheduler(c); s.start(0); s.goal='A'; s.arrived(20)
+        c['repeat_interval_seconds']=5; s.configure(c,40); s.update(40)
+        self.assertEqual(s.state,'PLANNING'); self.assertEqual(s.completed,1)
+    def test_clock_change_while_waiting_rejected(self):
+        c=schedule(); s=PatrolScheduler(c); s.goal='A'; s.arrived(20)
+        c['clock_mode']='wall'
+        with self.assertRaises(ValueError): s.configure(c,21)
+        self.assertEqual(s.config['clock_mode'],'simulation')
+    def test_repeat_disabled_stops_even_with_ten_cycles(self):
+        c=schedule(); c.update(max_cycles=10,repeat_enabled=False)
+        s=PatrolScheduler(c); s.goal='A'; s.arrived(20)
+        self.assertEqual(s.state,'STOPPED'); self.assertEqual(s.completed,1)
+    def test_navigation_speed_limit(self):
+        import json
+        from pathlib import Path
+        from navigation.patrol_controller import validate_navigation
+        c=json.loads((Path(__file__).resolve().parents[1]/'configs/navigation.json').read_text())
+        c['local']['max_speed_m_s']=.35; validate_navigation(c)
+        c['local']['max_speed_m_s']=.36
+        with self.assertRaises(ValueError): validate_navigation(c)
     def test_repeat_after_completed_return(self):
         s=PatrolScheduler(schedule()); s.start(0); s.update(4); self.assertEqual(s.state,'WAITING_START')
         s.update(5); self.assertEqual(s.state,'PLANNING')
@@ -108,8 +143,12 @@ class MissionBudgetTests(unittest.TestCase):
         nav.now=1; nav.sim_time=1; nav.plan_current(state)
         nav.now=50; nav.sim_time=50; nav.plan_current(state)
         self.assertEqual(nav.movement_started,1)
+        state['base_position_m']=[0,.8,.78]; nav.local.position_reached=True
+        nav.plan_current(state)
+        self.assertTrue(nav.local.position_reached)
         nav.scheduler.goal='A'; nav.plan_current(state)
         self.assertEqual(nav.movement_started,50)
+        self.assertFalse(nav.local.position_reached)
     def test_stop_cannot_clear_fault(self):
         from navigation.patrol_controller import PatrolController
         from types import SimpleNamespace

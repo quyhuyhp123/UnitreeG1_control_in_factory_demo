@@ -1,6 +1,8 @@
 # Patrol scheduling
 
-Default settings are in `configs/patrol_schedule.json`: start delay 5 s, dwell at B 10 s, rest after a complete A→B→A cycle 120 s, repeat enabled, max cycles 0 (unlimited), movement timeout 180 s, blocked-path timeout 60 s, simulation clock. UI accepts 60, 90, 120 seconds or other finite nonnegative intervals. No catch-up cycles are generated.
+Default settings are in `configs/patrol_schedule.json`: start delay 5 s, dwell at B 10 s, rest after a complete A→B→A cycle 5 s (changed from 120 s on 2026-11-10), repeat enabled, max cycles 10 (0 still means unlimited), movement timeout 180 s, blocked-path timeout 60 s, simulation clock. UI still accepts 60, 90, 120 seconds or other finite nonnegative intervals. No catch-up cycles are generated.
+
+Max Cycles = 10 means ten complete returns, with Repeat enabled. It does not remove the rest interval. The panel shows completed/limit, Repeat and remaining wait with clock units and approximate real-time duration. `Apply schedule / speed (while waiting)` applies edits in IDLE, STOPPED or CYCLE_COMPLETE. A changed interval is measured from the original arrival at A, so shortening an already expired interval starts the next cycle on the next update without clearing the completed count. Stop first to change clock modes. Explicit saved configurations keep their own interval when loaded.
 
 Typical transitions:
 

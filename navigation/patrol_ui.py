@@ -35,14 +35,16 @@ class PatrolPanel:
                             ui.Button('Apply A/B + Validate Route',height=25,clicked_fn=lambda:self.call(self.apply_points))
                     with ui.CollapsableFrame('Schedule / limits',collapsed=True):
                         with ui.VStack(spacing=3):
-                            for label,key in [('Start delay s','start_delay_seconds'),('Interval after return s','repeat_interval_seconds'),('Dwell B s','dwell_at_b_seconds'),('Movement timeout s','movement_timeout_seconds'),('Obstacle wait timeout s','obstacle_wait_timeout_seconds'),('Max cycles (0 unlimited)','max_cycles')]:
+                            for label,key in [('Start delay s','start_delay_seconds'),('Wait after return A (clock s)','repeat_interval_seconds'),('Dwell B s','dwell_at_b_seconds'),('Movement timeout s','movement_timeout_seconds'),('Obstacle wait timeout s','obstacle_wait_timeout_seconds'),('Total A-B-A cycles (0 unlimited)','max_cycles')]:
                                 with ui.HStack(height=22):
                                     ui.Label(label,width=210); field=ui.FloatField(); field.model.set_value(nav.scheduler.config[key]); self.fields[key]=field.model
                             with ui.HStack(height=22):
                                 ui.Label('Repeat enabled',width=210); self.repeat=ui.CheckBox(); self.repeat.model.set_value(nav.scheduler.config['repeat_enabled'])
                             self.clock=ui.ComboBox(0 if nav.scheduler.config['clock_mode']=='simulation' else 1,'Simulation Time','Wall Time',height=22)
                             with ui.HStack(height=22):
-                                ui.Label('Max speed m/s (<= 0.25)',width=210); self.speed=ui.FloatField(); self.speed.model.set_value(nav.config['local']['max_speed_m_s'])
+                                ui.Label('Max speed m/s (0.12 - 0.35)',width=210); self.speed=ui.FloatField(); self.speed.model.set_value(nav.config['local']['max_speed_m_s'])
+                            ui.Label('Each cycle = A > B > A. Repeat must be enabled. Wait uses selected clock; simulation seconds may run slower than real time.',word_wrap=True,height=44)
+                            ui.Button('Apply schedule / speed (while waiting)',height=24,clicked_fn=lambda:self.call(self.apply_schedule))
                     with ui.HStack(height=26):
                         ui.Button('START PATROL',clicked_fn=lambda:self.call(self.start))
                         ui.Button('STOP',clicked_fn=lambda:self.call(nav.stop))
@@ -87,16 +89,17 @@ class PatrolPanel:
         self.speed.model.set_value(self.nav.config['local']['max_speed_m_s'])
     def apply_schedule(self):
         from navigation.patrol_scheduler import validate_schedule
-        if self.nav.scheduler.state not in ('IDLE','STOPPED'): raise ValueError('STOP before editing schedule')
+        if self.nav.scheduler.state not in ('IDLE','STOPPED','CYCLE_COMPLETE'): raise ValueError('STOP or wait at A before editing schedule')
         config={key:field.as_float for key,field in self.fields.items()}
         if config['max_cycles']!=int(config['max_cycles']): raise ValueError('Max cycles must be integer')
         config['max_cycles']=int(config['max_cycles']); config['repeat_enabled']=self.repeat.model.as_bool
         config['clock_mode']='simulation' if self.clock.model.get_item_value_model().as_int==0 else 'wall'
         validate_schedule(config)
         speed=self.speed.model.as_float
-        if not math.isfinite(speed) or not .12<=speed<=.25: raise ValueError('Speed must be 0.12 to 0.25 m/s')
-        self.nav.scheduler.config=config; self.nav.config['local']['max_speed_m_s']=speed
+        if not math.isfinite(speed) or not .12<=speed<=.35: raise ValueError('Speed must be 0.12 to 0.35 m/s')
+        self.nav.scheduler.configure(config,self.nav.now); self.nav.config['local']['max_speed_m_s']=speed
         self.nav.before_tick(self.runtime.timeline.is_playing())
+        self.nav.reason='Schedule/speed applied; wait measured from completed return to A'
     def start(self):
         self.apply_schedule(); self.nav.start(); self.mode.model.get_item_value_model().set_value(1)
     def save(self): self.apply_schedule(); self.nav.save(); self.nav.reason='Saved configs/patrol_user.json'
@@ -149,9 +152,15 @@ class PatrolPanel:
         self.last_update=now; s=self.nav.snapshot()
         gpu=s['gpu_memory'].get('gpu_device_total_used_mib') if s['gpu_memory'] else None
         clearance='none' if s['nearest_obstacle_m'] is None else f'{s["nearest_obstacle_m"]:.2f}'
+        wait=s['next_cycle_seconds']
+        wait_text='-' if wait is None else f'{wait:.1f} s ({s["clock_mode"]})'
+        if wait is not None and s['clock_mode']=='simulation' and s['loop_fps']>0:
+            wait_text+=f' ~{wait*self.runtime.loco_cfg["control_hz"]/s["loop_fps"]:.0f} wall s'
+        if s['state']=='CYCLE_COMPLETE': wait_text='Waiting at A: '+wait_text
         self.monitor.text=(f'{s["mode"]} | {s["state"]}\nGoal {s["goal"]} | Distance {s["distance_to_goal"]}\n'
             f'XY {s["position"][0]:.2f}, {s["position"][1]:.2f} | speed {math.hypot(*s["actual_velocity"][:2]):.2f}\n'
-            f'Cycle {s["cycle_index"]} | completed {s["completed_cycles"]} | wait {s["next_cycle_seconds"]}\n'
+            f'Completed {s["completed_cycles"]}/{self.nav.scheduler.config["max_cycles"] or "unlimited"} | Repeat {self.nav.scheduler.config["repeat_enabled"]}\n'
+            f'{wait_text}\n'
             f'Waypoint {s["active_waypoint"]} | path {s["path_length_m"]:.2f}m\n'
             f'Humans: {s["human_count"]} | within 1.5m: {s["human_within_1_5m"]} (scene truth)\n'
             f'{s["reason"]}\nClearance {clearance} m | deviation {s["path_deviation_m"]:.2f} m\n'
