@@ -25,11 +25,12 @@ class KeyboardController:
         self.focused=False
         self.running=False
         self.enabled=config.get('capture_keys_on_start',True)
-        self.space_down=False
+        self.stop_down=False
         self.reset_requested=False
         self.reason='Waiting for viewport focus'
         self.event_count=0
         self.stop_generation=0
+        self.follow_generation=0
 
     @staticmethod
     def _limits(value):
@@ -73,21 +74,24 @@ class KeyboardController:
             self.pressed.discard(key)
             self.held_keys.discard(key)
             self.blocked.discard(key)
-            if action=='stop': self.space_down=False
+            if action=='stop': self.stop_down=False
             return True
         if event_type!='PRESS': return bool(self.enabled and self.focused)
         if not (self.enabled and self.focused): return False
+        if action=='follow_camera':
+            self.follow_generation+=1
+            return True
         if action=='stop':
             self.stop_generation+=1
-            self.clear('SPACE: target command zero')
-            self.space_down=True
+            self.clear('Stop: target command zero')
+            self.stop_down=True
             self.held_keys.add(key)
             return True
         if action=='reset':
             self.request_reset()
             self.held_keys.add(key)
             return True
-        if not self.running or self.space_down or self.reset_requested:
+        if not self.running or self.stop_down or self.reset_requested:
             self.blocked.add(key)
             return True
         if key not in self.blocked:
@@ -97,7 +101,7 @@ class KeyboardController:
         return True
 
     def desired(self):
-        if not (self.enabled and self.focused and self.running) or self.space_down or self.reset_requested: return [0.0]*3
+        if not (self.enabled and self.focused and self.running) or self.stop_down or self.reset_requested: return [0.0]*3
         actions={self.mapping[k] for k in self.pressed}
         forward,backward,lateral,yaw=self.speeds
         def opposed(positive,negative,p,n):
@@ -120,7 +124,7 @@ class KeyboardController:
     def tick(self,dt):
         if not math.isfinite(dt) or dt<0: raise ValueError('Invalid control dt')
         desired=self.desired()
-        if not (self.enabled and self.focused and self.running) or self.space_down or self.reset_requested:
+        if not (self.enabled and self.focused and self.running) or self.stop_down or self.reset_requested:
             self.command=[0.0]*3
             return list(self.command)
         for i,(current,target) in enumerate(zip(self.command,desired)):

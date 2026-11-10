@@ -10,7 +10,7 @@ Bật Repeat và đặt Max Cycles = 10 để chạy mười vòng A→B→A. Ma
 cho phép 0.12–0.35 m/s; vẫn giảm tốc gần đích. Thời gian chờ dùng clock đã chọn;
 simulation chậm sẽ kéo dài thời gian chờ ngoài đời. Khi đang chờ tại A có thể sửa
 Interval/Speed rồi nhấn **Apply schedule / speed (while waiting)**.
-SPACE trong AUTO tạm dừng và giữ camera Follow; Resume phải chủ động trên UI.
+SPACE chỉ khóa camera Follow, không dừng robot hoặc tuần tra. X dừng lệnh tay / tạm dừng AUTO; Resume phải chủ động trên UI.
 
 Patrol dùng A* và footprint trong làn cho phép, phản hồi PhysX và Locomotion RL hiện tại.
 Vật cản/người được đọc từ **SIM GROUND TRUTH**, chưa có AI perception. SONIC vẫn bị khóa.
@@ -63,7 +63,8 @@ Khi cửa sổ mở, click viewport hoặc bảng **G1 Keyboard Control**. Simul
 | D / → | Quay phải tại chỗ, yaw target -0.6 rad/s |
 | Q / E | Ngang trái / phải |
 | W+A hoặc ↑+→ | Đi và quay |
-| SPACE | Đưa target velocity về 0 và khóa camera chính về bám robot |
+| SPACE | Khóa camera chính về bám robot, không dừng di chuyển |
+| X | Dừng lệnh tay / tạm dừng AUTO |
 | R | Yêu cầu reset an toàn |
 
 Giữ phím để đi; nhả để giảm target về 0. Phím đối nghịch triệt tiêu. Robot vẫn có quán tính; target=0 không phải phanh cơ học tức thì. Không có tránh chướng ngại tự động. Đổ thì runtime Pause; dùng R, Resume và nhấn mới. Reset dễ kiểm tra nhất bằng Pause → R → Resume. Đóng cửa sổ để kết thúc.
@@ -74,7 +75,7 @@ Mặc định **Free Camera**, không tự kéo camera theo robot. Dùng chuột
 
 **Cập nhật camera đầu:** góc trên bên phải có G1 Head Camera | LIVE, camera gắn trên đầu qua torso_link, hướng theo robot, ảnh RGB xem trực tiếp 320×180. SPACE đưa camera chính về Follow ở phía sau robot; chọn Camera: Free để di chuyển lại bằng chuột. Ảnh head camera chưa được dùng trong observation của policy, không có depth/LiDAR hay vision AI. Hiện có viewport chính và một viewport nhỏ head camera theo yêu cầu mới; các ghi chú một viewport/không camera ở báo cáo cũ là lịch sử.
 
-**S/↓ bị triệt tiêu do W kẹt:** log native từng ghi nhận W còn trong pressed_keys khi bấm lùi, làm vx=0. Đã thêm release-only polling GetAsyncKeyState trên Windows để loại phím đã thả bị mất KEY_RELEASE; không tạo PRESS từ polling. Nếu thật sự giữ cả W và S/↓, lệnh vẫn triệt tiêu đúng. Khi lùi hãy thả phím tiến, kiểm tra HUD Keys và Desired vx âm. SPACE cũng xóa lệnh giữ cũ.
+**S/↓ bị triệt tiêu do W kẹt:** log native từng ghi nhận W còn trong pressed_keys khi bấm lùi, làm vx=0. Đã thêm release-only polling GetAsyncKeyState trên Windows để loại phím đã thả bị mất KEY_RELEASE; không tạo PRESS từ polling. Nếu thật sự giữ cả W và S/↓, lệnh vẫn triệt tiêu đúng. Khi lùi hãy thả phím tiến, kiểm tra HUD Keys và Desired vx âm. X xóa lệnh giữ cũ.
 
 Thao tác chuột theo [Omniverse viewport navigation](https://docs.omniverse.nvidia.com/extensions/latest/ext_core/ext_viewport/navigation.html). Alt+chuột trái cũng orbit được, nhưng shortcut Alt hiện xóa lệnh robot đang giữ; thả rồi nhấn lại phím robot sau thao tác đó. Để vừa điều khiển robot vừa nhìn quanh, dùng chuột phải/giữa và bánh xe, không dùng Alt.
 

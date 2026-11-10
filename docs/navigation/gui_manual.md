@@ -20,7 +20,7 @@ Mặc định robot vẫn ở MANUAL, gần cửa `[0, -4]`, nhìn theo +Y. Đi�
 
 **STOP** hủy nhiệm vụ và đưa mục tiêu về 0, vẫn giữ AUTO để WASD không vô tình di chuyển robot. Muốn điều khiển tay: chọn MANUAL, nhấn **Apply Mode / explicit Manual takeover**, rồi nhấn phím mới. Nhập số trong panel không được coi là focus điều khiển tay.
 
-**SPACE trong AUTO**: PAUSE nhiệm vụ, đưa lệnh về 0 và giữ hành vi chuyển camera Follow đang có. Nhả SPACE không tự chạy tiếp; dùng **RESUME Auto**. Pause timeline cũng yêu cầu Resume patrol riêng sau khi bật lại simulation. Mất focus vẫn xóa phím manual bị giữ.
+**SPACE** chỉ chuyển camera sang Follow, không xóa phím đang giữ, không đổi lệnh vận tốc và không PAUSE AUTO. **X** đưa lệnh tay về 0 hoặc PAUSE AUTO; dùng **RESUME Auto** để tiếp tục. Pause timeline vẫn yêu cầu Resume riêng. Mất focus vẫn xóa phím manual bị giữ.
 
 **FAULT**: đọc lý do, loại bỏ nguyên nhân, nhấn **Acknowledge FAULT**, rồi chủ động START lại. STOP hoặc chọn mode khác không bỏ qua latch. **RESET ROBOT** dùng cơ chế reset an toàn hiện có và hủy nhiệm vụ; không dùng để vượt vật cản. **RETURN TO A** chỉ dùng sau STOP/PAUSE và khi robot đã chậm, có path hợp lệ; chỉ quay về A, không tự khởi động thêm chu trình.
 

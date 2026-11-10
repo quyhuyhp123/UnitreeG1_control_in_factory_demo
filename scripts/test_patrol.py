@@ -44,7 +44,7 @@ def main():
         # Calibrate actual target-zero braking from straight walking, no arbitrary deceleration assertion.
         runtime.inject('W'); walking=advance(4); runtime.inject('W','RELEASE')
         start=pose(runtime.last_state); v0=math.hypot(*runtime.last_state['base_linear_velocity_world_m_s'][:2])
-        runtime.inject('SPACE'); runtime.inject('SPACE','RELEASE'); stopped=advance(3)
+        runtime.inject('X'); runtime.inject('X','RELEASE'); stopped=advance(3)
         distances=[math.dist(start[:2],r['base_position_m'][:2]) for r in stopped]
         distance=max(distances); settled=all(math.hypot(*r['base_linear_velocity_world_m_s'][:2])<.1 for r in stopped[-25:])
         calibration={'validated':settled and v0>.15 and not runtime.fault,'initial_speed_m_s':v0,
@@ -79,14 +79,14 @@ def main():
         starts=[t['time'] for t in nav.transitions if t['state']=='PLANNING']
         add('repeat_interval_after_completion',bool(completions) and any(t>=completions[0]+2 for t in starts),completions=completions,starts=starts)
         add('lane_trajectory',all(nav.grid.map.safe(s['position'][:2]) for s in trace),samples=len(trace))
-        # Explicit keyboard input during Auto cannot add to selected velocity. SPACE pauses.
+        # Explicit keyboard input during Auto cannot add to selected velocity. X pauses.
         if nav.scheduler.state!='FAULT':
             reset(); nav.a=list(pose(runtime.last_state)); nav.b=[0,-2.5,None]
             nav.scheduler.config.update(start_delay_seconds=0,max_cycles=1); nav.start(); advance(1)
             runtime.inject('D'); advance(.2); runtime.inject('D','RELEASE')
             add('auto_ignores_wasd',nav.selector.mode=='AUTO PATROL' and abs(nav.last_command[2])<.2,auto_command=nav.last_command)
-            runtime.inject('SPACE'); advance(.1); runtime.inject('SPACE','RELEASE')
-            add('space_pauses_auto',nav.scheduler.state=='PAUSED' and nav.last_command==[0,0,0],state=nav.scheduler.state)
+            runtime.inject('X'); advance(.1); runtime.inject('X','RELEASE')
+            add('x_pauses_auto',nav.scheduler.state=='PAUSED' and nav.last_command==[0,0,0],state=nav.scheduler.state)
             runtime.timeline.pause(); app.update(); runtime.tick(); old_sim=nav.sim_time
             for _ in range(8): app.update(); runtime.tick()
             add('pause_clock',nav.sim_time==old_sim,clock_before=old_sim,clock_after=nav.sim_time)

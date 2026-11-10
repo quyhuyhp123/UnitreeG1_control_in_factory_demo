@@ -170,7 +170,7 @@ class PatrolController:
     def command(self,dt):
         if self.mode=='MANUAL': return self.record(self.runtime.last_state,self.runtime.keys.tick(dt))
         if self.runtime.keys.stop_generation!=self.last_stop_generation:
-            self.last_stop_generation=self.runtime.keys.stop_generation; self.pause('SPACE pauses Auto; explicit Resume required')
+            self.last_stop_generation=self.runtime.keys.stop_generation; self.pause('X pauses Auto; explicit Resume required')
         self.runtime.keys.command=[0.,0.,0.] # WASD never contributes to AUTO command.
         state=self.runtime.policy.feedback.read_feedback()
         self.velocity_history.append(state['base_linear_velocity_world_m_s'][:2])

@@ -46,7 +46,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         self.contact_subscription=None
         self.head_window=None
         self.head_widget=None
-        self.last_stop_generation=0
+        self.last_follow_generation=0
         super().__init__(app,logical_test_keyboard=self_test,scene_setup=self._compose,
             runtime_config={'scene_output':'assets/robot/g1_factory_base.usd','locomotion_config':cfg['locomotion_config'],
                 'keyboard':cfg.get('keyboard_overrides',{}),'locomotion':{
@@ -408,8 +408,8 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             raise
         if nav is not None and hasattr(self,'patrol_panel'): self.patrol_panel.update()
         if result is not None: self.last_inference_ms=result.get('inference_ms',0)
-        if self.keys.stop_generation!=self.last_stop_generation:
-            self.last_stop_generation=self.keys.stop_generation
+        if self.keys.follow_generation!=self.last_follow_generation:
+            self.last_follow_generation=self.keys.follow_generation
             self.set_camera_mode('follow')
         self.update_camera()
         self._bind_render_camera(self.context['viewport'])

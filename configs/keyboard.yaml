@@ -11,7 +11,7 @@
     "A": "turn_left", "LEFT": "turn_left",
     "D": "turn_right", "RIGHT": "turn_right",
     "Q": "lateral_left", "E": "lateral_right",
-    "SPACE": "stop", "R": "reset"
+    "SPACE": "follow_camera", "X": "stop", "R": "reset"
   },
   "reset_max_linear_speed": 0.15,
   "reset_max_angular_speed": 0.5,

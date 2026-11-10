@@ -42,9 +42,12 @@ def main():
                 'stale_W_removed':'W' not in runtime.keys.pressed,'fault':runtime.fault,
                 'passed':bool(delta[0]<-.2 and command[0]<-.3 and not runtime.fault)}
             report['cases'].append(case); print('REVERSE_TEST '+json.dumps(case),flush=True)
-        reset(); runtime.set_camera_mode('free'); runtime.inject('SPACE'); runtime.tick()
-        report['space_stops_and_locks_camera']=runtime.keys.command==[0,0,0] and runtime.factory_cfg['camera']['mode']=='follow'
+        reset(); runtime.inject('W'); advance(.5)
+        runtime.set_camera_mode('free'); stop_before=runtime.keys.stop_generation
+        runtime.inject('SPACE'); advance(.02)
+        report['space_follows_without_stopping']=runtime.keys.command[0]>0 and runtime.keys.stop_generation==stop_before and runtime.factory_cfg['camera']['mode']=='follow'
         runtime.inject('SPACE','RELEASE')
+        runtime.inject('W','RELEASE'); advance(2)
         camera=runtime.stage.GetPrimAtPath(runtime.head_camera_path)
         local_before=UsdGeom.Xformable(camera).GetLocalTransformation()
         world_before=UsdGeom.XformCache().GetLocalToWorldTransform(camera)
@@ -57,7 +60,7 @@ def main():
         runtime.capture_head_preview(runtime.directory/'head_camera.png')
         report['head_image_saved']=(runtime.directory/'head_camera.png').is_file()
         report['status']='passed' if all(c['passed'] for c in report['cases']) and all(report[k] for k in [
-            'space_stops_and_locks_camera','head_camera_attached_to_torso','head_camera_follows_robot','head_image_saved']) else 'failed'
+            'space_follows_without_stopping','head_camera_attached_to_torso','head_camera_follows_robot','head_image_saved']) else 'failed'
         (ROOT/'logs/reverse_head_camera_result.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
         print('REVERSE_HEAD_RESULT '+json.dumps(report),flush=True)
         print('PREVIEW_READY',flush=True)

@@ -100,12 +100,12 @@ class G1KeyboardRuntime:
                 self.label_note=ui.Label('',height=50 if compact else 75,word_wrap=True)
                 with ui.HStack(height=30):
                     ui.Button('Pause / Resume',clicked_fn=self.toggle_pause)
-                    ui.Button('Stop [SPACE]',clicked_fn=self.stop_command)
+                    ui.Button('Stop [X]',clicked_fn=self.stop_command)
                     ui.Button('Reset [R]',clicked_fn=self.keys.request_reset)
                 ui.Button('Enable / Disable keyboard capture',height=30,clicked_fn=lambda:self.keys.set_enabled(not self.keys.enabled))
                 turning=('A/Left and D/Right: turn in place.\nPure yaw uses vx=vy=0.' if self.loco_cfg.get('backend')=='unitree_mjlab' else
                     'A/D alone: in-place turning not achieved.\nHold W+A or W+D for walking turns.')
-                ui.Label('W/Up forward | S/Down backward\nA/Left yaw+ | D/Right yaw- | Q/E sideways\n'+turning+'\nSPACE: stop + follow camera. Release to brake.',word_wrap=True,height=70 if compact else 90)
+                ui.Label('W/Up forward | S/Down backward\nA/Left yaw+ | D/Right yaw- | Q/E sideways\n'+turning+'\nSPACE: follow camera only. X: stop.',word_wrap=True,height=70 if compact else 90)
                 if hasattr(self,'build_camera_controls'): self.build_camera_controls()
                 if hasattr(self,'build_controller_controls'): self.build_controller_controls()
 
@@ -127,8 +127,8 @@ class G1KeyboardRuntime:
         else: self.timeline.play()
 
     def stop_command(self):
-        self.keys.handle_key('SPACE','PRESS')
-        self.keys.handle_key('SPACE','RELEASE')
+        self.keys.handle_key('X','PRESS')
+        self.keys.handle_key('X','RELEASE')
 
     def inject(self,key,kind='PRESS'):
         """Test-only logical Carb device, not an OS key or fake policy."""

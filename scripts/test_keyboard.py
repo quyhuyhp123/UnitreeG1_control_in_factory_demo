@@ -89,10 +89,10 @@ def integration_tests(runtime):
     smooth=all(abs(b-a)<=runtime.keys.decel[0]/runtime.loco_cfg['control_hz']+1e-6 for a,b in zip(commands,commands[1:]))
     add(13,'Release decelerates command to zero',smooth and abs(commands[-1])<1e-9,None,final_command=runtime.keys.command)
     reset_case(); runtime.inject('W'); advance(2)
-    runtime.inject('SPACE'); rows=advance(.02)
+    runtime.inject('X'); rows=advance(.02)
     zero=rows and rows[0]['applied_command']==[0,0,0]
-    runtime.inject('SPACE','RELEASE'); runtime.inject('W','REPEAT'); more=advance(.4)
-    add(14,'SPACE immediate zero; stale hold cannot restart',zero and all(r['applied_command']==[0,0,0] for r in more))
+    runtime.inject('X','RELEASE'); runtime.inject('W','REPEAT'); more=advance(.4)
+    add(14,'X immediate zero; stale hold cannot restart',zero and all(r['applied_command']==[0,0,0] for r in more))
     release()
     reset_case(); runtime.inject('W'); advance(2)
     release(); runtime.timeline.pause(); runtime.app.update()

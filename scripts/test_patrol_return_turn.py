@@ -8,6 +8,7 @@ def main():
     parser.add_argument('--cycles',type=int,default=1)
     parser.add_argument('--speed',type=float,default=.35)
     parser.add_argument('--interval',type=float,default=5.)
+    parser.add_argument('--test-space',action='store_true')
     args,_=parser.parse_known_args()
     if args.cycles<1: raise ValueError('cycles must be positive')
     from isaacsim import SimulationApp
@@ -25,9 +26,18 @@ def main():
         from navigation.patrol_controller import validate_navigation
         validate_navigation(nav.config)
         nav.validate_points(); nav.scheduler.config.update(start_delay_seconds=.2,dwell_at_b_seconds=1.,repeat_interval_seconds=args.interval,repeat_enabled=True,max_cycles=args.cycles)
-        nav.start(); rows=[]
+        nav.start(); rows=[]; space_check=None
         for i in range(args.cycles*120*50):
+            inject_space=args.test_space and space_check is None and nav.scheduler.state=='MOVING_TO_B' and nav.last_command[0]>.1
+            if inject_space:
+                runtime.set_camera_mode('free'); stop_before=runtime.keys.stop_generation
+                runtime.inject('SPACE'); runtime.inject('SPACE','RELEASE')
             app.update(); runtime.tick()
+            if inject_space:
+                space_check={'camera_follow':runtime.factory_cfg['camera']['mode']=='follow',
+                    'patrol_continues':nav.scheduler.state=='MOVING_TO_B',
+                    'command_continues':nav.last_command[0]>.05,
+                    'no_stop_event':runtime.keys.stop_generation==stop_before}
             if i%5==0: rows.append(nav.snapshot())
             if runtime.fault or nav.scheduler.state in ('FAULT','STOPPED'): break
         returning=[r for r in rows if r['state']=='MOVING_TO_A']
@@ -44,6 +54,7 @@ def main():
                 'turn_before_forward':bool(rotating and walking) and rotating[0]['sim_time']<walking[0]['sim_time'],
                 'forward_faces_a':bool(errors) and max(errors)<.7,
                 'no_runtime_fault':not runtime.fault}
+        if args.test_space: checks['space_camera_without_stop']=bool(space_check) and all(space_check.values())
         report.update(status='passed' if all(checks.values()) else 'failed',checks=checks,
             run_directory=str(runtime.directory),patrol_directory=str(nav.directory),
             completed=nav.scheduler.completed,state=nav.scheduler.state,reason=nav.reason,
@@ -52,12 +63,13 @@ def main():
             return_rotation_samples=len(rotating),return_forward_samples=len(walking),
             max_return_heading_error_rad=max(errors,default=None),
             final_a_distance_m=math.dist(pose(runtime.last_state)[:2],nav.a[:2]),fault=runtime.fault)
+        if args.test_space: report['space_check']=space_check
         (nav.directory/'return_turn_trace.json').write_text(json.dumps(rows,indent=2))
         print('RETURN_TURN_RESULT '+json.dumps(report),flush=True)
     except BaseException as exc:
         report.update(status='failed',error=str(exc)); raise
     finally:
-        name='repeat_speed_test_results.json' if args.cycles>1 else 'return_turn_test_results.json'
+        name='space_camera_test_results.json' if args.test_space else ('repeat_speed_test_results.json' if args.cycles>1 else 'return_turn_test_results.json')
         (ROOT/'docs/navigation'/name).write_text(json.dumps(report,indent=2))
         if runtime: runtime.close()
         app.close()

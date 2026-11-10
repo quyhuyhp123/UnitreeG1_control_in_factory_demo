@@ -41,11 +41,11 @@ for _ in range(100):
     previous=current
 assert c.command==[0,0,0]
 results+=['repeat does not accumulate','release decelerates']
-for trigger in ['focus','pause','space']:
+for trigger in ['focus','pause','stop']:
     c=hold(['W'])
     if trigger=='focus': c.set_focus(False); c.set_focus(True)
     elif trigger=='pause': c.set_running(False); c.handle_key('S','PRESS'); c.set_running(True)
-    else: c.handle_key('SPACE','PRESS'); c.handle_key('SPACE','RELEASE')
+    else: c.handle_key('X','PRESS'); c.handle_key('X','RELEASE')
     c.handle_key('W','REPEAT')
     assert c.tick(.02)==[0,0,0]
     c.handle_key('W','RELEASE'); c.handle_key('W','PRESS')
@@ -63,6 +63,13 @@ assert c.desired()==[0,0,0]
 c.reconcile_released_keys(lambda key:key=='S')
 assert c.desired()[0]<0 and c.pressed=={'S'}
 results+=['physical opposite keys still cancel','lost W release reconciles and allows reverse']
+c=hold(['W']); before=c.command[:]; stop_before=c.stop_generation
+c.handle_key('SPACE','PRESS'); c.handle_key('SPACE','REPEAT')
+assert c.tick(.02)==before and 'W' in c.pressed
+assert c.follow_generation==1 and c.stop_generation==stop_before
+c.handle_key('SPACE','RELEASE')
+assert c.tick(.02)==before
+results.append('SPACE only requests camera follow; held W and velocity preserved')
 report={'status':'passed','kind':'unit_checks_not_physics','checks':results}
 (ROOT/'logs/keyboard_contract_result.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
 print(json.dumps(report))

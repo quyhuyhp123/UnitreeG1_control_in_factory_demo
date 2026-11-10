@@ -62,7 +62,7 @@ class PatrolPanel:
                         ui.Button('Top View',clicked_fn=lambda:self.call(self.top_view))
                         ui.Button('Show / Hide Path',clicked_fn=self.toggle_map)
                     self.monitor=ui.Label('',height=210,word_wrap=True)
-                    self.message=ui.Label('B must be selected explicitly. SPACE pauses Auto; Resume is explicit.',height=90,word_wrap=True)
+                    self.message=ui.Label('B must be selected explicitly. SPACE follows camera only. X pauses Auto; Resume is explicit.',height=90,word_wrap=True)
         self.draw()
 
     def call(self,fn):
