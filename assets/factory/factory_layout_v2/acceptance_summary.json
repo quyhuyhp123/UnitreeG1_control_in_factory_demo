@@ -1,0 +1,13 @@
+{
+  "inner_equal_dimensions": true,
+  "inner_count": 8,
+  "outer_equal_dimensions": true,
+  "outer_count": 6,
+  "standing_operator_count": 14,
+  "standing_one_per_machine": true,
+  "roof_present": true,
+  "door_open": true,
+  "all_markers_connected": true,
+  "spawn_safe": true,
+  "tracked_files_modified": []
+}

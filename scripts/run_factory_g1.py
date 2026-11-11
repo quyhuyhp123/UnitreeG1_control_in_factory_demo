@@ -10,6 +10,11 @@ def preflight(cfg,flat):
         if not path.is_file(): raise FileNotFoundError(f'Missing {label}: {path}')
         return path
     if not flat: file(cfg['factory_usd'],'USD')
+    if cfg.get('factory_id')=='v2' and not flat:
+        source=file(cfg['source_factory_usd'],'V2 source USD')
+        if hashlib.sha256(source.read_bytes()).hexdigest()!=cfg['source_factory_sha256']: raise ValueError('Factory V2 source changed; rebuild physics/navigation composition')
+        nav=json.loads(file(cfg['navigation_map'],'V2 navigation map').read_text())
+        if nav.get('factory_id')!='v2' or nav.get('source_factory_sha256')!=cfg['source_factory_sha256']: raise ValueError('V2 navigation map identity mismatch')
     loco=json.loads(file(cfg['locomotion_config'],'locomotion config').read_text(encoding='utf-8-sig'))
     checkpoint=file(cfg['checkpoint'],'checkpoint')
     if hashlib.sha256(checkpoint.read_bytes()).hexdigest()!=loco['checkpoint_sha256']: raise ValueError('Checkpoint hash mismatch: select a verified matching policy/config')
@@ -65,7 +70,8 @@ def validation(runtime):
     def motion(key,keys,axis,sign):
         reset(); before=runtime.policy.feedback.read_feedback()
         for k in keys: runtime.inject(k)
-        rows=advance(3.5)
+        seconds=1.4 if runtime.factory_cfg.get('factory_id')=='v2' and axis==0 and sign<0 else 3.5
+        rows=advance(seconds)
         after=runtime.policy.feedback.read_feedback()
         release(); stop=advance(2)
         delta=np.array(after['base_position_m'])-np.array(before['base_position_m'])
@@ -96,7 +102,8 @@ def validation(runtime):
     if not runtime.flat:
         reset(); runtime.contact_counts.pop('obstacle',None); runtime.contact_examples.clear()
         runtime.inject('W'); trajectory=[]
-        for _ in range(40*runtime.loco_cfg['control_hz']):
+        collision_seconds=80 if runtime.factory_cfg.get('factory_id')=='v2' else 40
+        for _ in range(collision_seconds*runtime.loco_cfg['control_hz']):
             runtime.app.update(); row=runtime.tick()
             trajectory.append(runtime.last_state['base_position_m'])
             if runtime.fault: break
@@ -104,7 +111,8 @@ def validation(runtime):
                 advance(.5); break
         release()
         contacts=runtime.contact_counts.get('obstacle',0)
-        inside=all(abs(p[0])<5.15 and abs(p[1])<5.15 and p[2]>.35 for p in trajectory)
+        floor=runtime.navigation.detector.floor
+        inside=all(all(floor[0][i]-.15<p[i]<floor[1][i]+.15 for i in [0,1]) and p[2]>.35 for p in trajectory)
         add('H',contacts>0 and inside,contact_points=contacts,contact_examples=runtime.contact_examples,
             trajectory_end_m=trajectory[-1],base_stayed_inside_factory=inside,fault=runtime.fault,
             scope='Actual G1/factory contact reports and base trajectory; not an exhaustive geometric penetration proof')
@@ -137,7 +145,8 @@ def validation(runtime):
 
 def main():
     parser=argparse.ArgumentParser()
-    parser.add_argument('--config',type=Path,default=ROOT/'configs/factory_g1.json')
+    parser.add_argument('--config',type=Path)
+    parser.add_argument('--factory',choices=['v1','v2'])
     parser.add_argument('--flat',action='store_true'); parser.add_argument('--self-test',action='store_true')
     parser.add_argument('--headless',action='store_true'); parser.add_argument('--duration',type=float,default=0)
     parser.add_argument('--overview',action='store_true')
@@ -147,7 +156,8 @@ def main():
     try:
         from controllers.controller_selector import validate_selection
         validate_selection(args.controller)
-        cfg=json.loads(args.config.read_text(encoding='utf-8-sig'))
+        from controllers.factory_selector import load_factory
+        cfg=load_factory(args.factory,args.config)
         if args.overview: cfg['camera']['mode']='overview'
         preflight(cfg,args.flat)
         from isaacsim import SimulationApp

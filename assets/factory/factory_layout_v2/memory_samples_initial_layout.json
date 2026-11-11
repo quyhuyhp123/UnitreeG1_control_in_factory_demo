@@ -1,0 +1,82 @@
+{
+  "scope": "Sampled Blender working set and whole-device GPU usage; not guaranteed peak and not Isaac memory validation",
+  "samples": [
+    {
+      "blender_working_set_bytes": 12681216,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 0.045
+    },
+    {
+      "blender_working_set_bytes": 112787456,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 0.195
+    },
+    {
+      "blender_working_set_bytes": 152473600,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 0.339
+    },
+    {
+      "blender_working_set_bytes": 170995712,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 0.474
+    },
+    {
+      "blender_working_set_bytes": 208924672,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 0.614
+    },
+    {
+      "blender_working_set_bytes": 209793024,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 0.755
+    },
+    {
+      "blender_working_set_bytes": 209858560,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 0.896
+    },
+    {
+      "blender_working_set_bytes": 209989632,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 1.039
+    },
+    {
+      "blender_working_set_bytes": 237969408,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 1.182
+    },
+    {
+      "blender_working_set_bytes": 259686400,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 1.32
+    },
+    {
+      "blender_working_set_bytes": 276905984,
+      "gpu_total_used_mib": 2277.0,
+      "elapsed_seconds": 1.464
+    },
+    {
+      "blender_working_set_bytes": 313602048,
+      "gpu_total_used_mib": 2282.0,
+      "elapsed_seconds": 1.605
+    },
+    {
+      "blender_working_set_bytes": 359854080,
+      "gpu_total_used_mib": 2293.0,
+      "elapsed_seconds": 1.745
+    },
+    {
+      "blender_working_set_bytes": 497807360,
+      "gpu_total_used_mib": 2317.0,
+      "elapsed_seconds": 1.879
+    },
+    {
+      "blender_working_set_bytes": 475627520,
+      "gpu_total_used_mib": 2318.0,
+      "elapsed_seconds": 2.026
+    }
+  ],
+  "exit_code": 0,
+  "baseline_gpu_total_used_mib": 2275.0
+}

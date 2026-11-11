@@ -1,0 +1,10 @@
+{
+  "mode": "alternate",
+  "status": "running",
+  "requested_cycles": 2,
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_205522",
+  "patrol_directory": "D:\\unitree_g1\\logs\\patrol_runs\\20261110_205522",
+  "state": "WAITING_FOR_CLEAR_PATH",
+  "completed_cycles": 0,
+  "reason": "Predicted trajectory/footprint blocked"
+}

@@ -1,0 +1,36 @@
+{
+  "blend_reopen": {
+    "status": "passed",
+    "objects": 429,
+    "meshes": 400
+  },
+  "custom_metadata_complete": true,
+  "openusd": {
+    "status": "passed",
+    "meters_per_unit": 1.0,
+    "up_axis": "Z",
+    "prims": 429,
+    "missing_visual_objects": [],
+    "position_mismatches": [],
+    "collision_proxy_ids": 42,
+    "semantic_ids": 429
+  },
+  "usd_roundtrip": {
+    "status": "passed",
+    "objects": 388,
+    "mesh_objects": 358,
+    "missing_visual_mesh_names": [],
+    "position_mismatches": [],
+    "collision_proxies_imported": 0,
+    "note": "USD importer may use shared mesh data names; authoritative original object IDs and transforms verified with OpenUSD. Invisible proxies remain in USD but are skipped by default importer."
+  },
+  "glb_roundtrip": {
+    "status": "passed",
+    "objects": 387,
+    "mesh_objects": 358,
+    "missing_visual_mesh_names": [],
+    "position_mismatches": [],
+    "collision_proxies_imported": 0,
+    "note": "Standard glTF Y-up export; Blender importer restores Z-up."
+  }
+}

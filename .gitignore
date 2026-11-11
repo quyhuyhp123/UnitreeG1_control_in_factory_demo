@@ -12,6 +12,7 @@ logs/*
 *.blend2
 *.bak
 *.tmp
+assets/factory/factory_layout_v2/backups/
 
 # Local credentials and editor/OS state
 .env

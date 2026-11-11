@@ -1,0 +1,21 @@
+{
+  "scope": "Straight flat floor only; not factory route certification",
+  "trials": [
+    {
+      "command_m_s": 0.3,
+      "passed": true,
+      "mean_forward_m_s": 0.30336175292730333,
+      "max_tilt_deg": 2.514361509402175,
+      "max_speed_m_s": 0.4280679539774985,
+      "max_stop_displacement_m": 0.09391694553566175,
+      "final_position": [
+        0.9450029730796814,
+        0.09739765524864197,
+        0.7836706638336182
+      ],
+      "fault": null
+    }
+  ],
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261111_070848",
+  "status": "completed"
+}

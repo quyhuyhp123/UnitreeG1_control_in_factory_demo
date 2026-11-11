@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "factory_id": "v2",
+  "route_mode": "route_1_blue",
+  "alternate_first": "route_1_blue",
+  "schedule": {
+    "start_delay_seconds": 5.0,
+    "repeat_interval_seconds": 120.0,
+    "dwell_at_b_seconds": 0.0,
+    "repeat_enabled": false,
+    "max_cycles": 1,
+    "movement_timeout_seconds": 220.0,
+    "obstacle_wait_timeout_seconds": 60.0,
+    "clock_mode": "simulation"
+  },
+  "factory_usd": "assets/factory/factory_layout_v2/factory_layout_v2_physics.usd",
+  "source_factory_sha256": "6e3e1683dcc4885b4127063fb77a5f3195c3de5071eefaa454969033f76ef8c7",
+  "coordinate_frame": "world meters, Z up, X right/Y north"
+}

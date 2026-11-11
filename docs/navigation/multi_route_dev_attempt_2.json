@@ -1,0 +1,10 @@
+{
+  "mode": "alternate",
+  "status": "running",
+  "requested_cycles": 2,
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_205312",
+  "patrol_directory": "D:\\unitree_g1\\logs\\patrol_runs\\20261110_205312",
+  "state": "WAITING_FOR_CLEAR_PATH",
+  "completed_cycles": 0,
+  "reason": "INVALID_ROUTE_SEGMENT LEFT_BOTTOM__LEFT_CORRIDOR: NO_VALID_PATH: endpoint footprint outside lane or obstructed"
+}

@@ -1,0 +1,91 @@
+{
+  "scope": "Straight flat floor only; not factory route certification",
+  "trials": [
+    {
+      "command_m_s": 0.22,
+      "passed": true,
+      "mean_forward_m_s": 0.2273796918988228,
+      "max_tilt_deg": 2.5035065959720764,
+      "max_speed_m_s": 0.36010639859959087,
+      "max_stop_displacement_m": 0.06484947565148046,
+      "final_position": [
+        0.6852743625640869,
+        0.07365407049655914,
+        0.7837201952934265
+      ],
+      "fault": null
+    },
+    {
+      "command_m_s": 0.35,
+      "passed": true,
+      "mean_forward_m_s": 0.350002575814724,
+      "max_tilt_deg": 2.5141639031877383,
+      "max_speed_m_s": 0.46760138885684926,
+      "max_stop_displacement_m": 0.10144322812902426,
+      "final_position": [
+        1.1489379405975342,
+        0.08361010998487473,
+        0.7840965986251831
+      ],
+      "fault": null
+    },
+    {
+      "command_m_s": 0.5,
+      "passed": true,
+      "mean_forward_m_s": 0.4950096008181572,
+      "max_tilt_deg": 2.5141639031877383,
+      "max_speed_m_s": 0.6171833563688759,
+      "max_stop_displacement_m": 0.16931950324520756,
+      "final_position": [
+        1.7679240703582764,
+        0.019645577296614647,
+        0.7839219570159912
+      ],
+      "fault": null
+    },
+    {
+      "command_m_s": 0.65,
+      "passed": true,
+      "mean_forward_m_s": 0.627464844584465,
+      "max_tilt_deg": 2.756339428140748,
+      "max_speed_m_s": 0.7401543294416263,
+      "max_stop_displacement_m": 0.17828200934186592,
+      "final_position": [
+        2.350773572921753,
+        0.05746772512793541,
+        0.7834676504135132
+      ],
+      "fault": null
+    },
+    {
+      "command_m_s": 0.8,
+      "passed": true,
+      "mean_forward_m_s": 0.7531534337997436,
+      "max_tilt_deg": 3.526089966881694,
+      "max_speed_m_s": 0.8596016386203821,
+      "max_stop_displacement_m": 0.24972003484686536,
+      "final_position": [
+        3.0251002311706543,
+        0.06045839190483093,
+        0.7835056781768799
+      ],
+      "fault": null
+    },
+    {
+      "command_m_s": 1.0,
+      "passed": true,
+      "mean_forward_m_s": 0.9470937776565552,
+      "max_tilt_deg": 4.5588026393183405,
+      "max_speed_m_s": 1.069527652874972,
+      "max_stop_displacement_m": 0.35601900843927603,
+      "final_position": [
+        4.071080684661865,
+        -0.21682286262512207,
+        0.7837634682655334
+      ],
+      "fault": null
+    }
+  ],
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261111_064055",
+  "status": "completed"
+}

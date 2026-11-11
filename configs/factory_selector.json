@@ -1,0 +1,8 @@
+{
+  "default_factory": "v2",
+  "factories": {
+    "v1": "configs/factory_g1.json",
+    "v2": "configs/factory_v2.json"
+  },
+  "note": "V2 standing/keyboard/reset/collision acceptance passed; factory selection requires restart. Use -Factory v1 to rollback."
+}

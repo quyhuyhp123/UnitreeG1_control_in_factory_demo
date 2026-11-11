@@ -1,0 +1,731 @@
+{
+  "source_sha256": "6e3e1683dcc4885b4127063fb77a5f3195c3de5071eefaa454969033f76ef8c7",
+  "colliders": [
+    {
+      "path": "/FactoryV2/PhysicsColliders/Floor",
+      "source_proxy": "COL_Floor",
+      "bounds": [
+        [
+          -10.0,
+          -15.0,
+          -0.20000000298023224
+        ],
+        [
+          10.0,
+          15.0,
+          0.0
+        ]
+      ],
+      "semantic_class": "floor"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Wall_North",
+      "source_proxy": "COL_Wall_North",
+      "bounds": [
+        [
+          -10.0,
+          15.0,
+          0.0
+        ],
+        [
+          10.0,
+          15.15999984741211,
+          4.0
+        ]
+      ],
+      "semantic_class": "wall"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Wall_South",
+      "source_proxy": "COL_Wall_South",
+      "bounds": [
+        [
+          -10.0,
+          -15.15999984741211,
+          0.0
+        ],
+        [
+          10.0,
+          -15.0,
+          4.0
+        ]
+      ],
+      "semantic_class": "wall"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Wall_East",
+      "source_proxy": "COL_Wall_East",
+      "bounds": [
+        [
+          10.0,
+          -15.0,
+          0.0
+        ],
+        [
+          10.15999984741211,
+          15.0,
+          4.0
+        ]
+      ],
+      "semantic_class": "wall"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Wall_West",
+      "source_proxy": "COL_Wall_West",
+      "bounds": [
+        [
+          -10.15999984741211,
+          -12.5,
+          0.0
+        ],
+        [
+          -10.0,
+          15.0,
+          4.0
+        ]
+      ],
+      "semantic_class": "wall"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Roof",
+      "source_proxy": "COL_Roof",
+      "bounds": [
+        [
+          -10.15999984741211,
+          -15.15999984741211,
+          4.0
+        ],
+        [
+          10.15999984741211,
+          15.15999984741211,
+          4.119999885559082
+        ]
+      ],
+      "semantic_class": "roof"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Entrance_Lintel",
+      "source_proxy": "COL_Entrance_Lintel",
+      "bounds": [
+        [
+          -10.204999923706055,
+          -15.0,
+          2.8000001907348633
+        ],
+        [
+          -9.954999923706055,
+          -12.5,
+          4.0
+        ]
+      ],
+      "semantic_class": "wall"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Entrance_Roller_Shutter",
+      "source_proxy": "COL_Entrance_Roller_Shutter",
+      "bounds": [
+        [
+          -10.3100004196167,
+          -15.0,
+          2.875
+        ],
+        [
+          -10.130000114440918,
+          -12.5,
+          3.4250001907348633
+        ]
+      ],
+      "semantic_class": "door"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Outer_Left_01",
+      "source_proxy": "COL_Machine_Outer_Left_01",
+      "bounds": [
+        [
+          -9.822368621826172,
+          6.230188846588135,
+          0.0
+        ],
+        [
+          -8.072368621826172,
+          11.43018913269043,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Outer_Left_01",
+      "source_proxy": "COL_Operator_Outer_Left_01",
+      "bounds": [
+        [
+          -9.2373685836792,
+          5.400188446044922,
+          0.0
+        ],
+        [
+          -8.657368659973145,
+          5.960188865661621,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Outer_Left_02",
+      "source_proxy": "COL_Machine_Outer_Left_02",
+      "bounds": [
+        [
+          -9.87021541595459,
+          -1.6660375595092773,
+          0.0
+        ],
+        [
+          -8.12021541595459,
+          3.5339622497558594,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Outer_Left_02",
+      "source_proxy": "COL_Operator_Outer_Left_02",
+      "bounds": [
+        [
+          -9.285215377807617,
+          -2.496037721633911,
+          0.0
+        ],
+        [
+          -8.705215454101562,
+          -1.9360377788543701,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Outer_Left_03",
+      "source_proxy": "COL_Machine_Outer_Left_03",
+      "bounds": [
+        [
+          -9.822368621826172,
+          -9.760377883911133,
+          0.0
+        ],
+        [
+          -8.072368621826172,
+          -4.560377597808838,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Outer_Left_03",
+      "source_proxy": "COL_Operator_Outer_Left_03",
+      "bounds": [
+        [
+          -9.2373685836792,
+          -10.590376853942871,
+          0.0
+        ],
+        [
+          -8.657368659973145,
+          -10.030377388000488,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Outer_Right_01",
+      "source_proxy": "COL_Machine_Outer_Right_01",
+      "bounds": [
+        [
+          8.056419372558594,
+          6.598113536834717,
+          0.0
+        ],
+        [
+          9.806419372558594,
+          11.798112869262695,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Outer_Right_01",
+      "source_proxy": "COL_Operator_Outer_Right_01",
+      "bounds": [
+        [
+          8.641419410705566,
+          5.768113136291504,
+          0.0
+        ],
+        [
+          9.221419334411621,
+          6.328113555908203,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Outer_Right_02",
+      "source_proxy": "COL_Machine_Outer_Right_02",
+      "bounds": [
+        [
+          8.056419372558594,
+          -1.3830187320709229,
+          0.0
+        ],
+        [
+          9.806419372558594,
+          3.816981077194214,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Outer_Right_02",
+      "source_proxy": "COL_Operator_Outer_Right_02",
+      "bounds": [
+        [
+          8.641419410705566,
+          -2.2130188941955566,
+          0.0
+        ],
+        [
+          9.221419334411621,
+          -1.6530189514160156,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Outer_Right_03",
+      "source_proxy": "COL_Machine_Outer_Right_03",
+      "bounds": [
+        [
+          8.040470123291016,
+          -10.864151000976562,
+          0.0
+        ],
+        [
+          9.790470123291016,
+          -5.664150714874268,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Outer_Right_03",
+      "source_proxy": "COL_Operator_Outer_Right_03",
+      "bounds": [
+        [
+          8.625470161437988,
+          -11.694150924682617,
+          0.0
+        ],
+        [
+          9.205470085144043,
+          -11.134151458740234,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Inner_Left_01",
+      "source_proxy": "COL_Machine_Inner_Left_01",
+      "bounds": [
+        [
+          -5.17559814453125,
+          5.620754241943359,
+          0.0
+        ],
+        [
+          -2.5755982398986816,
+          8.02075481414795,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Inner_Left_01",
+      "source_proxy": "COL_Operator_Inner_Left_01",
+      "bounds": [
+        [
+          -2.415598154067993,
+          6.540754318237305,
+          0.0
+        ],
+        [
+          -1.8355982303619385,
+          7.100754737854004,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Inner_Left_02",
+      "source_proxy": "COL_Machine_Inner_Left_02",
+      "bounds": [
+        [
+          -5.111802101135254,
+          1.4320755004882812,
+          0.0
+        ],
+        [
+          -2.5118021965026855,
+          3.832075595855713,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Inner_Left_02",
+      "source_proxy": "COL_Operator_Inner_Left_02",
+      "bounds": [
+        [
+          -2.351802110671997,
+          2.3520755767822266,
+          0.0
+        ],
+        [
+          -1.7718021869659424,
+          2.9120755195617676,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Inner_Left_03",
+      "source_proxy": "COL_Machine_Inner_Left_03",
+      "bounds": [
+        [
+          -5.032057285308838,
+          -2.2754716873168945,
+          0.0
+        ],
+        [
+          -2.4320573806762695,
+          0.12452840805053711,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Inner_Left_03",
+      "source_proxy": "COL_Operator_Inner_Left_03",
+      "bounds": [
+        [
+          -2.27205753326416,
+          -1.3554716110229492,
+          0.0
+        ],
+        [
+          -1.692057490348816,
+          -0.7954716682434082,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Inner_Left_04",
+      "source_proxy": "COL_Machine_Inner_Left_04",
+      "bounds": [
+        [
+          -5.063955307006836,
+          -5.813207626342773,
+          0.0
+        ],
+        [
+          -2.4639554023742676,
+          -3.4132072925567627,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Inner_Left_04",
+      "source_proxy": "COL_Operator_Inner_Left_04",
+      "bounds": [
+        [
+          -2.303955316543579,
+          -4.893207550048828,
+          0.0
+        ],
+        [
+          -1.7239553928375244,
+          -4.333207130432129,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Inner_Right_01",
+      "source_proxy": "COL_Machine_Inner_Right_01",
+      "bounds": [
+        [
+          2.8786284923553467,
+          6.01698112487793,
+          0.0
+        ],
+        [
+          5.478628158569336,
+          8.416980743408203,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Inner_Right_01",
+      "source_proxy": "COL_Operator_Inner_Right_01",
+      "bounds": [
+        [
+          2.1386284828186035,
+          6.936980724334717,
+          0.0
+        ],
+        [
+          2.718628406524658,
+          7.496981143951416,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Inner_Right_02",
+      "source_proxy": "COL_Machine_Inner_Right_02",
+      "bounds": [
+        [
+          2.8307816982269287,
+          1.8849055767059326,
+          0.0
+        ],
+        [
+          5.430781364440918,
+          4.284905433654785,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Inner_Right_02",
+      "source_proxy": "COL_Operator_Inner_Right_02",
+      "bounds": [
+        [
+          2.0907814502716064,
+          2.804905652999878,
+          0.0
+        ],
+        [
+          2.670781373977661,
+          3.364905595779419,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Inner_Right_03",
+      "source_proxy": "COL_Machine_Inner_Right_03",
+      "bounds": [
+        [
+          3.0540668964385986,
+          -2.190566062927246,
+          0.0
+        ],
+        [
+          5.654067039489746,
+          0.20943403244018555,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Inner_Right_03",
+      "source_proxy": "COL_Operator_Inner_Right_03",
+      "bounds": [
+        [
+          2.3140671253204346,
+          -1.2705659866333008,
+          0.0
+        ],
+        [
+          2.8940670490264893,
+          -0.7105660438537598,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Machine_Inner_Right_04",
+      "source_proxy": "COL_Machine_Inner_Right_04",
+      "bounds": [
+        [
+          3.0381181240081787,
+          -5.728302001953125,
+          0.0
+        ],
+        [
+          5.638117790222168,
+          -3.3283016681671143,
+          2.3299999237060547
+        ]
+      ],
+      "semantic_class": "machine"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Operator_Inner_Right_04",
+      "source_proxy": "COL_Operator_Inner_Right_04",
+      "bounds": [
+        [
+          2.2981181144714355,
+          -4.80830192565918,
+          0.0
+        ],
+        [
+          2.8781180381774902,
+          -4.2483015060424805,
+          1.840000033378601
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Table_01",
+      "source_proxy": "COL_Table_01",
+      "bounds": [
+        [
+          -5.249721050262451,
+          13.034905433654785,
+          0.0
+        ],
+        [
+          -1.7997208833694458,
+          14.134905815124512,
+          0.800000011920929
+        ]
+      ],
+      "semantic_class": "table"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Person_01",
+      "source_proxy": "COL_Person_01",
+      "bounds": [
+        [
+          -3.8347208499908447,
+          12.38990592956543,
+          0.0
+        ],
+        [
+          -3.2147209644317627,
+          13.239906311035156,
+          1.5199999809265137
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Chair_01",
+      "source_proxy": "COL_Chair_01",
+      "bounds": [
+        [
+          -3.7997210025787354,
+          12.379905700683594,
+          0.0
+        ],
+        [
+          -3.249720811843872,
+          12.949905395507812,
+          1.0
+        ]
+      ],
+      "semantic_class": "chair"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Table_02",
+      "source_proxy": "COL_Table_02",
+      "bounds": [
+        [
+          1.9592105150222778,
+          13.034905433654785,
+          0.0
+        ],
+        [
+          5.409210681915283,
+          14.134905815124512,
+          0.800000011920929
+        ]
+      ],
+      "semantic_class": "table"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Person_02",
+      "source_proxy": "COL_Person_02",
+      "bounds": [
+        [
+          3.3742105960845947,
+          12.38990592956543,
+          0.0
+        ],
+        [
+          3.9942104816436768,
+          13.239906311035156,
+          1.5199999809265137
+        ]
+      ],
+      "semantic_class": "person"
+    },
+    {
+      "path": "/FactoryV2/PhysicsColliders/COL_Chair_02",
+      "source_proxy": "COL_Chair_02",
+      "bounds": [
+        [
+          3.409210443496704,
+          12.379905700683594,
+          0.0
+        ],
+        [
+          3.9592106342315674,
+          12.949905395507812,
+          1.0
+        ]
+      ],
+      "semantic_class": "chair"
+    }
+  ],
+  "friction": [
+    0.8,
+    0.6
+  ],
+  "spawn": {
+    "position_m": [
+      -8.85,
+      -13.75,
+      0
+    ],
+    "yaw_deg": 0
+  }
+}

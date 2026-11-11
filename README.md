@@ -1,8 +1,47 @@
 # G1_factory_keyboard
 
-## Automatic Patrol Navigation
+## Factory V2 — nhà xưởng Blender mới
 
-Chạy `./run_sim.bat -Controller locomotion`, mở panel **G1 PATROL NAVIGATION**.
+```powershell
+cd D:\unitree_g1
+.\run_sim.bat -Factory v2 -Controller locomotion
+```
+
+Mặc định launcher chọn V2. G1 xuất hiện tại cửa tây nam, marker
+`(-8.85, -13.75, 0)` m, hướng +X vào xưởng; base đứng khoảng Z=0.785 m theo FK
+của policy hiện có. Một factory, một G1, viewport chính và cửa sổ
+**G1 Head Camera | LIVE** góc trên phải (320×180). Mái ẩn hiển thị để xem bên trong,
+collider mái vẫn có. Camera đầu chỉ xem trực tiếp, không đưa vào policy hay AI.
+
+Theo lựa chọn đã xác nhận: **Space chỉ khóa camera Follow, X dừng, R reset** ở cả V1/V2.
+V2 còn cho phép F khóa camera. Space không ngắt di chuyển hoặc AUTO. WASD/arrow/Q/E không đổi.
+Camera Free, Follow, Overview và Top View có trên panel.
+
+V2 dùng `configs/navigation_map_v2.json` và Multi-Route trong `configs/patrol_routes.json`.
+Trong **ROUTE SELECTION**, chọn Route 1 (giữa), Route 2 (phải), hoặc Alternate;
+Apply khi STOP/đứng chậm, PREVIEW/VALIDATE rồi START. Mỗi tuyến có checkpoint bắt buộc,
+không tìm đường tắt qua nhánh khác. Mặc định mới: delay 5 s, interval 120 s,
+Repeat off, Max Cycles=1; bật Repeat và >=2 cycles để kiểm tra Alternate.
+Cấu hình route lưu riêng `configs/patrol_route_user.json`. Không load A/B V1 vào V2.
+Tốc độ tuần tra V2 mặc định và giới hạn đã kiểm thử là **0.30 m/s** (11/11/2026).
+Trong **Schedule / limits**, chọn nhanh **0.22 / 0.25 / 0.30 m/s**, rồi Apply khi STOP
+hoặc trước START. Robot giảm về tối đa 0.22 m/s trong 1.2 m trước góc/đích,
+và tiếp tục giảm tốc để dừng/quay. Các mức cao hơn chưa đạt kiểm thử toàn xưởng;
+giới hạn 1 m/s của policy chỉ đạt bài đi thẳng ngắn trên sàn trống.
+Xem [báo cáo thử tốc độ](docs/navigation/speed_test_report.md).
+Legacy A/B V2 còn được giữ qua `multi_route_enabled=false`; khi đó B vẫn UNSET.
+Các ví dụ A/B gần `(0,-4)` trong tài liệu V1 phía dưới không áp dụng cho V2.
+
+Rollback bằng `./run_sim.bat -Factory v1 -Controller locomotion`; chọn factory
+chỉ có hiệu lực khi khởi động phiên mới. Không chuyển môi trường khi đang chạy.
+Xem [báo cáo tích hợp V2](docs/factory_v2_integration_report.md).
+Hướng dẫn [Multi-Route GUI](docs/navigation/multi_route_gui_manual.md),
+[kiến trúc](docs/navigation/multi_route_architecture.md),
+[kết quả kiểm thử từng tuyến](docs/navigation/multi_route_test_report.md).
+
+## Automatic Patrol A/B — V1 / legacy
+
+Chạy `./run_sim.bat -Factory v1 -Controller locomotion`, mở panel **G1 PATROL NAVIGATION**.
 Mặc định vẫn MANUAL, A lấy từ robot, B chưa đặt. Nhập A/B, nhấn **Apply A/B + Validate Route**,
 cấu hình lịch rồi **START PATROL**. Bộ điểm đã thử: A gần `(0,-4)`, B `(0,-2.5)`.
 Mặc định chờ 5 giây, đến B chờ 10 giây, về A rồi nghỉ 5 giây trước lượt tiếp theo.

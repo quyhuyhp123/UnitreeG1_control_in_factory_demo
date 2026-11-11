@@ -1,0 +1,179 @@
+{
+  "version": 1,
+  "factory_id": "v2",
+  "factory_usd": "assets/factory/factory_layout_v2/factory_layout_v2_physics.usd",
+  "source_factory_sha256": "6e3e1683dcc4885b4127063fb77a5f3195c3de5071eefaa454969033f76ef8c7",
+  "coordinate_frame": "world meters, Z up, X right/Y north",
+  "reference_image": "references/patrol_routes_reference.png",
+  "nodes": {
+    "ENTRY": [
+      -8.85,
+      -13.75
+    ],
+    "ENTRY_INNER": [
+      -6.985645933014354,
+      -13.0
+    ],
+    "LEFT_BOTTOM": [
+      -6.985645933014354,
+      -10.1
+    ],
+    "LEFT_CORRIDOR": [
+      -6.985645933014354,
+      0.0
+    ],
+    "TOP_LEFT_TURN": [
+      -6.985645933014354,
+      10.952830188679245
+    ],
+    "TOP_CENTER_JUNCTION": [
+      8.881784197001252E-16,
+      10.952830188679245
+    ],
+    "CENTER_CORRIDOR": [
+      8.881784197001252E-16,
+      0.0
+    ],
+    "BOTTOM_CENTER_JUNCTION": [
+      8.881784197001252E-16,
+      -11.4
+    ],
+    "TOP_RIGHT_TURN": [
+      6.95,
+      10.952830188679245
+    ],
+    "RIGHT_CORRIDOR": [
+      6.95,
+      0.0
+    ],
+    "BOTTOM_RIGHT_TURN": [
+      6.95,
+      -11.4
+    ],
+    "BOTTOM_EXIT_CORRIDOR": [
+      -6.985645933014354,
+      -11.4
+    ],
+    "EXIT": [
+      -8.85,
+      -13.75
+    ]
+  },
+  "routes": {
+    "route_1_blue": {
+      "route_id": "route_1_blue",
+      "name": "Route 1 — Blue / Center Corridor",
+      "ordered_nodes": [
+        "ENTRY",
+        "ENTRY_INNER",
+        "LEFT_BOTTOM",
+        "LEFT_CORRIDOR",
+        "TOP_LEFT_TURN",
+        "TOP_CENTER_JUNCTION",
+        "CENTER_CORRIDOR",
+        "BOTTOM_CENTER_JUNCTION",
+        "BOTTOM_EXIT_CORRIDOR",
+        "ENTRY_INNER",
+        "EXIT"
+      ],
+      "mandatory_segments": [
+        "ENTRY__ENTRY_INNER",
+        "ENTRY_INNER__LEFT_BOTTOM",
+        "LEFT_BOTTOM__LEFT_CORRIDOR",
+        "LEFT_CORRIDOR__TOP_LEFT_TURN",
+        "TOP_LEFT_TURN__TOP_CENTER_JUNCTION",
+        "TOP_CENTER_JUNCTION__CENTER_CORRIDOR",
+        "CENTER_CORRIDOR__BOTTOM_CENTER_JUNCTION",
+        "BOTTOM_CENTER_JUNCTION__BOTTOM_EXIT_CORRIDOR",
+        "BOTTOM_EXIT_CORRIDOR__ENTRY_INNER",
+        "ENTRY_INNER__EXIT"
+      ],
+      "allowed_corridor_ids": [
+        "ENTRY",
+        "ENTRY_INNER",
+        "LEFT_BOTTOM",
+        "LEFT_CORRIDOR",
+        "TOP_LEFT_TURN",
+        "TOP_CENTER_JUNCTION",
+        "CENTER_CORRIDOR",
+        "BOTTOM_CENTER_JUNCTION",
+        "BOTTOM_EXIT_CORRIDOR",
+        "ENTRY_INNER",
+        "EXIT"
+      ],
+      "speed_limit_m_s": 0.3,
+      "turn_speed_limit_rad_s": 0.3,
+      "waypoint_tolerance_m": 0.13,
+      "exit_node": "EXIT",
+      "validation_status": "UNVALIDATED",
+      "branch_color": "blue"
+    },
+    "route_2_brown": {
+      "route_id": "route_2_brown",
+      "name": "Route 2 — Brown / Right Corridor",
+      "ordered_nodes": [
+        "ENTRY",
+        "ENTRY_INNER",
+        "LEFT_BOTTOM",
+        "LEFT_CORRIDOR",
+        "TOP_LEFT_TURN",
+        "TOP_CENTER_JUNCTION",
+        "TOP_RIGHT_TURN",
+        "RIGHT_CORRIDOR",
+        "BOTTOM_RIGHT_TURN",
+        "BOTTOM_CENTER_JUNCTION",
+        "BOTTOM_EXIT_CORRIDOR",
+        "ENTRY_INNER",
+        "EXIT"
+      ],
+      "mandatory_segments": [
+        "ENTRY__ENTRY_INNER",
+        "ENTRY_INNER__LEFT_BOTTOM",
+        "LEFT_BOTTOM__LEFT_CORRIDOR",
+        "LEFT_CORRIDOR__TOP_LEFT_TURN",
+        "TOP_LEFT_TURN__TOP_CENTER_JUNCTION",
+        "TOP_CENTER_JUNCTION__TOP_RIGHT_TURN",
+        "TOP_RIGHT_TURN__RIGHT_CORRIDOR",
+        "RIGHT_CORRIDOR__BOTTOM_RIGHT_TURN",
+        "BOTTOM_RIGHT_TURN__BOTTOM_CENTER_JUNCTION",
+        "BOTTOM_CENTER_JUNCTION__BOTTOM_EXIT_CORRIDOR",
+        "BOTTOM_EXIT_CORRIDOR__ENTRY_INNER",
+        "ENTRY_INNER__EXIT"
+      ],
+      "allowed_corridor_ids": [
+        "ENTRY",
+        "ENTRY_INNER",
+        "LEFT_BOTTOM",
+        "LEFT_CORRIDOR",
+        "TOP_LEFT_TURN",
+        "TOP_CENTER_JUNCTION",
+        "TOP_RIGHT_TURN",
+        "RIGHT_CORRIDOR",
+        "BOTTOM_RIGHT_TURN",
+        "BOTTOM_CENTER_JUNCTION",
+        "BOTTOM_EXIT_CORRIDOR",
+        "ENTRY_INNER",
+        "EXIT"
+      ],
+      "speed_limit_m_s": 0.3,
+      "turn_speed_limit_rad_s": 0.3,
+      "waypoint_tolerance_m": 0.13,
+      "exit_node": "EXIT",
+      "validation_status": "UNVALIDATED",
+      "branch_color": "brown"
+    }
+  },
+  "common_nodes": [
+    "ENTRY",
+    "ENTRY_INNER",
+    "LEFT_BOTTOM",
+    "LEFT_CORRIDOR",
+    "TOP_LEFT_TURN",
+    "TOP_CENTER_JUNCTION"
+  ],
+  "corridor_center_allowance_m": 0.4,
+  "notes": [
+    "World coordinates derived from actual outer/holes and verified spawn, not image pixels.",
+    "Right lane uses verified grid centre x=6.95. End inside entry marker; no outside floor/apron exists."
+  ]
+}

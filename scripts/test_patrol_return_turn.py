@@ -9,6 +9,7 @@ def main():
     parser.add_argument('--speed',type=float,default=.35)
     parser.add_argument('--interval',type=float,default=5.)
     parser.add_argument('--test-space',action='store_true')
+    parser.add_argument('--output-name')
     args,_=parser.parse_known_args()
     if args.cycles<1: raise ValueError('cycles must be positive')
     from isaacsim import SimulationApp
@@ -70,6 +71,9 @@ def main():
         report.update(status='failed',error=str(exc)); raise
     finally:
         name='space_camera_test_results.json' if args.test_space else ('repeat_speed_test_results.json' if args.cycles>1 else 'return_turn_test_results.json')
+        if args.output_name:
+            if Path(args.output_name).name!=args.output_name: raise ValueError('Output must be a filename only')
+            name=args.output_name
         (ROOT/'docs/navigation'/name).write_text(json.dumps(report,indent=2))
         if runtime: runtime.close()
         app.close()

@@ -14,7 +14,7 @@ class SceneObstacleDetector:
 
     def update(self,now):
         from pxr import Usd,UsdGeom,UsdPhysics
-        cache=UsdGeom.BBoxCache(Usd.TimeCode.Default(),['default','render','proxy'])
+        cache=UsdGeom.BBoxCache(Usd.TimeCode.Default(),['default','render','proxy'],False,True)
         objects=[]; zmin,zmax=self.config['obstacle_height_range_m']
         for p in self.stage.Traverse():
             path=str(p.GetPath())

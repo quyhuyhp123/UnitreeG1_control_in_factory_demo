@@ -1,0 +1,253 @@
+{
+  "factory": "v1",
+  "checks": {
+    "factory_reference": {
+      "passed": true,
+      "selected_usd": "assets/factory/factory_physics.usd"
+    },
+    "collider_count": {
+      "passed": true,
+      "count": 192
+    },
+    "spawn_heading": {
+      "passed": true,
+      "pose": [
+        1.0949734132736921e-06,
+        -4.000192165374756,
+        1.5707900491034312
+      ],
+      "root_z": 0.7838170528411865
+    },
+    "standing": {
+      "passed": true,
+      "max_tilt_deg": 0.9210277605068425,
+      "floor_contacts": 10800
+    },
+    "navigation_new_spawn": {
+      "passed": true,
+      "a": [
+        1.0949734132736921e-06,
+        -4.000192165374756,
+        1.5707900491034312
+      ],
+      "b": null
+    },
+    "auto_unset_b_rejected": {
+      "passed": true
+    },
+    "key_W": {
+      "passed": true,
+      "value": 0.8322102161383221,
+      "max_tilt_deg": 1.7052892832297049,
+      "world_delta": [
+        -0.08045113272964954,
+        0.8326394557952881
+      ]
+    },
+    "key_UP": {
+      "passed": true,
+      "value": 0.48358174476605775,
+      "max_tilt_deg": 1.7052892832297049,
+      "world_delta": [
+        -0.057990821078419685,
+        0.4838895797729492
+      ]
+    },
+    "key_S": {
+      "passed": true,
+      "value": -0.16589480575536408,
+      "max_tilt_deg": 2.775193845583683,
+      "world_delta": [
+        -0.03251730464398861,
+        -0.16572809219360352
+      ]
+    },
+    "key_DOWN": {
+      "passed": true,
+      "value": -0.16589480575536408,
+      "max_tilt_deg": 2.775193845583683,
+      "world_delta": [
+        -0.03251730464398861,
+        -0.16572809219360352
+      ]
+    },
+    "key_A": {
+      "passed": true,
+      "value": 1.1660137413773963,
+      "max_tilt_deg": 2.213601022437884,
+      "world_delta": [
+        -0.08507888205349445,
+        0.0238492488861084
+      ]
+    },
+    "key_LEFT": {
+      "passed": true,
+      "value": 1.1660137413773963,
+      "max_tilt_deg": 2.213601022437884,
+      "world_delta": [
+        -0.08507888205349445,
+        0.0238492488861084
+      ]
+    },
+    "key_D": {
+      "passed": true,
+      "value": -0.9619133084843328,
+      "max_tilt_deg": 2.4542650843254536,
+      "world_delta": [
+        -0.07987002469599247,
+        0.036830902099609375
+      ]
+    },
+    "key_RIGHT": {
+      "passed": true,
+      "value": -0.9619133084843328,
+      "max_tilt_deg": 2.4542650843254536,
+      "world_delta": [
+        -0.07987002469599247,
+        0.036830902099609375
+      ]
+    },
+    "key_Q": {
+      "passed": true,
+      "value": 0.13623337306615327,
+      "max_tilt_deg": 2.5426084434883625,
+      "world_delta": [
+        -0.13632784970104694,
+        -0.017829418182373047
+      ]
+    },
+    "key_E": {
+      "passed": true,
+      "value": -0.07086968687775463,
+      "max_tilt_deg": 1.6778214565775356,
+      "world_delta": [
+        0.07085213623940945,
+        -0.0035619735717773438
+      ]
+    },
+    "space_binding": {
+      "passed": true,
+      "mapping": "follow_camera"
+    },
+    "reset_new_spawn": {
+      "passed": true,
+      "reset": {
+        "source": "R",
+        "paused_before_reset": true,
+        "safe_before_reset": true,
+        "position_after_reset": [
+          -3.637978807091713e-12,
+          -4.0,
+          0.7854665517807007
+        ],
+        "orientation_after_reset_wxyz": [
+          0.7071068286895752,
+          0.0,
+          0.0,
+          0.7071068286895752
+        ],
+        "joint_positions_after_reset": [
+          -0.10000000149011612,
+          -0.10000000149011612,
+          -7.117122863276037e-11,
+          -5.353064928717392e-14,
+          -9.381665583285681e-12,
+          1.1518135750732128e-10,
+          -3.1299695474329425e-11,
+          -5.796143079384031e-11,
+          1.1400967669938922e-10,
+          0.30000001192092896,
+          0.30000001192092896,
+          0.3499999940395355,
+          0.3499999940395355,
+          -0.20000000298023224,
+          -0.20000000298023224,
+          0.17999999225139618,
+          -0.17999999225139618,
+          2.9956913685791342e-12,
+          3.299040944940157e-12,
+          -9.604123052397995e-12,
+          -7.671233093198282e-11,
+          0.8700000047683716,
+          0.8700000047683716,
+          -3.7664104474144366e-11,
+          7.280598866843402e-12,
+          -4.1406430367763036e-11,
+          1.098642617852752e-11,
+          -7.80814475576097e-12,
+          -3.361858708084142e-11
+        ],
+        "history_terms_after_reset": 0,
+        "policy_steps_after_reset": 0,
+        "gait_phase_after_reset": 0.0
+      }
+    },
+    "camera_modes": {
+      "passed": true
+    }
+  },
+  "status": "passed",
+  "startup_seconds": 16.09189620000052,
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_194400",
+  "scene": {
+    "referenced_physics_scene_deactivated": true,
+    "spawn_marker": "/World/FactoryScene/Factory/Robot_Spawn_001",
+    "entrance_apron": {
+      "path": "/World/EntranceApron",
+      "size_m": [
+        3.0,
+        2.0,
+        0.2
+      ],
+      "top_z_m": 0,
+      "y_range_m": [
+        -7.0,
+        -5.0
+      ],
+      "overlaps_factory_floor": false
+    },
+    "floor_contact_override": {
+      "contact_offset_m": 0.02,
+      "rest_offset_m": 0.0
+    },
+    "factory_reference_loaded": true,
+    "factory_meshes": 263,
+    "source_names_transforms_preserved": true,
+    "floor_top_z_m": 0.0,
+    "no_duplicate_ground": true,
+    "spawn_xyz_m": [
+      0.0,
+      -4.0,
+      0.0
+    ],
+    "base_spawn_height_m": 0.7862021756598827,
+    "spawn_blockers": [],
+    "spawn_heading_deg": 90.0,
+    "policy_backend": "unitree_mjlab",
+    "checkpoint": "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx",
+    "physics_scene": "/World/PhysicsScene",
+    "gravity": [
+      0,
+      0,
+      -9.81
+    ],
+    "physics_hz": 200,
+    "robot_count": 1,
+    "robot_dof": 29,
+    "flat_mode": false,
+    "head_camera": {
+      "path": "/World/G1/torso_link/HeadCamera",
+      "resolution": [
+        320,
+        180
+      ],
+      "horizontal_fov_deg": 80.0
+    }
+  },
+  "performance": {
+    "mean_fps": 35.11734528622605,
+    "mean_physics_steps_per_wall_second": 140.4693811449042,
+    "peak_whole_gpu_mib": 4884.0,
+    "cpu_ram": "sampled externally if available"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "status": "passed",
+  "checks": {
+    "physical_two_cycles": true,
+    "route_1_blue_ordered_trace": true,
+    "route_1_blue_sampled_footprint_safe": true,
+    "route_2_brown_ordered_trace": true,
+    "route_2_brown_sampled_footprint_safe": true,
+    "test_repeat_interval_2s": true,
+    "ui": true,
+    "reset": true,
+    "v1_regression": true,
+    "unchanged:run_sim.bat": true,
+    "unchanged:assets/factory/factory_physics.usd": true,
+    "unchanged:configs/factory_g1.json": true,
+    "unchanged:controllers/g1_mjlab_locomotion.py": true,
+    "unchanged:checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx": true,
+    "unchanged:assets/robot/unitree_model/G1/29dof/usd/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd": true,
+    "source_factory_unchanged": true,
+    "clean_log:multi_route_physics_final.log": true,
+    "clean_log:multi_route_ui.log": true,
+    "clean_log:multi_route_reset.log": true,
+    "clean_log:multi_route_v1_regression.log": true
+  },
+  "trace_audit": {
+    "route_1_blue": {
+      "recorded_edges": [
+        "ENTRY__ENTRY_INNER",
+        "ENTRY_INNER__LEFT_BOTTOM",
+        "LEFT_BOTTOM__LEFT_CORRIDOR",
+        "LEFT_CORRIDOR__TOP_LEFT_TURN",
+        "TOP_LEFT_TURN__TOP_CENTER_JUNCTION",
+        "TOP_CENTER_JUNCTION__CENTER_CORRIDOR",
+        "CENTER_CORRIDOR__BOTTOM_CENTER_JUNCTION",
+        "BOTTOM_CENTER_JUNCTION__BOTTOM_EXIT_CORRIDOR",
+        "BOTTOM_EXIT_CORRIDOR__ENTRY_INNER",
+        "ENTRY_INNER__EXIT"
+      ],
+      "samples": 1862,
+      "unsafe_sample_times": [],
+      "mean_loop_fps": 40.10628780197322,
+      "in_place_turn_samples": 69,
+      "max_path_deviation_m": 0.13837992984829117
+    },
+    "route_2_brown": {
+      "recorded_edges": [
+        "ENTRY__ENTRY_INNER",
+        "ENTRY_INNER__LEFT_BOTTOM",
+        "LEFT_BOTTOM__LEFT_CORRIDOR",
+        "LEFT_CORRIDOR__TOP_LEFT_TURN",
+        "TOP_LEFT_TURN__TOP_CENTER_JUNCTION",
+        "TOP_CENTER_JUNCTION__TOP_RIGHT_TURN",
+        "TOP_RIGHT_TURN__RIGHT_CORRIDOR",
+        "RIGHT_CORRIDOR__BOTTOM_RIGHT_TURN",
+        "BOTTOM_RIGHT_TURN__BOTTOM_CENTER_JUNCTION",
+        "BOTTOM_CENTER_JUNCTION__BOTTOM_EXIT_CORRIDOR",
+        "BOTTOM_EXIT_CORRIDOR__ENTRY_INNER",
+        "ENTRY_INNER__EXIT"
+      ],
+      "samples": 2214,
+      "unsafe_sample_times": [],
+      "mean_loop_fps": 40.05420332117184,
+      "in_place_turn_samples": 68,
+      "max_path_deviation_m": 0.138628099424374
+    }
+  },
+  "protected_sha256": {
+    "run_sim.bat": "0cef2c8099ef9e4be78a3e371dc452b68cd298e29f65ccf5b52567171477a79d",
+    "assets/factory/factory_physics.usd": "c27388dca162662b3adaf5a8c2a984bc894b2ba57cb97ec75020b9eac4e22590",
+    "configs/factory_g1.json": "09b8bbc8087253070440668384855eaf0e6cd18592d1a2a4a4891dc58838ca6f",
+    "controllers/g1_mjlab_locomotion.py": "5c0eb523bbe5cd845fb61a1ce09fa8f934ee6566e5d86706c2d44819081dcf67",
+    "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx": "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28",
+    "assets/robot/unitree_model/G1/29dof/usd/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd": "cfed730bb043c42708260f25bf3bdf49ac80deed5d5a49384721b8e01059a96e"
+  },
+  "error_lines": {
+    "multi_route_physics_final.log": [],
+    "multi_route_ui.log": [],
+    "multi_route_reset.log": [],
+    "multi_route_v1_regression.log": []
+  },
+  "metrics": {
+    "mean_fps": 40.848679948294865,
+    "peak_whole_gpu_mib": 4378.0,
+    "planner_latency_ms_last": 8.411099999648286,
+    "mean_physics_steps_per_wall_second": 160.16216962906503
+  },
+  "repeat_interval_measured_sim_seconds": 2.0,
+  "scope": "Sampled SIM ground-truth footprint audit, not continuous swept-mesh proof; GUI callbacks/logical input, not native OS clicks."
+}

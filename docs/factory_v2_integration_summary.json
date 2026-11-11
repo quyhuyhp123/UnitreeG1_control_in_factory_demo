@@ -1,0 +1,76 @@
+{
+  "status": "passed_headless_acceptance",
+  "protected_files": {
+    "run_sim.bat": {
+      "unchanged_content_from_HEAD": true,
+      "sha256_worktree": "0cef2c8099ef9e4be78a3e371dc452b68cd298e29f65ccf5b52567171477a79d",
+      "line_endings_normalized_for_comparison": false
+    },
+    "assets/factory/factory_physics.usd": {
+      "unchanged_content_from_HEAD": true,
+      "sha256_worktree": "c27388dca162662b3adaf5a8c2a984bc894b2ba57cb97ec75020b9eac4e22590",
+      "line_endings_normalized_for_comparison": false
+    },
+    "configs/factory_g1.json": {
+      "unchanged_content_from_HEAD": true,
+      "sha256_worktree": "09b8bbc8087253070440668384855eaf0e6cd18592d1a2a4a4891dc58838ca6f",
+      "line_endings_normalized_for_comparison": true
+    },
+    "controllers/g1_mjlab_locomotion.py": {
+      "unchanged_content_from_HEAD": true,
+      "sha256_worktree": "5c0eb523bbe5cd845fb61a1ce09fa8f934ee6566e5d86706c2d44819081dcf67",
+      "line_endings_normalized_for_comparison": false
+    },
+    "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx": {
+      "unchanged_content_from_HEAD": true,
+      "sha256_worktree": "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28",
+      "line_endings_normalized_for_comparison": false
+    },
+    "assets/robot/unitree_model/G1/29dof/usd/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd": {
+      "unchanged_content_from_HEAD": true,
+      "sha256_worktree": "cfed730bb043c42708260f25bf3bdf49ac80deed5d5a49384721b8e01059a96e",
+      "line_endings_normalized_for_comparison": false
+    }
+  },
+  "source_usd_sha256": "6e3e1683dcc4885b4127063fb77a5f3195c3de5071eefaa454969033f76ef8c7",
+  "log_error_lines": {
+    "logs/factory_v2_acceptance_final.log": 0,
+    "logs/factory_v1_rollback_acceptance.log": 0,
+    "D:\\unitree_g1\\logs\\factory_g1_20261110_195155.log": 0,
+    "D:\\unitree_g1\\logs\\factory_g1_20261110_195219.log": 0,
+    "D:\\unitree_g1\\logs\\factory_g1_20261110_195455.log": 0
+  },
+  "unit_tests": {
+    "passed": 45,
+    "skipped": 2
+  },
+  "default_factory": "v2",
+  "ram_sample": {
+    "Id": 5244,
+    "WorkingSet64": 8219852800,
+    "PeakWorkingSet64": 8398143488,
+    "CPU": 263.359375
+  },
+  "native_os_keyboard": "NOT TESTED",
+  "auto_patrol_v2": "NOT TESTED; B UNSET and old-map guard verified",
+  "entry_camera_launcher": {
+    "exit_code": 0,
+    "error_lines": 0,
+    "log": "D:\\unitree_g1\\logs\\factory_g1_20261110_195951.log",
+    "flat_mode": false,
+    "self_test": false,
+    "checked_at": "2026-11-10T20:00:15.7068876+07:00",
+    "native_stderr_diagnostics": 0,
+    "finished_marker_seen": true,
+    "status": "completed",
+    "controller": "locomotion",
+    "factory": "v2"
+  },
+  "entry_camera_visual_inspection": "passed; robot visible in new doorway",
+  "keyboard_final_override": {
+    "SPACE": "follow_camera",
+    "X": "stop",
+    "F": "follow_camera",
+    "validation": "Unit checked with actual V2 config; existing full physics report predates this mapping change"
+  }
+}

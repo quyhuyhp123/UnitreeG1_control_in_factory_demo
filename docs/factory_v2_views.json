@@ -1,0 +1,7 @@
+{
+  "status": "passed_visual_inspection",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_195314",
+  "top": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_195314\\factory_top.png",
+  "overview": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_195314\\factory_overview.png",
+  "review": "Images inspected: full colored scene visible. Earlier black/overexposed trial images are not acceptance evidence. Fixed V2 initial safe-reset lighting and near-vertical perspective main camera."
+}

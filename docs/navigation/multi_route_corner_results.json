@@ -1,0 +1,15 @@
+{
+  "scope": "Independent initial pose at corner; no prior route traversal claimed",
+  "status": "passed",
+  "initial_distance_m": 0.13768770618395715,
+  "position": [
+    -6.98018217086792,
+    -13.075328826904297,
+    0.7840673327445984
+  ],
+  "segment_index": 9,
+  "completed_cycles": 0,
+  "state": "MOVING_TO_EXIT",
+  "reason": "Following ENTRY_INNER__EXIT",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_221144"
+}

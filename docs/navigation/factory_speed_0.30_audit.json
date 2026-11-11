@@ -1,0 +1,24 @@
+{
+  "candidate_speed_m_s": 0.3,
+  "status": "passed",
+  "checks": {
+    "completed_two_cycles": true,
+    "actually_commanded_candidate": true,
+    "route_1_blue_edge_order": true,
+    "route_1_blue_safe_samples": true,
+    "route_2_brown_edge_order": true,
+    "route_2_brown_safe_samples": true
+  },
+  "sample_count": 3621,
+  "metrics": {
+    "mean_fps": 53.788922486011366,
+    "peak_whole_gpu_mib": 4041.0,
+    "planner_latency_ms_last": 8.591799999976502,
+    "max_forward_command_m_s": 0.29999980540233484,
+    "forward_samples_above_90pct": 903
+  },
+  "simulation_seconds": 726.22,
+  "mean_moving_speed_m_s": 0.27676249757415905,
+  "raw_report": "D:\\unitree_g1\\docs\\navigation\\factory_speed_0.30_results.json",
+  "scope": "Two complete routes, sampled footprint audit, one run per candidate; not proof for every disturbance."
+}

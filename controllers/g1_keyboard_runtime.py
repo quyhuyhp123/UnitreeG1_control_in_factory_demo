@@ -105,7 +105,9 @@ class G1KeyboardRuntime:
                 ui.Button('Enable / Disable keyboard capture',height=30,clicked_fn=lambda:self.keys.set_enabled(not self.keys.enabled))
                 turning=('A/Left and D/Right: turn in place.\nPure yaw uses vx=vy=0.' if self.loco_cfg.get('backend')=='unitree_mjlab' else
                     'A/D alone: in-place turning not achieved.\nHold W+A or W+D for walking turns.')
-                ui.Label('W/Up forward | S/Down backward\nA/Left yaw+ | D/Right yaw- | Q/E sideways\n'+turning+'\nSPACE: follow camera only. X: stop.',word_wrap=True,height=70 if compact else 90)
+                follow_keys='/'.join(k for k,v in self.keys.mapping.items() if v=='follow_camera')
+                stop_keys='/'.join(k for k,v in self.keys.mapping.items() if v=='stop')
+                ui.Label('W/Up forward | S/Down backward\nA/Left yaw+ | D/Right yaw- | Q/E sideways\n'+turning+'\n'+follow_keys+': follow camera. '+stop_keys+': stop.',word_wrap=True,height=70 if compact else 90)
                 if hasattr(self,'build_camera_controls'): self.build_camera_controls()
                 if hasattr(self,'build_controller_controls'): self.build_controller_controls()
 

@@ -13,11 +13,11 @@ from navigation.obstacle_detector import SceneObstacleDetector
 ROOT=Path(r'D:\unitree_g1')
 
 
-def validate_navigation(config):
+def validate_navigation(config,max_speed=.35):
     for group in ['local','safety']:
         if not all(isinstance(v,(int,float)) and math.isfinite(v) and v>0 for v in config[group].values()):
             raise ValueError('Navigation limits must be finite and positive')
-    if not .12<=config['local']['max_speed_m_s']<=.35 or config['local']['max_yaw_rate']>.6:
+    if not .12<=config['local']['max_speed_m_s']<=max_speed or config['local']['max_yaw_rate']>.6:
         raise ValueError('Navigation velocity outside tested limits')
     if config['safety']['reaction_latency_seconds']<config['obstacle_update_seconds']+.2:
         raise ValueError('Reaction latency must include obstacle scan and velocity-filter delay')
@@ -29,7 +29,13 @@ class PatrolController:
     def __init__(self,runtime):
         self.runtime=runtime
         def load(name): return json.loads((ROOT/'configs'/name).read_text(encoding='utf-8-sig'))
-        self.config=load('navigation.json'); self.map_config=load('navigation_map.json')
+        self.factory_id=runtime.factory_cfg.get('factory_id','v1')
+        self.user_config_path=runtime.factory_cfg.get('patrol_user_config','configs/patrol_user.json')
+        self.config=load('navigation.json'); self.map_config=json.loads((ROOT/runtime.factory_cfg.get('navigation_map','configs/navigation_map.json')).read_text(encoding='utf-8-sig'))
+        if self.factory_id=='v2':
+            if self.map_config.get('factory_id')!='v2' or self.map_config.get('source_factory_sha256')!=runtime.factory_cfg.get('source_factory_sha256'):
+                raise ValueError('Factory V2 navigation map identity mismatch; AUTO disabled')
+            self.config['point_a']=None; self.config['point_b']=None
         validate_navigation(self.config)
         self.scheduler=PatrolScheduler(load('patrol_schedule.json'))
         braking_path=ROOT/'configs/navigation_braking.json'
@@ -58,7 +64,7 @@ class PatrolController:
     @property
     def mode(self): return self.selector.mode
     def fail(self,reason):
-        self.scheduler.transition('FAULT',self.now,reason); self.reason=reason; self.selector.stop(); self.path=[]
+        self.scheduler.transition('FAULT',self.now,reason); self.reason=reason; self.last_command=list(self.selector.stop()); self.path=[]
     def before_tick(self,running):
         self.sim_time=self.runtime.steps/self.runtime.loco_cfg['control_hz']
         self.now=self.sim_time if self.scheduler.config['clock_mode']=='simulation' else time.perf_counter()-self.wall_origin
@@ -170,7 +176,7 @@ class PatrolController:
     def command(self,dt):
         if self.mode=='MANUAL': return self.record(self.runtime.last_state,self.runtime.keys.tick(dt))
         if self.runtime.keys.stop_generation!=self.last_stop_generation:
-            self.last_stop_generation=self.runtime.keys.stop_generation; self.pause('X pauses Auto; explicit Resume required')
+            self.last_stop_generation=self.runtime.keys.stop_generation; self.pause('Stop key pauses Auto; explicit Resume required')
         self.runtime.keys.command=[0.,0.,0.] # WASD never contributes to AUTO command.
         state=self.runtime.policy.feedback.read_feedback()
         self.velocity_history.append(state['base_linear_velocity_world_m_s'][:2])
@@ -262,17 +268,20 @@ class PatrolController:
                 self.log.flush(); self.last_flush=self.sim_time
         return self.last_command
     def save(self,path=None):
-        payload={'version':1,'point_a':self.a,'point_b':self.b,'navigation':self.config,'map':self.map_config,'schedule':self.scheduler.config}
-        path=Path(path) if path is not None else ROOT/'configs/patrol_user.json'
+        payload={'version':1,'factory_id':self.factory_id,'point_a':self.a,'point_b':self.b,'navigation':self.config,'map':self.map_config,'schedule':self.scheduler.config}
+        path=Path(path) if path is not None else ROOT/self.user_config_path
         if not path.resolve().is_relative_to(ROOT): raise ValueError('Configuration must stay under project root')
         if path.exists(): (self.directory/'patrol_user_previous.json').write_bytes(path.read_bytes())
         tmp=path.with_suffix('.tmp'); tmp.write_text(json.dumps(payload,indent=2)); tmp.replace(path)
         return path
     def load(self,path=None):
         if self.mode!='MANUAL' or self.scheduler.state=='FAULT': raise ValueError('Switch to MANUAL before loading configuration')
-        path=Path(path) if path is not None else ROOT/'configs/patrol_user.json'
+        path=Path(path) if path is not None else ROOT/self.user_config_path
         if not path.resolve().is_relative_to(ROOT): raise ValueError('Configuration must stay under project root')
         payload=json.loads(path.read_text())
+        if payload.get('factory_id','v1')!=self.factory_id: raise ValueError('Saved patrol belongs to another factory')
+        if self.factory_id=='v2' and payload['map'].get('source_factory_sha256')!=self.runtime.factory_cfg['source_factory_sha256']:
+            raise ValueError('Saved navigation map does not match Factory V2')
         validate_schedule(payload['schedule'])
         config=payload['navigation']; lane=LaneMap(payload['map'],self.detector.obstacles,self.detector.floor); grid=OccupancyGrid(lane)
         validate_navigation(config)

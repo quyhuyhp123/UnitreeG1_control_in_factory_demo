@@ -1,0 +1,109 @@
+{
+  "status": "passed",
+  "checks": {
+    "alternate_selection_and_preview": true,
+    "save_load_alternate": true,
+    "wasd_not_added_to_auto": true,
+    "x_pauses": true,
+    "space_only_follows": true,
+    "resume_explicit": true,
+    "blocked_route1_no_switch": true,
+    "route2_still_valid": true,
+    "route1_valid_after_clear": true,
+    "manual_regression": true
+  },
+  "manual_keys": {
+    "W": {
+      "passed": true,
+      "measured_body_delta_or_yaw": 0.1431912451667345,
+      "command": [
+        0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "UP": {
+      "passed": true,
+      "measured_body_delta_or_yaw": 0.10454661545187642,
+      "command": [
+        0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "S": {
+      "passed": true,
+      "measured_body_delta_or_yaw": -0.13209060642429096,
+      "command": [
+        -0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "DOWN": {
+      "passed": true,
+      "measured_body_delta_or_yaw": -0.13987882878220279,
+      "command": [
+        -0.35,
+        0.0,
+        0.0
+      ]
+    },
+    "A": {
+      "passed": true,
+      "measured_body_delta_or_yaw": 0.23708968515456164,
+      "command": [
+        0.0,
+        0.0,
+        0.5000000000000002
+      ]
+    },
+    "LEFT": {
+      "passed": true,
+      "measured_body_delta_or_yaw": 0.3183025663414303,
+      "command": [
+        0.0,
+        0.0,
+        0.5200000000000001
+      ]
+    },
+    "D": {
+      "passed": true,
+      "measured_body_delta_or_yaw": -0.16982350231321686,
+      "command": [
+        0.0,
+        0.0,
+        -0.47000000000000025
+      ]
+    },
+    "RIGHT": {
+      "passed": true,
+      "measured_body_delta_or_yaw": -0.20834365084241568,
+      "command": [
+        0.0,
+        0.0,
+        -0.5000000000000002
+      ]
+    },
+    "Q": {
+      "passed": true,
+      "measured_body_delta_or_yaw": 0.05915430499079408,
+      "command": [
+        0.0,
+        0.3,
+        0.0
+      ]
+    },
+    "E": {
+      "passed": true,
+      "measured_body_delta_or_yaw": -0.16016098090495448,
+      "command": [
+        0.0,
+        -0.3,
+        0.0
+      ]
+    }
+  },
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_223027",
+  "scope": "Actual GUI app and callbacks, Carb logical keys; not native OS mouse clicks. Obstacle test blocks start; not moving-human avoidance."
+}

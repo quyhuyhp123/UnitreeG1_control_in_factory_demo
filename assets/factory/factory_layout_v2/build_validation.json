@@ -1,0 +1,85 @@
+{
+  "blender_version": "5.2.2 LTS",
+  "machine_count": 14,
+  "table_count": 2,
+  "seated_people": 2,
+  "standing_operators": 14,
+  "total_people": 16,
+  "uniform_machine_dimensions_m": {
+    "inner": [
+      2.4,
+      2.4,
+      2.15
+    ],
+    "outer": [
+      1.55,
+      5.2,
+      2.15
+    ]
+  },
+  "enclosure": "four walls, roof, lintel, open raised roller shutter",
+  "objects": 429,
+  "mesh_objects": 400,
+  "triangles_including_proxies": 8298,
+  "materials": 15,
+  "texture_images": 0,
+  "shared_box_meshes": 56,
+  "collision_proxy_count": 42,
+  "geometry_issues": [],
+  "navigation": {
+    "resolution_m": 0.1,
+    "footprint_radius_m": 0.67,
+    "safe_cells": 9325,
+    "spawn_component_cells": 9325,
+    "all_free_cells_connected": true,
+    "spawn_safe": true,
+    "all_markers_connected": true
+  },
+  "exports": {
+    "usd": {
+      "status": "passed",
+      "options": {
+        "filepath": "D:\\unitree_g1\\assets\\factory\\factory_layout_v2\\factory_layout_v2.usd",
+        "selected_objects_only": false,
+        "export_custom_properties": true,
+        "export_materials": true,
+        "export_uvmaps": false,
+        "generate_preview_surface": true
+      },
+      "result": [
+        "FINISHED"
+      ]
+    },
+    "glb": {
+      "status": "passed",
+      "options": {
+        "filepath": "D:\\unitree_g1\\assets\\factory\\factory_layout_v2\\factory_layout_v2.glb",
+        "export_format": "GLB",
+        "use_visible": true,
+        "export_cameras": true,
+        "export_lights": true,
+        "export_extras": true,
+        "export_yup": true
+      },
+      "result": [
+        "FINISHED"
+      ]
+    }
+  },
+  "build_seconds": 2.0324775999997655,
+  "corridor_widths_m": {
+    "left_longitudinal": 1.6267942583732056,
+    "central_longitudinal": 1.6267942583732056,
+    "right_longitudinal": 1.5629984051036683,
+    "north": 2.433962264150943,
+    "south": 6.056603773584906
+  },
+  "files_bytes": {
+    "factory_layout_v2.blend": 232261,
+    "factory_layout_v2.usd": 123229,
+    "factory_layout_v2.glb": 499584,
+    "preview_top.png": 908013,
+    "preview_isometric.png": 1088832
+  },
+  "physx_and_isaac_semantics": "NOT TESTED; not launched; collider proxies are recommendations only"
+}

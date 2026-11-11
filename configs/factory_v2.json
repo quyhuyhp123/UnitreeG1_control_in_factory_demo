@@ -1,0 +1,129 @@
+{
+  "factory_usd": "assets/factory/factory_layout_v2/factory_layout_v2_physics.usd",
+  "locomotion_config": "configs/locomotion_mjlab.yaml",
+  "checkpoint": "checkpoints/unitree_g1_mjlab_velocity_v0/policy.onnx",
+  "robot_spawn": {
+    "marker_prefix": "Robot_Entry_Spawn",
+    "position_override_m": null,
+    "heading_deg": 0,
+    "position_from_marker_m": [
+      -8.85,
+      -13.75,
+      0
+    ],
+    "clearance_radius_m": 0.67,
+    "units": "meters; heading degrees about +Z; robot forward +X"
+  },
+  "physics_dt": 0.005,
+  "entrance_apron": {
+    "enabled": false
+  },
+  "floor_contact": {
+    "contact_offset_m": 0.02,
+    "rest_offset_m": 0.0
+  },
+  "control_hz": 50,
+  "rendering": {
+    "renderer": "RaytracedLighting",
+    "graphics_api": "d3d12",
+    "width": 960,
+    "height": 640,
+    "limit_fps": 50,
+    "low_quality": true,
+    "anti_aliasing": 1
+  },
+  "camera": {
+    "mode": "free",
+    "free_eye_m": [
+      -12,
+      -16,
+      3
+    ],
+    "free_target_m": [
+      -8,
+      -13.5,
+      0.8
+    ],
+    "offset_world_m": [
+      0.0,
+      -2.7,
+      1.7
+    ],
+    "look_height_m": 0.65,
+    "focal_length_mm": 19,
+    "overview_eye_m": [
+      22,
+      -29,
+      30
+    ],
+    "overview_target_m": [
+      0,
+      0,
+      0
+    ],
+    "follow_offset_body_m": [
+      -2.5,
+      -0.8,
+      1.4
+    ]
+  },
+  "gpu_sample_interval_s": 2.0,
+  "head_camera": {
+    "enabled": true,
+    "resolution": [
+      320,
+      180
+    ],
+    "torso_offset_m": [
+      0.1,
+      0,
+      0.52
+    ],
+    "pitch_down_deg": 10.0,
+    "horizontal_fov_deg": 80.0
+  },
+  "note": "One V2 factory, one unchanged G1/ONNX, main viewport plus 320x180 live head-camera preview. Roof hidden visually at runtime; roof collision remains.",
+  "keyboard_overrides": {
+    "max_yaw_rate": 0.6,
+    "keyboard_mapping": {
+      "W": "forward",
+      "UP": "forward",
+      "S": "backward",
+      "DOWN": "backward",
+      "A": "turn_left",
+      "LEFT": "turn_left",
+      "D": "turn_right",
+      "RIGHT": "turn_right",
+      "Q": "lateral_left",
+      "E": "lateral_right",
+      "SPACE": "follow_camera",
+      "X": "stop",
+      "R": "reset",
+      "F": "follow_camera"
+    }
+  },
+  "factory_id": "v2",
+  "floor_prim_relative": "PhysicsColliders/Floor",
+  "navigation_map": "configs/navigation_map_v2.json",
+  "patrol_user_config": "configs/patrol_v2_user.json",
+  "scene_output": "logs/generated_g1_factory_v2_base.usd",
+  "source_factory_usd": "assets/factory/factory_layout_v2/factory_layout_v2.usd",
+  "source_factory_sha256": "6e3e1683dcc4885b4127063fb77a5f3195c3de5071eefaa454969033f76ef8c7",
+  "standing_configuration_reference": "configs/locomotion_mjlab.yaml: deploy default_joint_pos and existing FK height",
+  "navigation_map_verified": true,
+  "hide_source_object_ids": [
+    "Factory_Roof"
+  ],
+  "top_view": {
+    "height_m": 45,
+    "projection": "perspective",
+    "focal_length_mm": 19,
+    "horizontal_aperture": 20.955,
+    "vertical_aperture": 13.97,
+    "clipping_m": [
+      0.1,
+      100
+    ]
+  },
+  "multi_route_enabled": true
+}

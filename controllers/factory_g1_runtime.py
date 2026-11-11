@@ -48,7 +48,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         self.head_widget=None
         self.last_follow_generation=0
         super().__init__(app,logical_test_keyboard=self_test,scene_setup=self._compose,
-            runtime_config={'scene_output':'assets/robot/g1_factory_base.usd','locomotion_config':cfg['locomotion_config'],
+            runtime_config={'scene_output':cfg.get('scene_output','assets/robot/g1_factory_base.usd'),'locomotion_config':cfg['locomotion_config'],
                 'keyboard':cfg.get('keyboard_overrides',{}),'locomotion':{
                 'checkpoint':cfg['checkpoint'],'physics_hz':round(1/cfg['physics_dt']),
                 'control_hz':cfg['control_hz'],'decimation':round(1/cfg['physics_dt']/cfg['control_hz'])}})
@@ -63,8 +63,20 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         if not flat:
             from navigation.patrol_controller import PatrolController
             from navigation.patrol_ui import PatrolPanel
-            self.navigation=PatrolController(self)
+            if cfg.get('multi_route_enabled',False):
+                from navigation.multi_route_controller import MultiRouteController
+                self.navigation=MultiRouteController(self)
+            else: self.navigation=PatrolController(self)
             self.patrol_panel=PatrolPanel(self.navigation)
+        if cfg.get('factory_id')=='v2':
+            self._configure_preview_lighting()
+
+    def _configure_preview_lighting(self):
+        # Kit's shared scene-light mode renders this two-viewport scene dark.
+        # Camera lighting is a display-only fallback; physics/policy are unchanged.
+        import omni.kit.actions.core
+        registry=omni.kit.actions.core.get_action_registry()
+        registry.execute_action('omni.kit.viewport.menubar.lighting','set_lighting_mode_camera')
 
     def select_motion_command(self,dt):
         nav=getattr(self,'navigation',None)
@@ -88,6 +100,9 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             root.GetReferences().AddReference(str(source),src.GetDefaultPrim().GetPath())
             cache=UsdGeom.XformCache()
             prims=list(Usd.PrimRange(root))
+            for p in prims:
+                if p.GetAttribute('userProperties:object_id').Get() in cfg.get('hide_source_object_ids',[]):
+                    UsdGeom.Imageable(p).CreateVisibilityAttr('invisible')
             # Keep the flat-tested PhysicsScene path used by SimulationManager.
             # Deactivate only the referenced scene prim, never its colliders.
             for p in prims:
@@ -109,9 +124,11 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             if not any(p.IsA(UsdLux.DomeLight) for p in prims):
                 UsdLux.DomeLight.Define(stage,'/World/FactoryAmbient').CreateIntensityAttr(500)
             # Keep the authored factory collisions/materials; never add a second floor.
-            floors=[p for p in prims if p.GetName().startswith('Floor') and p.IsA(UsdGeom.Mesh)]
+            if cfg.get('floor_prim_relative'):
+                floors=[stage.GetPrimAtPath(root.GetPath().AppendPath(cfg['floor_prim_relative']))]
+            else: floors=[p for p in prims if p.GetName().startswith('Floor') and p.IsA(UsdGeom.Mesh)]
             if len(floors)!=1: raise ValueError('Expected exactly one factory floor mesh')
-            bbox=UsdGeom.BBoxCache(Usd.TimeCode.Default(),['default','render'])
+            bbox=UsdGeom.BBoxCache(Usd.TimeCode.Default(),['default','render','proxy'],False,True)
             bounds=bbox.ComputeWorldBound(floors[0]).ComputeAlignedRange()
             if abs(bounds.GetMax()[2])>1e-5: raise ValueError('Factory floor top must be Z=0')
             self.floor_path=str(floors[0].GetPath())
@@ -159,7 +176,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         if abs(ps.GetGravityMagnitudeAttr().Get()-9.81)>1e-5 or list(ps.GetGravityDirectionAttr().Get())!=[0,0,-1]: raise ValueError('Wrong factory gravity')
         PhysxSchema.PhysxSceneAPI.Apply(scenes[0]).CreateTimeStepsPerSecondAttr(round(1/cfg['physics_dt']))
         blockers=[]
-        bbox=UsdGeom.BBoxCache(Usd.TimeCode.Default(),['default','render','proxy','guide'])
+        bbox=UsdGeom.BBoxCache(Usd.TimeCode.Default(),['default','render','proxy','guide'],False,True)
         for p in stage.Traverse():
             if str(p.GetPath()).startswith('/World/G1/') and p.HasAPI(UsdPhysics.RigidBodyAPI):
                 PhysxSchema.PhysxContactReportAPI.Apply(p).CreateThresholdAttr(0)
@@ -167,7 +184,8 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             if str(p.GetPath())==self.floor_path: continue
             r=bbox.ComputeWorldBound(p).ComputeAlignedRange()
             lo,hi=r.GetMin(),r.GetMax()
-            if hi[2]>.01 and lo[2]<2.1 and all(lo[i]<spawn[i]+1 and hi[i]>spawn[i]-1 for i in [0,1]): blockers.append(str(p.GetPath()))
+            radius=cfg['robot_spawn'].get('clearance_radius_m',1.)
+            if hi[2]>.01 and lo[2]<2.1 and all(lo[i]<spawn[i]+radius and hi[i]>spawn[i]-radius for i in [0,1]): blockers.append(str(p.GetPath()))
         if blockers: raise ValueError('Robot_Spawn collider blockers: '+str(blockers))
         self.scene_checks.update(spawn_xyz_m=spawn,base_spawn_height_m=self.context['height'],spawn_blockers=blockers,
             spawn_heading_deg=heading,
@@ -354,6 +372,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             self.head_widget.destroy(); self.head_widget=None; self.head_window=None
             for _ in range(5): self.app.update()
         result=super().safe_reset(source)
+        if result and nav is not None and hasattr(nav,'on_robot_reset'): nav.on_robot_reset()
         if result and view is not None:
             camera=self.context['camera']
             self._set_camera_transform(view[0])

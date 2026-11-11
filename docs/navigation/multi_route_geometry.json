@@ -1,0 +1,328 @@
+{
+  "route_1_blue": {
+    "status": "VALID_GEOMETRY",
+    "length_m": 65.89606462653148,
+    "ordered_nodes": [
+      "ENTRY",
+      "ENTRY_INNER",
+      "LEFT_BOTTOM",
+      "LEFT_CORRIDOR",
+      "TOP_LEFT_TURN",
+      "TOP_CENTER_JUNCTION",
+      "CENTER_CORRIDOR",
+      "BOTTOM_CENTER_JUNCTION",
+      "BOTTOM_EXIT_CORRIDOR",
+      "ENTRY_INNER",
+      "EXIT"
+    ],
+    "segments": [
+      {
+        "id": "ENTRY__ENTRY_INNER",
+        "path": [
+          [
+            -8.85,
+            -13.75
+          ],
+          [
+            -6.985645933014354,
+            -13.0
+          ]
+        ]
+      },
+      {
+        "id": "ENTRY_INNER__LEFT_BOTTOM",
+        "path": [
+          [
+            -6.985645933014354,
+            -13.0
+          ],
+          [
+            -6.985645933014354,
+            -10.1
+          ]
+        ]
+      },
+      {
+        "id": "LEFT_BOTTOM__LEFT_CORRIDOR",
+        "path": [
+          [
+            -6.985645933014354,
+            -10.1
+          ],
+          [
+            -6.985645933014354,
+            0.0
+          ]
+        ]
+      },
+      {
+        "id": "LEFT_CORRIDOR__TOP_LEFT_TURN",
+        "path": [
+          [
+            -6.985645933014354,
+            0.0
+          ],
+          [
+            -6.985645933014354,
+            10.952830188679245
+          ]
+        ]
+      },
+      {
+        "id": "TOP_LEFT_TURN__TOP_CENTER_JUNCTION",
+        "path": [
+          [
+            -6.985645933014354,
+            10.952830188679245
+          ],
+          [
+            8.881784197001252e-16,
+            10.952830188679245
+          ]
+        ]
+      },
+      {
+        "id": "TOP_CENTER_JUNCTION__CENTER_CORRIDOR",
+        "path": [
+          [
+            8.881784197001252e-16,
+            10.952830188679245
+          ],
+          [
+            8.881784197001252e-16,
+            0.0
+          ]
+        ]
+      },
+      {
+        "id": "CENTER_CORRIDOR__BOTTOM_CENTER_JUNCTION",
+        "path": [
+          [
+            8.881784197001252e-16,
+            0.0
+          ],
+          [
+            8.881784197001252e-16,
+            -11.4
+          ]
+        ]
+      },
+      {
+        "id": "BOTTOM_CENTER_JUNCTION__BOTTOM_EXIT_CORRIDOR",
+        "path": [
+          [
+            8.881784197001252e-16,
+            -11.4
+          ],
+          [
+            -6.985645933014354,
+            -11.4
+          ]
+        ]
+      },
+      {
+        "id": "BOTTOM_EXIT_CORRIDOR__ENTRY_INNER",
+        "path": [
+          [
+            -6.985645933014354,
+            -11.4
+          ],
+          [
+            -6.985645933014354,
+            -13.0
+          ]
+        ]
+      },
+      {
+        "id": "ENTRY_INNER__EXIT",
+        "path": [
+          [
+            -6.985645933014354,
+            -13.0
+          ],
+          [
+            -8.85,
+            -13.75
+          ]
+        ]
+      }
+    ]
+  },
+  "route_2_brown": {
+    "status": "VALID_GEOMETRY",
+    "length_m": 79.79606462653148,
+    "ordered_nodes": [
+      "ENTRY",
+      "ENTRY_INNER",
+      "LEFT_BOTTOM",
+      "LEFT_CORRIDOR",
+      "TOP_LEFT_TURN",
+      "TOP_CENTER_JUNCTION",
+      "TOP_RIGHT_TURN",
+      "RIGHT_CORRIDOR",
+      "BOTTOM_RIGHT_TURN",
+      "BOTTOM_CENTER_JUNCTION",
+      "BOTTOM_EXIT_CORRIDOR",
+      "ENTRY_INNER",
+      "EXIT"
+    ],
+    "segments": [
+      {
+        "id": "ENTRY__ENTRY_INNER",
+        "path": [
+          [
+            -8.85,
+            -13.75
+          ],
+          [
+            -6.985645933014354,
+            -13.0
+          ]
+        ]
+      },
+      {
+        "id": "ENTRY_INNER__LEFT_BOTTOM",
+        "path": [
+          [
+            -6.985645933014354,
+            -13.0
+          ],
+          [
+            -6.985645933014354,
+            -10.1
+          ]
+        ]
+      },
+      {
+        "id": "LEFT_BOTTOM__LEFT_CORRIDOR",
+        "path": [
+          [
+            -6.985645933014354,
+            -10.1
+          ],
+          [
+            -6.985645933014354,
+            0.0
+          ]
+        ]
+      },
+      {
+        "id": "LEFT_CORRIDOR__TOP_LEFT_TURN",
+        "path": [
+          [
+            -6.985645933014354,
+            0.0
+          ],
+          [
+            -6.985645933014354,
+            10.952830188679245
+          ]
+        ]
+      },
+      {
+        "id": "TOP_LEFT_TURN__TOP_CENTER_JUNCTION",
+        "path": [
+          [
+            -6.985645933014354,
+            10.952830188679245
+          ],
+          [
+            8.881784197001252e-16,
+            10.952830188679245
+          ]
+        ]
+      },
+      {
+        "id": "TOP_CENTER_JUNCTION__TOP_RIGHT_TURN",
+        "path": [
+          [
+            8.881784197001252e-16,
+            10.952830188679245
+          ],
+          [
+            6.95,
+            10.952830188679245
+          ]
+        ]
+      },
+      {
+        "id": "TOP_RIGHT_TURN__RIGHT_CORRIDOR",
+        "path": [
+          [
+            6.95,
+            10.952830188679245
+          ],
+          [
+            6.95,
+            0.0
+          ]
+        ]
+      },
+      {
+        "id": "RIGHT_CORRIDOR__BOTTOM_RIGHT_TURN",
+        "path": [
+          [
+            6.95,
+            0.0
+          ],
+          [
+            6.95,
+            -11.4
+          ]
+        ]
+      },
+      {
+        "id": "BOTTOM_RIGHT_TURN__BOTTOM_CENTER_JUNCTION",
+        "path": [
+          [
+            6.95,
+            -11.4
+          ],
+          [
+            8.881784197001252e-16,
+            -11.4
+          ]
+        ]
+      },
+      {
+        "id": "BOTTOM_CENTER_JUNCTION__BOTTOM_EXIT_CORRIDOR",
+        "path": [
+          [
+            8.881784197001252e-16,
+            -11.4
+          ],
+          [
+            -6.985645933014354,
+            -11.4
+          ]
+        ]
+      },
+      {
+        "id": "BOTTOM_EXIT_CORRIDOR__ENTRY_INNER",
+        "path": [
+          [
+            -6.985645933014354,
+            -11.4
+          ],
+          [
+            -6.985645933014354,
+            -13.0
+          ]
+        ]
+      },
+      {
+        "id": "ENTRY_INNER__EXIT",
+        "path": [
+          [
+            -6.985645933014354,
+            -13.0
+          ],
+          [
+            -8.85,
+            -13.75
+          ]
+        ]
+      }
+    ]
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "exit_code": 0,
+  "error_lines": 0,
+  "log": "D:\\unitree_g1\\logs\\factory_g1_20261110_204029.log",
+  "flat_mode": false,
+  "self_test": false,
+  "checked_at": "2026-11-10T20:40:55.5396092+07:00",
+  "native_stderr_diagnostics": 0,
+  "finished_marker_seen": true,
+  "status": "completed",
+  "controller": "locomotion",
+  "factory": "v2",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_204045",
+  "head_image": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_204045\\head_camera.png",
+  "head_camera_path": "/World/G1/torso_link/HeadCamera",
+  "head_preview_resolution": [
+    320,
+    180
+  ],
+  "gui_run": true,
+  "image_visually_inspected": true,
+  "peak_whole_gpu_mib": 4438.0,
+  "lighting": "Camera lighting via installed Kit action; display only, source USD unchanged",
+  "scope": "GUI runtime launched and secondary viewport image inspected; no native OS keyboard/mouse test"
+}

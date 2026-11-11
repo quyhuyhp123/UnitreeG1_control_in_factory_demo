@@ -1,0 +1,78 @@
+{
+  "checks": {
+    "walking_before_blocker": true,
+    "live_blocker_stops_same_route": true,
+    "cleared_blocker_resumes_same_route": true,
+    "fault_cancels_auto": true,
+    "stop_cannot_clear_fault": true,
+    "reset_at_entry": true,
+    "policy_history_cleared": true,
+    "reset_cancels_route": true,
+    "ack_does_not_restart": true
+  },
+  "fault_scope": "Software runtime fault injection; no actual falling robot claimed",
+  "blocked_state": "WAITING_FOR_CLEAR_PATH",
+  "blocked_command": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "blocked_reason": "Obstacle in braking envelope",
+  "blocked_position": [
+    -8.110220909118652,
+    -13.41125774383545,
+    0.7808747887611389
+  ],
+  "status": "passed",
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261110_223450",
+  "reset": {
+    "source": "R",
+    "paused_before_reset": true,
+    "safe_before_reset": true,
+    "position_after_reset": [
+      -8.850000381469727,
+      -13.75,
+      0.7854665517807007
+    ],
+    "orientation_after_reset_wxyz": [
+      1.0,
+      -3.293137290638626e-11,
+      0.0,
+      -2.4071916335244303e-12
+    ],
+    "joint_positions_after_reset": [
+      -0.10000000149011612,
+      -0.10000000149011612,
+      3.2801266043602784e-12,
+      8.552723113064431e-11,
+      7.105544624907978e-11,
+      1.1711295995475712e-11,
+      -1.2461897833104807e-11,
+      -5.996400598284879e-11,
+      3.4866259185362125e-11,
+      0.30000001192092896,
+      0.30000001192092896,
+      0.3499999940395355,
+      0.3499999940395355,
+      -0.20000000298023224,
+      -0.20000000298023224,
+      0.17999999225139618,
+      -0.17999999225139618,
+      -4.515348869544439e-13,
+      -7.024722600487698e-13,
+      1.457622356149102e-10,
+      5.849431355953172e-11,
+      0.8700000047683716,
+      0.8700000047683716,
+      -2.056203297906567e-11,
+      2.476719697386276e-11,
+      -1.0081283030594079e-10,
+      -4.3002459232388546e-11,
+      -4.088898924309303e-12,
+      1.6715552553225876e-11
+    ],
+    "history_terms_after_reset": 0,
+    "policy_steps_after_reset": 0,
+    "gait_phase_after_reset": 0.0
+  }
+}
