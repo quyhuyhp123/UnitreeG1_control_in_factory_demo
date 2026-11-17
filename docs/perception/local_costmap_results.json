@@ -1,0 +1,360 @@
+{
+  "status": "passed",
+  "run_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/keyboard_runs/20261117_085750",
+  "image_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/costmap_runs/20261117_085750",
+  "config": {
+    "enabled": true,
+    "size_m": 6.0,
+    "resolution_m": 0.1,
+    "min_obstacle_points": 3,
+    "min_floor_points": 2,
+    "occupied_memory_s": 10.0,
+    "human_memory_s": 3.0,
+    "free_memory_s": 10.0,
+    "human_class_id": 0,
+    "human_extra_m": 0.3,
+    "fallback_footprint": {
+      "body_radius_m": 0.35,
+      "step_sway_m": 0.08,
+      "pose_error_m": 0.04,
+      "margin_m": 0.1
+    },
+    "save_directory": "logs/costmap_runs",
+    "note": "Rolling 6x6 m local costmap, world-aligned and centred on the robot. Footprint/inflation radii are read from the factory navigation map (body radius = inscribed, body + sway + pose error + margin = inflation); people get human_extra_m more. Observations older than their memory fall back to UNKNOWN, never to FREE. Off by default; enable with --costmap or --costmap-debug. Output only: not read by navigation, the safety supervisor or locomotion."
+  },
+  "grid": {
+    "size_m": 6.0,
+    "cells": [
+      60,
+      60
+    ],
+    "resolution_m": 0.1,
+    "frame": "world-aligned, robot-centred rolling window",
+    "inscribed_radius_m": 0.35,
+    "inflation_radius_m": 0.57,
+    "human_extra_m": 0.3
+  },
+  "tests": {
+    "standing_states": {
+      "passed": true,
+      "cells": {
+        "unknown": 3062,
+        "free": 504,
+        "occupied": 34,
+        "static_lethal": 2032,
+        "inscribed": 304,
+        "inflated": 193,
+        "traversable": 429,
+        "labelled": 0
+      },
+      "behind_robot_1_5m": {
+        "state": 0,
+        "cost": 254,
+        "traversable": false,
+        "static": true,
+        "class_id": -1
+      },
+      "blind_zone_0_8m_ahead": {
+        "state": 0,
+        "cost": 255,
+        "traversable": false,
+        "static": false,
+        "class_id": -1
+      },
+      "ahead_2_4m": {
+        "state": 1,
+        "cost": 0,
+        "traversable": true,
+        "static": false,
+        "class_id": -1
+      },
+      "under_robot": {
+        "state": 1,
+        "cost": 0,
+        "traversable": true,
+        "static": false,
+        "class_id": -1
+      },
+      "outside_building_south": {
+        "state": 0,
+        "cost": 254,
+        "traversable": false,
+        "static": true,
+        "class_id": -1
+      },
+      "meaning": "Unseen areas (behind, at the feet) are UNKNOWN and not traversable; seen floor is FREE; outside the walkable area is LETHAL"
+    },
+    "inflation_and_shadow": {
+      "passed": true,
+      "box": {
+        "object": "box",
+        "found": true,
+        "occupied_cells": 36,
+        "nearest_occupied_cell_m": 1.8146902064822827,
+        "ground_truth_distance_m": 1.8680082011089232,
+        "distance_error_m": -0.05331799462664044,
+        "majority_class_id": -1,
+        "class_name": "unknown",
+        "expected_class": "unknown",
+        "class_correct": true,
+        "ground_truth_box_m": [
+          [
+            -7.106526746577171,
+            -13.113099886193488
+          ],
+          [
+            -6.606526746577171,
+            -12.613099886193488
+          ]
+        ]
+      },
+      "inflation_probes": {
+        "0.20 m beside box": {
+          "state": 1,
+          "cost": 253,
+          "traversable": false,
+          "static": false,
+          "class_id": -1
+        },
+        "0.47 m beside box": {
+          "state": 1,
+          "cost": 195,
+          "traversable": false,
+          "static": false,
+          "class_id": -1
+        },
+        "0.90 m beside box": {
+          "state": 1,
+          "cost": 0,
+          "traversable": true,
+          "static": false,
+          "class_id": -1
+        }
+      },
+      "shadow_behind_box": {
+        "state": 0,
+        "cost": 195,
+        "traversable": false,
+        "static": false,
+        "class_id": -1
+      },
+      "screenshot": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/costmap_runs/20261117_085750/002_2a_box_inflation",
+      "cells": {
+        "unknown": 3146,
+        "free": 384,
+        "occupied": 70,
+        "static_lethal": 2032,
+        "inscribed": 400,
+        "inflated": 297,
+        "traversable": 206,
+        "labelled": 0
+      },
+      "meaning": "0.20 m: inside the 0.35 m inscribed radius; 0.47 m: inflation ring; 0.90 m: clear and traversable. Floor hidden behind the box is UNKNOWN"
+    },
+    "test_obstacles": {
+      "passed": true,
+      "objects": [
+        {
+          "object": "person",
+          "found": true,
+          "occupied_cells": 53,
+          "nearest_occupied_cell_m": 2.487209897740142,
+          "ground_truth_distance_m": 2.50700381467479,
+          "distance_error_m": -0.01979391693464816,
+          "majority_class_id": 0,
+          "class_name": "person",
+          "expected_class": "person",
+          "class_correct": true,
+          "ground_truth_box_m": [
+            [
+              -6.356274574302261,
+              -14.915278113303277
+            ],
+            [
+              -5.772031453839209,
+              -12.823028880912418
+            ]
+          ]
+        },
+        {
+          "object": "chair",
+          "found": true,
+          "occupied_cells": 38,
+          "nearest_occupied_cell_m": 1.9515275991522516,
+          "ground_truth_distance_m": 1.9393592144452934,
+          "distance_error_m": 0.012168384706958246,
+          "majority_class_id": 56,
+          "class_name": "chair",
+          "expected_class": "chair",
+          "class_correct": true,
+          "ground_truth_box_m": [
+            [
+              -7.255037739532055,
+              -12.664261185320324
+            ],
+            [
+              -6.650406828719149,
+              -12.06044686257609
+            ]
+          ]
+        },
+        {
+          "object": "crate",
+          "found": true,
+          "occupied_cells": 24,
+          "nearest_occupied_cell_m": 2.101330617545674,
+          "ground_truth_distance_m": 2.0731480942582934,
+          "distance_error_m": 0.02818252328738069,
+          "majority_class_id": -1,
+          "class_name": "unknown",
+          "expected_class": "unknown",
+          "class_correct": true,
+          "ground_truth_box_m": [
+            [
+              -6.869078671760647,
+              -14.714752116629471
+            ],
+            [
+              -6.469078665800183,
+              -14.314752110669007
+            ]
+          ]
+        }
+      ],
+      "person_clearance_probe_0_75m": {
+        "state": 1,
+        "cost": 195,
+        "traversable": false,
+        "static": false,
+        "class_id": -1
+      },
+      "screenshot": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/costmap_runs/20261117_085750/003_2b_person_chair_crate",
+      "cells": {
+        "unknown": 3080,
+        "free": 381,
+        "occupied": 139,
+        "static_lethal": 2032,
+        "inscribed": 534,
+        "inflated": 286,
+        "traversable": 78,
+        "labelled": 81
+      },
+      "meaning": "A cell 0.75 m in front of the person still carries cost (0.57 m inflation + 0.30 m human margin)"
+    },
+    "removed_obstacle_cleared": {
+      "passed": true,
+      "occupied_cells_before": 38,
+      "occupied_cells_after": 0,
+      "cell_at_old_chair": {
+        "state": 1,
+        "cost": 0,
+        "traversable": true,
+        "static": false,
+        "class_id": -1
+      }
+    },
+    "turning": {
+      "passed": true,
+      "robot_yaw_change_deg": 85.45886646137109,
+      "box_cells_iou_after_18_deg": 0.96,
+      "box_cells_kept_when_out_of_view": 0.9583333333333334,
+      "cells_newly_seen_free": 672,
+      "screenshot": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/costmap_runs/20261117_085750/004_4_after_turn_box_remembered",
+      "meaning": "Occupied cells of the box are the same world cells before and after turning; once out of view they are kept from memory"
+    },
+    "stale_data_timeout": {
+      "passed": true,
+      "box_last_seen_sim_time_s": 18.66,
+      "occupied_memory_s": 10.0,
+      "box_cells_just_before_timeout": 11,
+      "box_cells_after_timeout": 0,
+      "cell_at_old_box": {
+        "state": 0,
+        "cost": 80,
+        "traversable": false,
+        "static": false,
+        "class_id": -1
+      },
+      "age_checked_s": 12.0,
+      "meaning": "Out of view, the box is remembered for the memory time, then its cells become UNKNOWN (not FREE)"
+    },
+    "slow_walk": {
+      "passed": true,
+      "distance_walked_m": 1.911207839783019,
+      "commanded_speed_limit_m_s": 0.3,
+      "peak_measured_speed_m_s": 0.42173685833602814,
+      "mean_measured_speed_m_s": 0.30489522225334553,
+      "far_box": {
+        "object": "far_box",
+        "found": true,
+        "occupied_cells": 36,
+        "nearest_occupied_cell_m": 2.0190655317812762,
+        "ground_truth_distance_m": 2.0095821606147104,
+        "distance_error_m": 0.009483371166565835,
+        "majority_class_id": -1,
+        "class_name": "unknown",
+        "expected_class": "unknown",
+        "class_correct": true,
+        "ground_truth_box_m": [
+          [
+            -4.956497495688233,
+            -14.429390642944423
+          ],
+          [
+            -4.456497495688233,
+            -13.929390642944423
+          ]
+        ]
+      },
+      "blind_zone_cells_free_from_memory": 1.0,
+      "maps_during_walk": 96,
+      "window_origin_world_m": [
+        -10.0,
+        -16.7
+      ],
+      "robot_xy": [
+        -6.945253372192383,
+        -13.640824317932129
+      ],
+      "screenshot": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/costmap_runs/20261117_085750/006_6_after_slow_walk",
+      "meaning": "The window stays centred while walking; floor seen earlier is still known when it enters the blind zone at the feet"
+    },
+    "no_avoidance_commands": {
+      "passed": true,
+      "ticks_checked": 2362,
+      "ticks_where_command_differs_from_keyboard": 0,
+      "navigation_mode": "MANUAL",
+      "scheduler_state": "IDLE",
+      "navigation_obstacle_source": "SIM GROUND TRUTH",
+      "meaning": "Every applied command is the test keyboard command; navigation keeps its own obstacle source"
+    },
+    "map_rules_every_frame": {
+      "passed": true,
+      "maps_checked": 472,
+      "violations": []
+    }
+  },
+  "update_ms": {
+    "mean": 3.90471710840248,
+    "p95": 21.279533271444958,
+    "max": 34.349249966908246,
+    "thread": "perception thread"
+  },
+  "pipeline_ms": {
+    "yolo_mean": 2.9334731369675926,
+    "localization_and_costmap_mean": 20.955670337509403,
+    "frame_to_map_mean": 30.927579167868224,
+    "frame_to_map_p95": 61.78466781275347
+  },
+  "worker": {
+    "submitted": 472,
+    "processed": 472,
+    "dropped": 0,
+    "inference_hz": 6.634534082492488,
+    "inference_ms_mean": 2.8449258347973228,
+    "inference_ms_p95": 4.3650168721796945,
+    "submit_to_result_ms_mean": 27.867096479749307,
+    "submit_to_result_ms_p95": 47.05282483482724
+  },
+  "failed_tests": []
+}

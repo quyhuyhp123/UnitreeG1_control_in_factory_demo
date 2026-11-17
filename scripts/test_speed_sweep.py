@@ -1,11 +1,11 @@
 """Measured flat-floor speed sweep; genuine policy/PhysX, resets only between trials."""
 from pathlib import Path
 import sys,json,math,statistics,argparse
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 parser=argparse.ArgumentParser(); parser.add_argument('--speeds',type=float,nargs='+',default=[.22,.35,.5,.65,.8,1.]); parser.add_argument('--output-name',default='speed_sweep_results.json'); args,_=parser.parse_known_args()
 if Path(args.output_name).name!=args.output_name or any(not .12<=v<=1. for v in args.speeds): raise ValueError('Invalid speed/output')
 from isaacsim import SimulationApp
-app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
 rt=None; report={'scope':'Straight flat floor only; not factory route certification','trials':[]}
 dest=ROOT/'docs/navigation'/args.output_name
 try:

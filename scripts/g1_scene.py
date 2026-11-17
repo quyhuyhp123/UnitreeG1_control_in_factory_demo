@@ -2,7 +2,7 @@
 from pathlib import Path
 import asyncio,json,math,re,shutil
 from datetime import datetime
-PROJECT_ROOT=Path(r"D:\unitree_g1")
+PROJECT_ROOT=Path(__file__).resolve().parents[1]
 
 def build_g1_scene(app,cfg,passive=False):
     source=PROJECT_ROOT/cfg['asset']

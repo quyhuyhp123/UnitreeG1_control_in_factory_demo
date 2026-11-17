@@ -1,7 +1,7 @@
 """Round-trip file verification in Blender; no Isaac runtime."""
 import bpy,json,traceback
 from pathlib import Path
-ROOT=Path(r'D:\unitree_g1'); OUT=ROOT/'assets/factory/factory_layout_v2'
+ROOT=Path(__file__).resolve().parents[1]; OUT=ROOT/'assets/factory/factory_layout_v2'
 report={}
 bpy.ops.wm.open_mainfile(filepath=str(ROOT/'blender/factory_layout_v2.blend'))
 bpy.context.view_layer.update()

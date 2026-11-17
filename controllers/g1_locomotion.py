@@ -5,7 +5,7 @@ import hashlib,json,time
 import numpy as np
 from controllers.g1_joint_targets import G1JointTargets,as_numpy
 
-PROJECT_ROOT=Path(r'D:\unitree_g1')
+PROJECT_ROOT=Path(__file__).resolve().parents[1]
 
 def inverse_rotate_wxyz(quaternion,vector):
     q=np.asarray(quaternion,dtype=np.float64)

@@ -1,7 +1,7 @@
 """Factory V2 speed ceiling, distinct from the policy's command range."""
 from pathlib import Path
 import json,math
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 
 def load_speed_profile():
     profile=json.loads((ROOT/'configs/navigation_speed_v2.json').read_text())
@@ -14,7 +14,9 @@ def load_speed_profile():
     maximum=profile['maximum_verified_m_s']; default=profile['default_m_s']; actual=profile['max_actual_speed_m_s']
     if not all(math.isfinite(v) for v in (maximum,default,actual)) or not .12<=default<=maximum<=1. or actual<maximum:
         raise ValueError('Invalid verified speed profile')
-    if maximum>.22:
+    # An explicit user override opens the ceiling without a matching audit;
+    # the flag stays visible in the profile so it is never mistaken for evidence.
+    if maximum>.22 and not profile.get('unverified_user_override',False):
         evidence=(ROOT/profile['evidence']).resolve()
         if not evidence.is_relative_to(ROOT): raise ValueError('Speed evidence must stay inside project')
         result=json.loads(evidence.read_text())

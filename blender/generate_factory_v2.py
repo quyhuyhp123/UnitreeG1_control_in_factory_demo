@@ -1,6 +1,6 @@
 """Industrial hall revision; all generated files remain in D:/unitree_g1."""
 from pathlib import Path
-BASE=Path(r'D:\unitree_g1\blender\generate_factory_base.py')
+BASE=(Path(__file__).resolve().parent/'generate_factory_base.py')
 exec(compile(BASE.read_text(encoding='utf-8').split('def bounds(obj):')[0],str(BASE),'exec'))
 scene.name='Industrial_Hall_Green_'+STAMP
 for name in ['Steel_Frame','Roof','Utilities','Workers','Props','Signage']:

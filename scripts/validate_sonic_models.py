@@ -3,8 +3,8 @@
 Does not synthesize encoder inputs or attach SONIC to Articulation.
 """
 from pathlib import Path
-import argparse,json,sys,time
-ROOT=Path(r'D:\unitree_g1')
+import argparse,json,sys,time,os
+ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 
 
@@ -13,7 +13,7 @@ def main():
     parser.add_argument('--telemetry',type=Path,required=True)
     args,_=parser.parse_known_args()
     environment=json.loads((ROOT/'configs/environment.json').read_text(encoding='utf-8-sig'))
-    sys.path.insert(0,str(Path(environment['isaac_sim_root'])/'exts/isaacsim.pip.onnx/pip_prebundle'))
+    sys.path.insert(0,str(Path(os.environ.get('ISAAC_SIM_ROOT') or environment['isaac_sim_root'] or sys.prefix)/'exts/isaacsim.pip.onnx/pip_prebundle'))
     import numpy as np
     import onnxruntime as ort
     from controllers.sonic_motion_planner import SonicMotionPlanner

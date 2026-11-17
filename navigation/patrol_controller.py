@@ -10,7 +10,7 @@ from navigation.patrol_scheduler import PatrolScheduler,validate_schedule
 from navigation.safety_supervisor import SafetySupervisor
 from navigation.command_adapter import CommandSelector
 from navigation.obstacle_detector import SceneObstacleDetector
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 
 
 def validate_navigation(config,max_speed=.35):

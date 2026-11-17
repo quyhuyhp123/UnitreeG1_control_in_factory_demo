@@ -1,0 +1,22 @@
+{
+  "enabled": false,
+  "pixel_stride": 2,
+  "min_range_m": 0.25,
+  "max_range_m": 8.0,
+  "floor_z_m": 0.0,
+  "floor_tolerance_m": 0.06,
+  "floor_tolerance_per_m": 0.012,
+  "max_height_m": 1.9,
+  "self_radius_m": 0.4,
+  "grid_resolution_m": 0.1,
+  "grid_half_width_m": 6.0,
+  "min_points_per_cell": 4,
+  "min_cluster_points": 25,
+  "box_shrink_fraction": 0.15,
+  "min_object_points": 12,
+  "depth_bin_m": 0.15,
+  "foreground_fraction": 0.12,
+  "max_object_depth_m": 0.9,
+  "save_directory": "logs/obstacle_runs",
+  "note": "RGB-D obstacle localisation (YOLO boxes + depth-only clusters) in the robot frame. Off by default; enable with --obstacles or --obstacles-debug (these also switch on the RGB-D camera and YOLO). Output only: obstacles are logged and shown, never sent to navigation, the safety supervisor or locomotion."
+}

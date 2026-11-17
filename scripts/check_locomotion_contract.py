@@ -3,7 +3,7 @@ from pathlib import Path
 from types import SimpleNamespace
 import json,sys
 import numpy as np
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from controllers.g1_locomotion import G1Locomotion,inverse_rotate_wxyz
 

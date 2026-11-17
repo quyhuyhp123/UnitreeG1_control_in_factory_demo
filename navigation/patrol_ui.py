@@ -56,7 +56,7 @@ class PatrolPanel:
                             ui.Label(('Each cycle = complete route back to ENTRY. ' if hasattr(nav,'route_manager') else 'Each cycle = A > B > A. ')+'Repeat must be enabled. Wait uses selected clock; simulation seconds may run slower than real time.',word_wrap=True,height=44)
                             if hasattr(nav,'speed_limit'):
                                 with ui.HStack(height=22):
-                                    for value in sorted(set([v for v in (.22,.25,.30,nav.speed_limit) if v<=nav.speed_limit])):
+                                    for value in sorted(set([v for v in (.22,.30,.50,.80,nav.speed_limit) if v<=nav.speed_limit])):
                                         ui.Button(f'{value:g} m/s',clicked_fn=lambda v=value:self.speed.model.set_value(v))
                             ui.Button('Apply schedule / speed (while waiting)',height=24,clicked_fn=lambda:self.call(self.apply_schedule))
                     with ui.HStack(height=26):

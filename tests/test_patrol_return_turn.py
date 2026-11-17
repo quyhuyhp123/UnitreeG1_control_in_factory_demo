@@ -4,7 +4,7 @@ from navigation.local_planner import LocalPlanner
 
 class ReturnTurnTests(unittest.TestCase):
     def setUp(self):
-        self.cfg=json.loads(Path(r'D:\unitree_g1\configs\navigation.json').read_text())['local']
+        self.cfg=json.loads((Path(__file__).resolve().parents[1]/'configs/navigation.json').read_text())['local']
         self.planner=LocalPlanner(self.cfg)
         self.planner.reset([(0,1.5),(0,0)])
     def state(self,x,y,yaw):

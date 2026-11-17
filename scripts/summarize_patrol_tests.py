@@ -1,7 +1,7 @@
 """Summarize persisted actual test evidence; never runs or invents a simulation."""
 from pathlib import Path
 import json,statistics,math,subprocess
-ROOT=Path(r'D:\unitree_g1'); DOC=ROOT/'docs/navigation'
+ROOT=Path(__file__).resolve().parents[1]; DOC=ROOT/'docs/navigation'
 
 
 def load(path): return json.loads(Path(path).read_text(encoding='utf-8-sig'))

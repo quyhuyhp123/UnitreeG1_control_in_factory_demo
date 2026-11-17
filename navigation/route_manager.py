@@ -4,7 +4,7 @@ from pathlib import Path
 from navigation.route_graph import CorridorGrid
 from navigation.global_planner import GlobalPlanner,NoValidPath
 from navigation.speed_profile import load_speed_profile
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 class RouteManager:
     def __init__(self,factory_config,data=None):
         self.data=data if data is not None else json.loads((ROOT/'configs/patrol_routes.json').read_text())

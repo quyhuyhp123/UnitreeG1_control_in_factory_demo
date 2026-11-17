@@ -4,7 +4,7 @@ import json
 import sys
 import traceback
 
-PROJECT_ROOT = Path(r"D:\unitree_g1")
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RESULT = PROJECT_ROOT / "logs" / "smoke_result.json"
 
 def main():

@@ -6,7 +6,7 @@ from pathlib import Path
 from collections import deque
 from mathutils import Vector
 
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'assets/factory/factory_layout_v2'
 C=json.loads((OUT/'factory_dimensions.json').read_text(encoding='utf-8'))
 START=time.perf_counter()

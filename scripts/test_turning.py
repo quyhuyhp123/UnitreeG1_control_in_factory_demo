@@ -1,7 +1,7 @@
 """Focused A/D and arrow yaw diagnosis using real ONNX and PhysX."""
 from pathlib import Path
 import json,sys,math
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 def main():
@@ -10,7 +10,7 @@ def main():
     preflight(cfg,False)
     from isaacsim import SimulationApp
     app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','multi_gpu':False,
-        'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
+        'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
             '--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None
     try:

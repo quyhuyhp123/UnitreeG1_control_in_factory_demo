@@ -1,0 +1,643 @@
+{
+  "status": "passed",
+  "run_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/keyboard_runs/20261117_084256",
+  "image_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/obstacle_runs/20261117_084256",
+  "config": {
+    "enabled": true,
+    "pixel_stride": 2,
+    "min_range_m": 0.25,
+    "max_range_m": 8.0,
+    "floor_z_m": 0.0,
+    "floor_tolerance_m": 0.06,
+    "floor_tolerance_per_m": 0.012,
+    "max_height_m": 1.9,
+    "self_radius_m": 0.4,
+    "grid_resolution_m": 0.1,
+    "grid_half_width_m": 6.0,
+    "min_points_per_cell": 4,
+    "min_cluster_points": 25,
+    "box_shrink_fraction": 0.15,
+    "min_object_points": 12,
+    "depth_bin_m": 0.15,
+    "foreground_fraction": 0.12,
+    "max_object_depth_m": 0.9,
+    "save_directory": "logs/obstacle_runs",
+    "note": "RGB-D obstacle localisation (YOLO boxes + depth-only clusters) in the robot frame. Off by default; enable with --obstacles or --obstacles-debug (these also switch on the RGB-D camera and YOLO). Output only: obstacles are logged and shown, never sent to navigation, the safety supervisor or locomotion."
+  },
+  "tests": {
+    "floor_and_self_rejected": {
+      "passed": true,
+      "obstacles_within_1m": 0,
+      "points": {
+        "valid": 56588,
+        "floor": 26674,
+        "robot_body": 0,
+        "above_height_band": 389,
+        "obstacle": 17280
+      },
+      "obstacle_count": 1,
+      "nearest_obstacle_m": 1.8623662843315465,
+      "localization_ms": 19.12912301486358
+    },
+    "synchronisation": {
+      "passed": true,
+      "sync": {
+        "rgb_depth_same_render_frame": true,
+        "yolo_frame_index": 49,
+        "depth_frame_index": 49,
+        "pose_sim_time": 4.86,
+        "pose_lag_ticks": 2
+      },
+      "result_sim_time_s": 4.86,
+      "meaning": "RGB, depth, camera pose and YOLO boxes of one result all belong to the same camera frame"
+    },
+    "named_props_standing": {
+      "passed": true,
+      "objects": [
+        {
+          "object": "person",
+          "found": true,
+          "class_name": "person",
+          "confidence": 0.9014663696289062,
+          "source": "yolo+depth",
+          "estimated_distance_robot_m": 4.498355571265288,
+          "ground_truth_distance_robot_m": 4.314940205486353,
+          "distance_error_m": 0.18341536577893436,
+          "estimated_range_camera_m": 4.4027537855546015,
+          "ground_truth_range_camera_m": 4.215715523142631,
+          "range_error_m": 0.18703826241197063,
+          "position_robot_m": [
+            4.563263534107083,
+            0.24681554890941046,
+            1.262729197190566
+          ],
+          "ground_truth_centre_robot_m": [
+            4.597384066113518,
+            0.24818628860373695
+          ],
+          "position_world_m": [
+            -4.298280389651439,
+            -13.535658556360733,
+            1.262729197190566
+          ],
+          "ground_truth_centre_world_m": [
+            -4.264128991691534,
+            -13.534604456905255,
+            0.9634084105491638
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": 2.992460937763207,
+          "height_range_m": [
+            0.1942857337547466,
+            1.8523484070930223
+          ],
+          "ground_truth_height_m": 1.9268168210983276,
+          "sim_time_s": 9.86
+        },
+        {
+          "object": "chair",
+          "found": true,
+          "class_name": "chair",
+          "confidence": 0.7893315553665161,
+          "source": "yolo+depth",
+          "estimated_distance_robot_m": 2.2842540103595828,
+          "ground_truth_distance_robot_m": 2.2337029560519315,
+          "distance_error_m": 0.05055105430765128,
+          "estimated_range_camera_m": 2.364499639422059,
+          "ground_truth_range_camera_m": 2.1696776987758257,
+          "range_error_m": 0.19482194064623348,
+          "position_robot_m": [
+            2.5858588165606875,
+            1.0735828772873148,
+            0.49575230989866415
+          ],
+          "ground_truth_centre_robot_m": [
+            2.3910082162962296,
+            1.081496320550456
+          ],
+          "position_world_m": [
+            -6.268810509272235,
+            -12.692824003637764,
+            0.49575230989866415
+          ],
+          "ground_truth_centre_world_m": [
+            -6.464128991691534,
+            -12.684604456905253,
+            0.4386135301652336
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": 22.005042797640012,
+          "height_range_m": [
+            0.1711537994809553,
+            0.8737135764334725
+          ],
+          "ground_truth_height_m": 0.8772270603304672,
+          "sim_time_s": 9.86
+        },
+        {
+          "object": "bottle",
+          "found": true,
+          "class_name": "bottle",
+          "confidence": 0.6753609776496887,
+          "source": "yolo+depth",
+          "estimated_distance_robot_m": 1.260541918170101,
+          "ground_truth_distance_robot_m": 1.253200758948417,
+          "distance_error_m": 0.0073411592216838795,
+          "estimated_range_camera_m": 1.2195717464850817,
+          "ground_truth_range_camera_m": 1.1927439975837573,
+          "range_error_m": 0.026827748901324444,
+          "position_robot_m": [
+            1.219041931706364,
+            -0.36457174108597423,
+            0.8964162831705298
+          ],
+          "ground_truth_centre_robot_m": [
+            1.2520253446960723,
+            -0.3771736277933981
+          ],
+          "position_world_m": [
+            -7.647124716765087,
+            -14.12175024096252,
+            0.8964162831705298
+          ],
+          "ground_truth_centre_world_m": [
+            -7.614128991691533,
+            -14.134604456905254,
+            0.8956504991132654
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": -16.970038016827917,
+          "height_range_m": [
+            0.8247792660983363,
+            0.970967788300259
+          ],
+          "ground_truth_height_m": 0.1913009982265308,
+          "sim_time_s": 9.86
+        },
+        {
+          "object": "pedestal",
+          "found": true,
+          "class_name": "unknown",
+          "confidence": null,
+          "source": "depth",
+          "estimated_distance_robot_m": 1.1262125311030715,
+          "ground_truth_distance_robot_m": 1.124319152113302,
+          "distance_error_m": 0.0018933789897694897,
+          "estimated_range_camera_m": 1.150925521512604,
+          "ground_truth_range_camera_m": 1.1277462178191784,
+          "range_error_m": 0.02317930369342558,
+          "position_robot_m": [
+            1.1026503842017379,
+            -0.35430685359103176,
+            0.6576638027885465
+          ],
+          "ground_truth_centre_robot_m": [
+            1.2520253446960723,
+            -0.3771736277933981
+          ],
+          "position_world_m": [
+            -7.764128915773857,
+            -14.11105202981642,
+            0.6576638027885465
+          ],
+          "ground_truth_centre_world_m": [
+            -7.614128991691533,
+            -14.134604456905254,
+            0.4
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": -11.926513755265663,
+          "height_range_m": [
+            0.29613054117530846,
+            0.9484643909430407
+          ],
+          "ground_truth_height_m": 0.800000011920929,
+          "sim_time_s": 9.86
+        }
+      ],
+      "screenshot": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/obstacle_runs/20261117_084256/002_A_named_props",
+      "note": "person tolerance 0.25 m: its true box starts at the toe tips, which are inside the floor band",
+      "max_abs_distance_error_m": 0.18341536577893436
+    },
+    "transform_after_rotation": {
+      "passed": true,
+      "robot_yaw_change_rad": 0.33887677513110553,
+      "robot_yaw_change_deg": 19.4162089900162,
+      "objects": [
+        {
+          "object": "person",
+          "found": true,
+          "class_name": "person",
+          "confidence": 0.8996046185493469,
+          "source": "yolo+depth",
+          "estimated_distance_robot_m": 4.503325366011103,
+          "ground_truth_distance_robot_m": 4.319632283123072,
+          "distance_error_m": 0.18369308288803055,
+          "estimated_range_camera_m": 4.416992299338587,
+          "ground_truth_range_camera_m": 4.231045924248665,
+          "range_error_m": 0.18594637508992218,
+          "position_robot_m": [
+            4.376569263500338,
+            -1.2964394163746342,
+            1.2603952338690454
+          ],
+          "ground_truth_centre_robot_m": [
+            4.420910703537603,
+            -1.3014368289948997
+          ],
+          "position_world_m": [
+            -4.297413079035815,
+            -13.548653463500315,
+            1.2603952338690454
+          ],
+          "ground_truth_centre_world_m": [
+            -4.264128991691534,
+            -13.534604456905255,
+            0.9634084105491638
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": -16.63000552817689,
+          "height_range_m": [
+            0.20364562688164892,
+            1.8542678665930612
+          ],
+          "ground_truth_height_m": 1.9268168210983276,
+          "sim_time_s": 14.76,
+          "world_position_shift_m": 0.01302381815253636,
+          "robot_frame_bearing_change_deg": -19.6224664659401
+        },
+        {
+          "object": "chair",
+          "found": true,
+          "class_name": "chair",
+          "confidence": 0.886733889579773,
+          "source": "yolo+depth",
+          "estimated_distance_robot_m": 2.2842739330486714,
+          "ground_truth_distance_robot_m": 2.2360691414840996,
+          "distance_error_m": 0.0482047915645718,
+          "estimated_range_camera_m": 2.363464020301084,
+          "ground_truth_range_camera_m": 2.170627316905339,
+          "range_error_m": 0.192836703395745,
+          "position_robot_m": [
+            2.7570020609127006,
+            0.1743605207042792,
+            0.5007681940756552
+          ],
+          "ground_truth_centre_robot_m": [
+            2.617029974127469,
+            0.21794275296043353
+          ],
+          "position_world_m": [
+            -6.2687479671855115,
+            -12.710403148363026,
+            0.5007681940756552
+          ],
+          "ground_truth_centre_world_m": [
+            -6.464128991691534,
+            -12.684604456905253,
+            0.4386135301652336
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": 2.4242811356642537,
+          "height_range_m": [
+            0.1535152668003913,
+            0.8711125436043943
+          ],
+          "ground_truth_height_m": 0.8772270603304672,
+          "sim_time_s": 14.76,
+          "world_position_shift_m": 0.017579255979259602,
+          "robot_frame_bearing_change_deg": -19.580761661975757
+        }
+      ],
+      "meaning": "Objects are fixed in the world: after the robot turns, robot-frame bearings change by about -yaw while world positions stay put"
+    },
+    "transform_while_rotating": {
+      "passed": true,
+      "samples": 18,
+      "max_abs_distance_error_m": 0.1863658919155169,
+      "max_position_error_m": 0.0,
+      "detail": [
+        {
+          "object": "chair",
+          "yaw_rad": -0.007533514792493837,
+          "distance_error_m": 0.05059617592104981,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "person",
+          "yaw_rad": -0.007533514792493837,
+          "distance_error_m": 0.18340823862506905,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "chair",
+          "yaw_rad": -0.006994500990530878,
+          "distance_error_m": 0.0498641757355518,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "person",
+          "yaw_rad": -0.006994500990530878,
+          "distance_error_m": 0.18332694814093742,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "chair",
+          "yaw_rad": -0.004835280849674195,
+          "distance_error_m": 0.04975860181365377,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "person",
+          "yaw_rad": -0.004835280849674195,
+          "distance_error_m": 0.1837346421551187,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "chair",
+          "yaw_rad": 0.008106050493622246,
+          "distance_error_m": 0.049634795801447584,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "person",
+          "yaw_rad": 0.008106050493622246,
+          "distance_error_m": 0.1840863414830185,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "chair",
+          "yaw_rad": 0.030127349494998023,
+          "distance_error_m": 0.04965252088711214,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "person",
+          "yaw_rad": 0.030127349494998023,
+          "distance_error_m": 0.18413363206707345,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "chair",
+          "yaw_rad": 0.05893798418447965,
+          "distance_error_m": 0.05096442903249088,
+          "position_error_to_true_box_m": 0.0
+        },
+        {
+          "object": "person",
+          "yaw_rad": 0.05893798418447965,
+          "distance_error_m": 0.18508805608909107,
+          "position_error_to_true_box_m": 0.0
+        }
+      ]
+    },
+    "unknown_shapes_depth_only": {
+      "passed": true,
+      "objects": [
+        {
+          "object": "box",
+          "found": true,
+          "class_name": "unknown",
+          "confidence": null,
+          "source": "depth",
+          "estimated_distance_robot_m": 3.0761580899522505,
+          "ground_truth_distance_robot_m": 3.0699217301167696,
+          "distance_error_m": 0.006236359835480876,
+          "estimated_range_camera_m": 3.1001544740648295,
+          "ground_truth_range_camera_m": 3.06640349187192,
+          "range_error_m": 0.03375098219290962,
+          "position_robot_m": [
+            2.8602609506589003,
+            1.3625863039662542,
+            0.3460801870902265
+          ],
+          "ground_truth_centre_robot_m": [
+            3.094675061860575,
+            1.4326091004114228
+          ],
+          "position_world_m": [
+            -6.161825087142396,
+            -12.11968173664442,
+            0.3460801870902265
+          ],
+          "ground_truth_centre_world_m": [
+            -5.911825223260832,
+            -12.032144629710936,
+            0.25
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": 23.21065966670993,
+          "height_range_m": [
+            0.10290597655725323,
+            0.5000001413831454
+          ],
+          "ground_truth_height_m": 0.5,
+          "sim_time_s": 23.16
+        },
+        {
+          "object": "cylinder",
+          "found": true,
+          "class_name": "vase",
+          "confidence": 0.577365517616272,
+          "source": "yolo+depth",
+          "estimated_distance_robot_m": 1.958274791468583,
+          "ground_truth_distance_robot_m": 1.9390225094029543,
+          "distance_error_m": 0.01925228206562868,
+          "estimated_range_camera_m": 1.8962456804275838,
+          "ground_truth_range_camera_m": 1.8599678833776445,
+          "range_error_m": 0.036277797049939275,
+          "position_robot_m": [
+            1.9337138419990807,
+            -0.43535655794836503,
+            0.6051009058313159
+          ],
+          "ground_truth_centre_robot_m": [
+            2.10319329517506,
+            -0.4718498532891211
+          ],
+          "position_world_m": [
+            -6.895023769842055,
+            -13.99939913370444,
+            0.6051009058313159
+          ],
+          "ground_truth_centre_world_m": [
+            -6.725602408501606,
+            -14.019043392300919,
+            0.5
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": -13.346635064603149,
+          "height_range_m": [
+            0.09659615169861424,
+            1.0000000519985477
+          ],
+          "ground_truth_height_m": 1.0,
+          "sim_time_s": 23.16
+        },
+        {
+          "object": "low_pallet",
+          "found": true,
+          "class_name": "unknown",
+          "confidence": null,
+          "source": "depth",
+          "estimated_distance_robot_m": 3.2785022301119,
+          "ground_truth_distance_robot_m": 3.273548233082427,
+          "distance_error_m": 0.004953997029472745,
+          "estimated_range_camera_m": 3.370969667845429,
+          "ground_truth_range_camera_m": 3.362371536675935,
+          "range_error_m": 0.008598131169494039,
+          "position_robot_m": [
+            3.5689693007956285,
+            0.1342548686413395,
+            0.14999983725387056
+          ],
+          "ground_truth_centre_robot_m": [
+            3.700490450868691,
+            0.1353089368251601
+          ],
+          "position_world_m": [
+            -5.340970075555317,
+            -13.279557047001266,
+            0.14999983725387056
+          ],
+          "ground_truth_centre_world_m": [
+            -5.190291677855342,
+            -13.268829449240384,
+            0.07500000000000001
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": -2.9061482880160328,
+          "height_range_m": [
+            0.10378494883787959,
+            0.15000013778725338
+          ],
+          "ground_truth_height_m": 0.15000000596046448,
+          "sim_time_s": 23.16
+        },
+        {
+          "object": "thin_pole",
+          "found": true,
+          "class_name": "unknown",
+          "confidence": null,
+          "source": "depth",
+          "estimated_distance_robot_m": 1.955276693772279,
+          "ground_truth_distance_robot_m": 1.9452857144949502,
+          "distance_error_m": 0.009990979277328726,
+          "estimated_range_camera_m": 1.8579124956074755,
+          "ground_truth_range_camera_m": 1.8454602999964707,
+          "range_error_m": 0.012452195611004857,
+          "position_robot_m": [
+            1.8736835065955786,
+            0.568910748570022,
+            0.7067565964475071
+          ],
+          "ground_truth_centre_robot_m": [
+            1.8984933965652386,
+            0.5772440183492232
+          ],
+          "position_world_m": [
+            -7.04988219768995,
+            -13.003765834761376,
+            0.7067565964475071
+          ],
+          "ground_truth_centre_world_m": [
+            -7.0250677410388045,
+            -12.992972968495424,
+            0.6000000000000001
+          ],
+          "position_error_to_true_box_m": 0.0,
+          "bearing_deg": 16.71477938324532,
+          "height_range_m": [
+            0.10424406198724478,
+            1.188660279109989
+          ],
+          "ground_truth_height_m": 1.2000000476837158,
+          "sim_time_s": 23.16
+        }
+      ],
+      "yolo_detections": [
+        [
+          "vase",
+          0.58
+        ]
+      ],
+      "screenshot": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/obstacle_runs/20261117_084256/004_C_unknown_shapes",
+      "note": "box, cylinder and low pallet are required; the 6 cm pole is reported as a sensor-limit probe"
+    },
+    "factory_operator_depth_only": {
+      "passed": true,
+      "object": {
+        "object": "COL_Operator_Outer_Left_03",
+        "found": true,
+        "class_name": "unknown",
+        "confidence": null,
+        "source": "depth",
+        "estimated_distance_robot_m": 3.2077383856217883,
+        "ground_truth_distance_robot_m": 3.067610740661621,
+        "distance_error_m": 0.14012764496016716,
+        "estimated_range_camera_m": 3.1201477824875106,
+        "ground_truth_range_camera_m": 2.9696264369213647,
+        "range_error_m": 0.15052134556614583,
+        "position_robot_m": [
+          3.2163635531962473,
+          -0.38060181583951125,
+          1.0931831592586219
+        ],
+        "ground_truth_centre_robot_m": [
+          3.325902749230397,
+          -0.39227710883043765
+        ],
+        "position_world_m": [
+          -8.94068262165729,
+          -10.440376814266314,
+          1.0931831592586219
+        ],
+        "ground_truth_centre_world_m": [
+          -8.947368621826172,
+          -10.31037712097168,
+          0.9200000166893005
+        ],
+        "position_error_to_true_box_m": 0.0,
+        "bearing_deg": -8.265389203093768,
+        "height_range_m": [
+          0.12371579170657399,
+          1.7671875761778852
+        ],
+        "ground_truth_height_m": 1.840000033378601,
+        "sim_time_s": 31.46
+      },
+      "heading_error_rad": -0.12145595572749279,
+      "yolo_detections": [],
+      "screenshot": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/obstacle_runs/20261117_084256/005_D_factory_operator",
+      "ground_truth": "existing SIM GROUND TRUTH collider box of the nearest factory operator (evaluation only)"
+    },
+    "no_avoidance_commands": {
+      "passed": true,
+      "ticks_checked": 1350,
+      "ticks_where_command_differs_from_keyboard": 0,
+      "ticks_with_linear_velocity": 0,
+      "navigation_mode": "MANUAL",
+      "scheduler_state": "IDLE",
+      "navigation_obstacle_source": "SIM GROUND TRUTH",
+      "meaning": "Applied command == keyboard command on every tick, never any linear velocity; navigation still uses its own obstacle source"
+    }
+  },
+  "localization_ms": {
+    "mean": 23.73505975061143,
+    "p95": 46.71755151066459,
+    "max": 79.04967601643875,
+    "thread": "YOLO inference thread"
+  },
+  "worker": {
+    "submitted": 316,
+    "processed": 316,
+    "dropped": 0,
+    "inference_hz": 6.762619749462686,
+    "inference_ms_mean": 2.8702461344073527,
+    "inference_ms_p95": 4.35305580322165,
+    "submit_to_result_ms_mean": 25.93718342919601,
+    "submit_to_result_ms_p95": 40.188347472576396
+  },
+  "results": 278,
+  "failed_tests": []
+}

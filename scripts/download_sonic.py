@@ -6,7 +6,7 @@ Existing files are verified, never overwritten on hash mismatch.
 """
 from pathlib import Path
 import hashlib,json,urllib.request
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 
 
 def sha256(path):

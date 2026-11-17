@@ -1,7 +1,7 @@
-"""One-command factory + G1 + verified ONNX + keyboard. Windows, Isaac Sim 6.1."""
+"""One-command factory + G1 + verified ONNX + keyboard. Linux/Windows, Isaac Sim 6.1."""
 from pathlib import Path
 import argparse,json,sys,time,traceback,hashlib,math
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 def preflight(cfg,flat):
@@ -146,12 +146,26 @@ def validation(runtime):
 def main():
     parser=argparse.ArgumentParser()
     parser.add_argument('--config',type=Path)
+    parser.add_argument('--check',action='store_true',help='Verify selected factory assets/config without starting Isaac Sim')
     parser.add_argument('--factory',choices=['v1','v2'])
     parser.add_argument('--flat',action='store_true'); parser.add_argument('--self-test',action='store_true')
     parser.add_argument('--headless',action='store_true'); parser.add_argument('--duration',type=float,default=0)
     parser.add_argument('--overview',action='store_true')
     parser.add_argument('--controller',choices=['locomotion','sonic'],default='locomotion')
+    parser.add_argument('--rgbd',action='store_true',help='Enable the forward RGB-D camera (perception only)')
+    parser.add_argument('--rgbd-debug',action='store_true',help='Enable the RGB-D camera and its RGB/Depth debug window')
+    parser.add_argument('--no-rgbd',action='store_true',help='Force the RGB-D camera off regardless of configs/rgbd_camera.json')
+    parser.add_argument('--yolo',action='store_true',help='Enable YOLO detection on the RGB-D camera (detection output only)')
+    parser.add_argument('--yolo-debug',action='store_true',help='Enable YOLO and show boxes/classes/confidence in the debug window')
+    parser.add_argument('--no-yolo',action='store_true',help='Force YOLO off regardless of configs/yolo.json')
+    parser.add_argument('--obstacles',action='store_true',help='Enable RGB-D obstacle localisation (camera + YOLO + depth; output only)')
+    parser.add_argument('--obstacles-debug',action='store_true',help='Obstacle localisation plus the debug window with distances')
+    parser.add_argument('--no-obstacles',action='store_true',help='Force obstacle localisation off regardless of its config')
+    parser.add_argument('--costmap',action='store_true',help='Enable the local obstacle costmap (camera + YOLO + localisation; output only)')
+    parser.add_argument('--costmap-debug',action='store_true',help='Local costmap plus the debug window showing it')
+    parser.add_argument('--no-costmap',action='store_true',help='Force the local costmap off regardless of its config')
     args,_=parser.parse_known_args()
+    (ROOT/'logs').mkdir(parents=True,exist_ok=True)
     app=runtime=None
     try:
         from controllers.controller_selector import validate_selection
@@ -159,7 +173,31 @@ def main():
         from controllers.factory_selector import load_factory
         cfg=load_factory(args.factory,args.config)
         if args.overview: cfg['camera']['mode']='overview'
+        if sys.platform.startswith('linux'): cfg['rendering']['graphics_api']='vulkan'
         preflight(cfg,args.flat)
+        from perception.rgbd_config import load_config as load_rgbd_config
+        cfg['rgbd_camera']=load_rgbd_config()
+        if args.rgbd or args.rgbd_debug: cfg['rgbd_camera']['enabled']=True
+        if args.rgbd_debug: cfg['rgbd_camera']['debug_window']=True
+        if args.no_rgbd: cfg['rgbd_camera']['enabled']=False
+        from perception.yolo_config import load_config as load_yolo_config,verify_model as verify_yolo_model
+        cfg['yolo']=load_yolo_config()
+        obstacles=json.loads((ROOT/'configs/obstacle_localization.json').read_text())
+        costmap=json.loads((ROOT/'configs/local_costmap.json').read_text())
+        if args.costmap or args.costmap_debug: costmap['enabled']=True
+        if args.no_costmap or args.no_obstacles or args.no_yolo or args.no_rgbd: costmap['enabled']=False
+        cfg['local_costmap']=costmap
+        if args.obstacles or args.obstacles_debug or costmap['enabled']: obstacles['enabled']=True
+        if args.no_obstacles or args.no_yolo or args.no_rgbd: obstacles['enabled']=False
+        cfg['obstacle_localization']=obstacles
+        if args.yolo or args.yolo_debug or obstacles['enabled']: cfg['yolo']['enabled']=True
+        if args.no_yolo or args.no_rgbd: cfg['yolo']['enabled']=False
+        if cfg['yolo']['enabled']:
+            verify_yolo_model(cfg['yolo']); cfg['rgbd_camera']['enabled']=True  # YOLO reads the camera's RGB frames
+            if args.yolo_debug or args.obstacles_debug or args.costmap_debug: cfg['rgbd_camera']['debug_window']=True
+        if args.check:
+            print('PREFLIGHT_OK '+str(ROOT)+' factory='+cfg.get('factory_id','v1'),flush=True)
+            return
         from isaacsim import SimulationApp
         render=cfg['rendering']
         app=SimulationApp({'headless':args.headless,'width':render['width'],'height':render['height'],
@@ -181,7 +219,9 @@ def main():
         from controllers.factory_g1_runtime import FactoryG1Runtime
         runtime=FactoryG1Runtime(app,cfg,flat=args.flat,self_test=args.self_test)
         print('FACTORY_READY '+str(runtime.directory),flush=True)
-        if args.self_test: validation(runtime)
+        if args.self_test:
+            report=validation(runtime)
+            if report['failed_tests']: raise RuntimeError('Integration checks failed: '+', '.join(report['failed_tests']))
         else:
             started=time.perf_counter()
             while app.is_running():
@@ -190,7 +230,18 @@ def main():
             if args.duration:
                 runtime.context['capture'](runtime.directory/'factory_g1_gui.png')
                 runtime.capture_head_preview(runtime.directory/'head_camera.png')
+                if runtime.rgbd is not None and runtime.rgbd.frame is not None:
+                    print('RGBD_SAVED '+str(runtime.rgbd.save(tag='duration_end')),flush=True)
+                if runtime.yolo is not None and runtime.yolo.result is not None:
+                    print('YOLO_SAVED '+str(runtime.yolo.save(tag='duration_end')),flush=True)
+                    print('YOLO_STATS '+json.dumps({'provider':runtime.yolo.detector.provider,**runtime.yolo.worker.stats()}),flush=True)
+                    if 'obstacles' in runtime.yolo.result:
+                        print('OBSTACLES_SAVED '+str(runtime.yolo.save_obstacles(tag='duration_end')),flush=True)
+                    if 'costmap' in runtime.yolo.result:
+                        print('COSTMAP_SAVED '+str(runtime.yolo.save_costmap(tag='duration_end')),flush=True)
+                        print('COSTMAP_STATS '+json.dumps(runtime.yolo.result['costmap']),flush=True)
                 (runtime.directory/'gui_snapshot.json').write_text(json.dumps(runtime.snapshot(),indent=2),encoding='utf-8')
+        if runtime.fault: raise RuntimeError('Policy fault: '+str(runtime.fault))
         print('FACTORY_FINISHED '+json.dumps({'run_directory':str(runtime.directory),'policy_fault':runtime.fault}),flush=True)
     except BaseException as error:
         record={'status':'failed','category':classify(error),'message':str(error),'traceback':traceback.format_exc()}

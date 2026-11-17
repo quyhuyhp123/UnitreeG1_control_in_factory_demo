@@ -5,7 +5,13 @@ from navigation.local_planner import pose
 
 
 class SafetySupervisor:
-    def __init__(self,config,braking): self.config=config; self.braking=braking
+    def __init__(self,config,braking):
+        self.config=config; self.braking=braking
+        # False: legacy omnidirectional envelope (V1 A/B patrol).
+        # True: only obstacles the footprint would sweep over while braking
+        # along the travel direction block motion; needed above ~0.3 m/s in
+        # corridors whose racks are 0.5 m beside the footprint.
+        self.swept=False
     def stop_distance(self,speed):
         if not self.braking.get('validated'): raise ValueError('Measured braking calibration required')
         return speed*self.config['reaction_latency_seconds']+speed*speed/(2*self.braking['conservative_deceleration_m_s2'])+self.config['stopping_extra_m']
@@ -31,7 +37,12 @@ class SafetySupervisor:
             lo,hi=o['bounds']
             nearest=[max(lo[i],min(hi[i],p[i])) for i in [0,1]]
             toward=sum((nearest[i]-p[i])*travel[i] for i in [0,1])>0
-            if d<braking+extra and (o['kind']=='human' or toward or d<.05):
+            if self.swept:
+                length=math.hypot(*travel); count=max(1,math.ceil(braking/.1)) if length>1e-6 else 0
+                ahead=min(box_distance((p[0]+travel[0]/length*braking*k/count,p[1]+travel[1]/length*braking*k/count),o['bounds']) for k in range(count+1)) if count else d+grid.map.radius
+                if ahead-grid.map.radius<extra or d<.05:
+                    return 'WAITING_FOR_CLEAR_PATH','Human near' if o['kind']=='human' else 'Obstacle in braking envelope'
+            elif d<braking+extra and (o['kind']=='human' or toward or d<.05):
                 return 'WAITING_FOR_CLEAR_PATH','Human near' if o['kind']=='human' else 'Obstacle in braking envelope'
             # Predict moving volumes through the stopping horizon, not just their current centers.
             horizon=self.config['prediction_seconds']

@@ -3,7 +3,7 @@ import json
 from isaacsim import SimulationApp
 app=SimulationApp({'headless':True,'width':640,'height':480})
 from pxr import Usd, UsdGeom
-p=Path(r'D:\unitree_g1')
+p=Path(__file__).resolve().parents[1]
 stage=Usd.Stage.Open(str(p/'assets/factory/factory.usd'))
 rows=[]
 for prim in stage.Traverse():

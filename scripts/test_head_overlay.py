@@ -1,13 +1,13 @@
 """Check head preview hides editor gizmos even when a scene object is selected."""
 from pathlib import Path
 import sys,json,time,argparse
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 def main():
     parser=argparse.ArgumentParser(); parser.add_argument('--hold-seconds',type=float,default=20); args,_=parser.parse_known_args()
     from isaacsim import SimulationApp
     app=SimulationApp({'headless':False,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':[
-        '--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
+        '--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
         '--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None
     try:

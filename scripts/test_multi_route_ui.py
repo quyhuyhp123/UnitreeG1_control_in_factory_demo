@@ -1,12 +1,12 @@
 """GUI callbacks, route persistence, blocked branch and existing input contracts."""
 from pathlib import Path
 import sys,json,argparse
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 def main():
     parser=argparse.ArgumentParser(); parser.add_argument('--output-name',default='multi_route_ui_results.json'); args,_=parser.parse_known_args()
     if Path(args.output_name).name!=args.output_name: raise ValueError('Output must be a filename only')
     from isaacsim import SimulationApp
-    app=SimulationApp({'headless':False,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+    app=SimulationApp({'headless':False,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None; report={'status':'running','checks':{}}
     try:
         from controllers.factory_selector import load_factory

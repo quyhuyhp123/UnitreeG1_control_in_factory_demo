@@ -1,7 +1,7 @@
 """Validate entrance spawn and physical in-place turning of a selected policy."""
 from pathlib import Path
 import argparse,json,sys,math
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 def main():
     p=argparse.ArgumentParser(); p.add_argument('--config',type=Path,default=ROOT/'configs/factory_g1.json'); args,_=p.parse_known_args()
@@ -9,7 +9,7 @@ def main():
     cfg=json.loads(args.config.read_text()); preflight(cfg,False)
     from isaacsim import SimulationApp
     app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','multi_gpu':False,'extra_args':[
-        '--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+        '--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None
     try:
         import numpy as np

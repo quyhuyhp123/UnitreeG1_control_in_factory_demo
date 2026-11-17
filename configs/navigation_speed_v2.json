@@ -4,8 +4,10 @@
   "source_factory_sha256": "6e3e1683dcc4885b4127063fb77a5f3195c3de5071eefaa454969033f76ef8c7",
   "factory_usd": "assets/factory/factory_layout_v2/factory_layout_v2_physics.usd",
   "checkpoint_sha256": "2a66ca6336eadb3c0b34b557763f3e06d01ff8fcf6260dd4cedbd69d6093fc28",
-  "maximum_verified_m_s": 0.3,
+  "maximum_verified_m_s": 1.0,
+  "unverified_user_override": true,
+  "override_note": "Ceiling opened to the policy forward limit at user request before a full two-route audit at 1.0 m/s. Last audited ceiling: 0.30 m/s (evidence below).",
   "default_m_s": 0.3,
-  "max_actual_speed_m_s": 0.6,
+  "max_actual_speed_m_s": 1.25,
   "evidence": "docs/navigation/factory_speed_0.30_audit.json"
 }

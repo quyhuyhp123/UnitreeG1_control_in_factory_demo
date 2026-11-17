@@ -8,7 +8,7 @@ try:
     import onnxruntime as ort
     import numpy as np
     import yaml
-    root=Path(r'D:\unitree_g1')
+    root=Path(__file__).resolve().parents[1]
     folder=root/'checkpoints/unitree_g1_velocity_v0'
     deploy=yaml.safe_load((folder/'deploy.yaml').read_text(encoding='utf-8'))
     (folder/'deploy.json').write_text(json.dumps(deploy,indent=2),encoding='utf-8')

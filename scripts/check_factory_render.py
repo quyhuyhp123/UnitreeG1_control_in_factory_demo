@@ -5,7 +5,7 @@ app=SimulationApp({'headless':True,'width':960,'height':640,'renderer':'Raytrace
 import omni.usd
 from pxr import UsdLux
 from omni.kit.viewport.utility import get_active_viewport,capture_viewport_to_file
-root=Path(r'D:\unitree_g1')
+root=Path(__file__).resolve().parents[1]
 omni.usd.get_context().open_stage(str(root/'assets/factory/factory_physics.usd'))
 for _ in range(30): app.update()
 stage=omni.usd.get_context().get_stage()

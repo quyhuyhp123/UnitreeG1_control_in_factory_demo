@@ -84,6 +84,10 @@
   },
   "note": "One V2 factory, one unchanged G1/ONNX, main viewport plus 320x180 live head-camera preview. Roof hidden visually at runtime; roof collision remains.",
   "keyboard_overrides": {
+    "max_forward_velocity": 1.0,
+    "max_backward_velocity": 0.5,
+    "max_lateral_velocity": 0.5,
+    "acceleration_limit": [0.4, 0.5, 0.5],
     "max_yaw_rate": 0.6,
     "keyboard_mapping": {
       "W": "forward",

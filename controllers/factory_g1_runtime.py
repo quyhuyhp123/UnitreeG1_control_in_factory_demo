@@ -3,7 +3,7 @@ from pathlib import Path
 import json,time,subprocess
 import numpy as np
 from controllers.g1_keyboard_runtime import G1KeyboardRuntime
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 
 class FactoryG1Runtime(G1KeyboardRuntime):
     def build_controller_controls(self):
@@ -59,6 +59,18 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         (self.directory/'scene_checks.json').write_text(json.dumps(self.scene_checks,indent=2),encoding='utf-8')
         self.update_camera()
         self._build_head_preview()
+        # Optional perception-only RGB-D sensor; never feeds navigation or the policy.
+        self.rgbd=None
+        if cfg.get('rgbd_camera',{}).get('enabled',False):
+            from perception.rgbd_camera import RgbdCamera
+            self.rgbd=RgbdCamera(self,cfg['rgbd_camera']); self.rgbd.start()
+        # Optional YOLO detection on the RGB frames. Output only: it has no path to the command selector.
+        self.yolo=None
+        if cfg.get('yolo',{}).get('enabled',False):
+            if self.rgbd is None: raise ValueError('YOLO needs the RGB-D camera: enable rgbd_camera as well')
+            from perception.yolo_detector import YoloPerception
+            self.yolo=YoloPerception(self,cfg['yolo']); self.rgbd.overlay=self.yolo.overlay
+            if self.yolo.costmap is not None: self.rgbd.costmap_view=self.yolo.costmap_image
         self.navigation=None
         if not flat:
             from navigation.patrol_controller import PatrolController
@@ -207,6 +219,12 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             camera.CreateClippingRangeAttr(Gf.Vec2f(.03,50))
             self.head_camera_path=str(camera.GetPath())
             self.scene_checks['head_camera']={'path':self.head_camera_path,'resolution':hc['resolution'],'horizontal_fov_deg':hc['horizontal_fov_deg']}
+        if cfg.get('rgbd_camera',{}).get('enabled',False):
+            from perception.rgbd_camera import author_camera
+            rc=cfg['rgbd_camera']
+            self.rgbd_camera_path,self.rgbd_mount=author_camera(stage,rc)
+            self.scene_checks['rgbd_camera']={'path':self.rgbd_camera_path,'resolution':rc['resolution'],'horizontal_fov_deg':rc['horizontal_fov_deg'],
+                'torso_offset_m':rc['torso_offset_m'],'pitch_down_deg':rc['pitch_down_deg']}
 
     def _build_head_preview(self):
         if not self.factory_cfg.get('head_camera',{}).get('enabled',False): return
@@ -371,7 +389,10 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             self.head_window.visible=False
             self.head_widget.destroy(); self.head_widget=None; self.head_window=None
             for _ in range(5): self.app.update()
+        rebuild_rgbd=safe and getattr(self,'rgbd',None) is not None
+        if rebuild_rgbd: self.rgbd.stop()
         result=super().safe_reset(source)
+        if rebuild_rgbd: self.rgbd.start()
         if result and nav is not None and hasattr(nav,'on_robot_reset'): nav.on_robot_reset()
         if result and view is not None:
             camera=self.context['camera']
@@ -411,6 +432,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             camera_path=str(self.context['viewport'].camera_path),camera_mode=self.factory_cfg['camera']['mode'],
             camera_world_transform=[list(row) for row in UsdGeom.XformCache().GetLocalToWorldTransform(self.context['camera'].GetPrim())])
         value['head_camera_path']=getattr(self,'head_camera_path',None)
+        value['rgbd_camera_path']=getattr(self,'rgbd_camera_path',None)
         nav=getattr(self,'navigation',None)
         if nav is not None and nav.mode=='AUTO PATROL':
             value['applied_command']=nav.last_command
@@ -427,6 +449,11 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             raise
         if nav is not None and hasattr(self,'patrol_panel'): self.patrol_panel.update()
         if result is not None: self.last_inference_ms=result.get('inference_ms',0)
+        if getattr(self,'rgbd',None) is not None:
+            frame=self.rgbd.update()
+            if getattr(self,'yolo',None) is not None:
+                if frame is not None: self.yolo.submit(frame)  # constant time; inference runs on its own thread
+                self.yolo.poll()
         if self.keys.follow_generation!=self.last_follow_generation:
             self.last_follow_generation=self.keys.follow_generation
             self.set_camera_mode('follow')
@@ -461,7 +488,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             if now-self.last_gpu_clock>=self.factory_cfg['gpu_sample_interval_s']:
                 self.last_gpu_clock=now
                 try:
-                    process=subprocess.run(['nvidia-smi','--query-gpu=memory.used,memory.total,utilization.gpu','--format=csv,noheader,nounits'],capture_output=True,text=True,timeout=5,creationflags=subprocess.CREATE_NO_WINDOW)
+                    process=subprocess.run(['nvidia-smi','--query-gpu=memory.used,memory.total,utilization.gpu','--format=csv,noheader,nounits'],capture_output=True,text=True,timeout=5,creationflags=getattr(subprocess,"CREATE_NO_WINDOW",0))
                     if process.returncode: raise RuntimeError(process.stderr.strip())
                     values=[float(x.strip()) for x in process.stdout.splitlines()[0].split(',')]
                     sample['gpu_device_total_used_mib']=values[0]; sample['gpu_total_mib']=values[1]; sample['gpu_utilization_pct']=values[2]
@@ -477,5 +504,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         if getattr(self,'controller_window',None) is not None:
             self.controller_window.destroy(); self.controller_window=None
         if self.head_widget is not None: self.head_widget.destroy(); self.head_widget=None; self.head_window=None
+        if getattr(self,'yolo',None) is not None: self.yolo.close(); self.yolo=None
+        if getattr(self,'rgbd',None) is not None: self.rgbd.close(); self.rgbd=None
         if hasattr(self,'metric_file'): self.metric_file.close()
         super().close()

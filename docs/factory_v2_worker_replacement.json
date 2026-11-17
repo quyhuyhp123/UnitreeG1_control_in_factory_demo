@@ -1,0 +1,746 @@
+{
+  "status": "applied",
+  "date": "2026-11-17 09:11:39",
+  "physics_usd": "assets/factory/factory_layout_v2/factory_layout_v2_physics.usd",
+  "override_layer": "assets/factory/factory_layout_v2/factory_layout_v2_workers.usda",
+  "backup_of_physics_usd": "assets/factory/factory_layout_v2/backups/factory_layout_v2_physics_20261117_091139.usd",
+  "worker_asset": "./props/worker/male_adult_construction_05_new.usd",
+  "chair_asset": "./props/chair/SM_Chair.usd",
+  "asset_origin": "NVIDIA Isaac Sim 6.1 asset library: People/Characters/male_adult_construction_05_new and Environments/Office/Props/SM_Chair",
+  "source_usd_sha256_before": "6e3e1683dcc4885b4127063fb77a5f3195c3de5071eefaa454969033f76ef8c7",
+  "source_usd_sha256_after": "6e3e1683dcc4885b4127063fb77a5f3195c3de5071eefaa454969033f76ef8c7",
+  "old_visual_prims_switched_off": 236,
+  "old_visual_prims_still_active": [],
+  "workers_placed": 16,
+  "chairs_placed": 2,
+  "enabled_colliders_before": 42,
+  "enabled_colliders_after": 42,
+  "colliders_identical": true,
+  "other_top_level_prims_untouched": 114,
+  "workers": [
+    {
+      "name": "Operator_Inner_Left_01",
+      "was": "standing at a machine",
+      "position": [
+        -2.126,
+        6.821,
+        0.0
+      ],
+      "yaw_deg": 270.0,
+      "facing": [
+        -1.0,
+        0.0
+      ],
+      "old_bounds": [
+        [
+          -2.382,
+          6.435,
+          0.01
+        ],
+        [
+          -1.981,
+          7.207,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Inner_Left_01",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          -2.441,
+          5.777,
+          -0.154
+        ],
+        [
+          -1.872,
+          7.865,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Inner_Left_02",
+      "was": "standing at a machine",
+      "position": [
+        -2.062,
+        2.632,
+        0.0
+      ],
+      "yaw_deg": 270.0,
+      "facing": [
+        -1.0,
+        0.0
+      ],
+      "old_bounds": [
+        [
+          -2.318,
+          2.246,
+          0.01
+        ],
+        [
+          -1.917,
+          3.018,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Inner_Left_02",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          -2.377,
+          1.588,
+          -0.154
+        ],
+        [
+          -1.809,
+          3.676,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Inner_Left_03",
+      "was": "standing at a machine",
+      "position": [
+        -1.982,
+        -1.075,
+        0.0
+      ],
+      "yaw_deg": 270.0,
+      "facing": [
+        -1.0,
+        0.0
+      ],
+      "old_bounds": [
+        [
+          -2.238,
+          -1.461,
+          0.01
+        ],
+        [
+          -1.837,
+          -0.69,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Inner_Left_03",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          -2.297,
+          -2.119,
+          -0.154
+        ],
+        [
+          -1.729,
+          -0.031,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Inner_Left_04",
+      "was": "standing at a machine",
+      "position": [
+        -2.014,
+        -4.613,
+        0.0
+      ],
+      "yaw_deg": 270.0,
+      "facing": [
+        -1.0,
+        0.0
+      ],
+      "old_bounds": [
+        [
+          -2.27,
+          -4.999,
+          0.01
+        ],
+        [
+          -1.869,
+          -4.227,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Inner_Left_04",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          -2.329,
+          -5.657,
+          -0.154
+        ],
+        [
+          -1.761,
+          -3.569,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Inner_Right_01",
+      "was": "standing at a machine",
+      "position": [
+        2.429,
+        7.217,
+        0.0
+      ],
+      "yaw_deg": 90.0,
+      "facing": [
+        1.0,
+        0.0
+      ],
+      "old_bounds": [
+        [
+          2.284,
+          6.831,
+          0.01
+        ],
+        [
+          2.685,
+          7.603,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Inner_Right_01",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          2.175,
+          6.173,
+          -0.154
+        ],
+        [
+          2.744,
+          8.261,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Inner_Right_02",
+      "was": "standing at a machine",
+      "position": [
+        2.381,
+        3.085,
+        0.0
+      ],
+      "yaw_deg": 90.0,
+      "facing": [
+        1.0,
+        0.0
+      ],
+      "old_bounds": [
+        [
+          2.236,
+          2.699,
+          0.01
+        ],
+        [
+          2.637,
+          3.471,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Inner_Right_02",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          2.128,
+          2.041,
+          -0.154
+        ],
+        [
+          2.696,
+          4.128,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Inner_Right_03",
+      "was": "standing at a machine",
+      "position": [
+        2.604,
+        -0.991,
+        0.0
+      ],
+      "yaw_deg": 90.0,
+      "facing": [
+        1.0,
+        0.0
+      ],
+      "old_bounds": [
+        [
+          2.459,
+          -1.376,
+          0.01
+        ],
+        [
+          2.86,
+          -0.605,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Inner_Right_03",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          2.351,
+          -2.035,
+          -0.154
+        ],
+        [
+          2.919,
+          0.053,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Inner_Right_04",
+      "was": "standing at a machine",
+      "position": [
+        2.588,
+        -4.528,
+        0.0
+      ],
+      "yaw_deg": 90.0,
+      "facing": [
+        1.0,
+        0.0
+      ],
+      "old_bounds": [
+        [
+          2.443,
+          -4.914,
+          0.01
+        ],
+        [
+          2.844,
+          -4.142,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Inner_Right_04",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          2.335,
+          -5.573,
+          -0.154
+        ],
+        [
+          2.903,
+          -3.485,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Outer_Left_01",
+      "was": "standing at a machine",
+      "position": [
+        -8.947,
+        5.68,
+        0.0
+      ],
+      "yaw_deg": 180.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          -9.283,
+          5.535,
+          0.01
+        ],
+        [
+          -8.612,
+          6.006,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Outer_Left_01",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          -9.991,
+          5.427,
+          -0.154
+        ],
+        [
+          -7.903,
+          5.995,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Outer_Left_02",
+      "was": "standing at a machine",
+      "position": [
+        -8.995,
+        -2.216,
+        0.0
+      ],
+      "yaw_deg": 180.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          -9.33,
+          -2.361,
+          0.01
+        ],
+        [
+          -8.66,
+          -1.89,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Outer_Left_02",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          -10.039,
+          -2.469,
+          -0.154
+        ],
+        [
+          -7.951,
+          -1.901,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Outer_Left_03",
+      "was": "standing at a machine",
+      "position": [
+        -8.947,
+        -10.31,
+        0.0
+      ],
+      "yaw_deg": 180.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          -9.283,
+          -10.455,
+          0.01
+        ],
+        [
+          -8.612,
+          -9.985,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Outer_Left_03",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          -9.991,
+          -10.564,
+          -0.154
+        ],
+        [
+          -7.903,
+          -9.995,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Outer_Right_01",
+      "was": "standing at a machine",
+      "position": [
+        8.931,
+        6.048,
+        0.0
+      ],
+      "yaw_deg": 180.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          8.596,
+          5.903,
+          0.01
+        ],
+        [
+          9.267,
+          6.374,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Outer_Right_01",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          7.888,
+          5.795,
+          -0.154
+        ],
+        [
+          9.976,
+          6.363,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Outer_Right_02",
+      "was": "standing at a machine",
+      "position": [
+        8.931,
+        -1.933,
+        0.0
+      ],
+      "yaw_deg": 180.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          8.596,
+          -2.078,
+          0.01
+        ],
+        [
+          9.267,
+          -1.607,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Outer_Right_02",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          7.888,
+          -2.186,
+          -0.154
+        ],
+        [
+          9.976,
+          -1.618,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Operator_Outer_Right_03",
+      "was": "standing at a machine",
+      "position": [
+        8.915,
+        -11.414,
+        0.0
+      ],
+      "yaw_deg": 180.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          8.58,
+          -11.559,
+          0.01
+        ],
+        [
+          9.251,
+          -11.088,
+          1.825
+        ]
+      ],
+      "prim": "/FactoryV2/Workers/Operator_Outer_Right_03",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          7.872,
+          -11.667,
+          -0.154
+        ],
+        [
+          9.96,
+          -11.099,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Person_01",
+      "was": "sitting at a desk",
+      "position": [
+        -4.275,
+        12.78,
+        0.0
+      ],
+      "yaw_deg": 180.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          -3.845,
+          12.515,
+          0.02
+        ],
+        [
+          -3.204,
+          13.245,
+          1.515
+        ]
+      ],
+      "note": "stands beside the chair; the model has no sitting pose",
+      "prim": "/FactoryV2/Workers/Person_01",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          -5.318,
+          12.527,
+          -0.154
+        ],
+        [
+          -3.23,
+          13.095,
+          1.773
+        ]
+      ]
+    },
+    {
+      "name": "Person_02",
+      "was": "sitting at a desk",
+      "position": [
+        2.934,
+        12.78,
+        0.0
+      ],
+      "yaw_deg": 180.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          3.364,
+          12.515,
+          0.02
+        ],
+        [
+          4.005,
+          13.245,
+          1.515
+        ]
+      ],
+      "note": "stands beside the chair; the model has no sitting pose",
+      "prim": "/FactoryV2/Workers/Person_02",
+      "meshes": 7,
+      "new_bounds": [
+        [
+          1.891,
+          12.527,
+          -0.154
+        ],
+        [
+          3.979,
+          13.095,
+          1.773
+        ]
+      ]
+    }
+  ],
+  "chairs": [
+    {
+      "name": "Chair_01",
+      "position": [
+        -3.525,
+        12.685,
+        0.0
+      ],
+      "yaw_deg": 90.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          -3.765,
+          12.385,
+          0.0
+        ],
+        [
+          -3.285,
+          12.905,
+          1.0
+        ]
+      ],
+      "prim": "/FactoryV2/OfficeChairs/Chair_01",
+      "meshes": 1,
+      "new_bounds": [
+        [
+          -3.824,
+          12.345,
+          0.0
+        ],
+        [
+          -3.225,
+          12.945,
+          0.877
+        ]
+      ]
+    },
+    {
+      "name": "Chair_02",
+      "position": [
+        3.684,
+        12.685,
+        0.0
+      ],
+      "yaw_deg": 90.0,
+      "facing": [
+        0.0,
+        1.0
+      ],
+      "old_bounds": [
+        [
+          3.444,
+          12.385,
+          0.0
+        ],
+        [
+          3.924,
+          12.905,
+          1.0
+        ]
+      ],
+      "prim": "/FactoryV2/OfficeChairs/Chair_02",
+      "meshes": 1,
+      "new_bounds": [
+        [
+          3.385,
+          12.345,
+          0.0
+        ],
+        [
+          3.984,
+          12.945,
+          0.877
+        ]
+      ]
+    }
+  ],
+  "not_verified_here": "Rendering, YOLO detection on the new figures, FPS and VRAM: these need a simulation run, which was not started.",
+  "checks_passed": true
+}

@@ -1,0 +1,213 @@
+{
+ "source": "Ultralytics 8.4.215 running checkpoints/yolo/yolo11n.onnx (its own letterbox and NMS), imgsz=320, conf=0.25, iou=0.45",
+ "images": {
+  "bus.jpg": [
+   {
+    "class_name": "bus",
+    "confidence": 0.8461,
+    "bbox_xyxy": [
+     27.1,
+     229.6,
+     802.2,
+     739.0
+    ]
+   },
+   {
+    "class_name": "person",
+    "confidence": 0.8111,
+    "bbox_xyxy": [
+     51.7,
+     394.2,
+     240.7,
+     907.9
+    ]
+   },
+   {
+    "class_name": "person",
+    "confidence": 0.8027,
+    "bbox_xyxy": [
+     219.3,
+     399.7,
+     344.8,
+     853.7
+    ]
+   },
+   {
+    "class_name": "person",
+    "confidence": 0.7308,
+    "bbox_xyxy": [
+     669.4,
+     393.1,
+     809.1,
+     873.2
+    ]
+   },
+   {
+    "class_name": "person",
+    "confidence": 0.3172,
+    "bbox_xyxy": [
+     0.0,
+     559.5,
+     93.1,
+     886.2
+    ]
+   }
+  ],
+  "coco_000000000139.jpg": [
+   {
+    "class_name": "tv",
+    "confidence": 0.8746,
+    "bbox_xyxy": [
+     5.5,
+     165.9,
+     155.5,
+     266.1
+    ]
+   },
+   {
+    "class_name": "chair",
+    "confidence": 0.6152,
+    "bbox_xyxy": [
+     294.4,
+     216.2,
+     355.1,
+     328.1
+    ]
+   },
+   {
+    "class_name": "chair",
+    "confidence": 0.4624,
+    "bbox_xyxy": [
+     358.8,
+     212.8,
+     435.3,
+     314.9
+    ]
+   },
+   {
+    "class_name": "chair",
+    "confidence": 0.3117,
+    "bbox_xyxy": [
+     216.5,
+     228.6,
+     298.3,
+     327.0
+    ]
+   },
+   {
+    "class_name": "potted plant",
+    "confidence": 0.2764,
+    "bbox_xyxy": [
+     208.7,
+     179.7,
+     264.7,
+     214.5
+    ]
+   }
+  ],
+  "coco_000000000632.jpg": [
+   {
+    "class_name": "bed",
+    "confidence": 0.8981,
+    "bbox_xyxy": [
+     0.7,
+     271.1,
+     400.9,
+     478.2
+    ]
+   },
+   {
+    "class_name": "potted plant",
+    "confidence": 0.6313,
+    "bbox_xyxy": [
+     337.1,
+     215.6,
+     428.5,
+     352.1
+    ]
+   },
+   {
+    "class_name": "tv",
+    "confidence": 0.2787,
+    "bbox_xyxy": [
+     571.8,
+     113.4,
+     639.5,
+     440.4
+    ]
+   },
+   {
+    "class_name": "book",
+    "confidence": 0.2616,
+    "bbox_xyxy": [
+     495.0,
+     246.4,
+     540.5,
+     288.6
+    ]
+   }
+  ],
+  "coco_000000397133.jpg": [
+   {
+    "class_name": "person",
+    "confidence": 0.7883,
+    "bbox_xyxy": [
+     384.6,
+     71.4,
+     498.3,
+     347.4
+    ]
+   },
+   {
+    "class_name": "bowl",
+    "confidence": 0.6861,
+    "bbox_xyxy": [
+     31.2,
+     342.9,
+     99.4,
+     386.2
+    ]
+   },
+   {
+    "class_name": "dining table",
+    "confidence": 0.5907,
+    "bbox_xyxy": [
+     2.8,
+     235.4,
+     344.5,
+     419.5
+    ]
+   },
+   {
+    "class_name": "bowl",
+    "confidence": 0.5493,
+    "bbox_xyxy": [
+     63.6,
+     289.2,
+     131.8,
+     329.9
+    ]
+   },
+   {
+    "class_name": "bowl",
+    "confidence": 0.311,
+    "bbox_xyxy": [
+     0.1,
+     303.0,
+     84.4,
+     353.2
+    ]
+   },
+   {
+    "class_name": "oven",
+    "confidence": 0.3109,
+    "bbox_xyxy": [
+     489.5,
+     202.1,
+     616.9,
+     336.7
+    ]
+   }
+  ]
+ }
+}

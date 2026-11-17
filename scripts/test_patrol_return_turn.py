@@ -1,7 +1,7 @@
 """Regression: return leg turns toward A before forward walking, using real PhysX."""
 import sys,json,math,argparse
 from pathlib import Path
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 def main():
     parser=argparse.ArgumentParser()
@@ -14,7 +14,7 @@ def main():
     if args.cycles<1: raise ValueError('cycles must be positive')
     from isaacsim import SimulationApp
     app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,
-        'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+        'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None; report={'status':'running'}
     try:
         from controllers.factory_g1_runtime import FactoryG1Runtime

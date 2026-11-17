@@ -1,14 +1,14 @@
 """Verify camera edits survive physics/keyboard updates and robot reset."""
 from pathlib import Path
 import sys,json
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 def main():
     from run_factory_g1 import preflight
     cfg=json.loads((ROOT/'configs/factory_g1.json').read_text()); preflight(cfg,False)
     from isaacsim import SimulationApp
     app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','multi_gpu':False,'extra_args':[
-        '--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
+        '--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
         '--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None
     try:

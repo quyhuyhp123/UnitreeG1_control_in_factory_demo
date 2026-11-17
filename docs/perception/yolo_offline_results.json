@@ -1,0 +1,596 @@
+{
+  "status": "passed",
+  "output_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/yolo_runs/offline_20261117_082642",
+  "tests": {
+    "photos_vs_ultralytics_reference": {
+      "passed": true,
+      "images": [
+        {
+          "image": "bus.jpg",
+          "size_wh": [
+            810,
+            1080
+          ],
+          "onnx_320": [
+            [
+              "bus",
+              0.846
+            ],
+            [
+              "person",
+              0.811
+            ],
+            [
+              "person",
+              0.803
+            ],
+            [
+              "person",
+              0.73
+            ],
+            [
+              "person",
+              0.318
+            ]
+          ],
+          "onnx_640": [
+            [
+              "bus",
+              0.939
+            ],
+            [
+              "person",
+              0.902
+            ],
+            [
+              "person",
+              0.849
+            ],
+            [
+              "person",
+              0.833
+            ],
+            [
+              "person",
+              0.4
+            ]
+          ],
+          "ultralytics_320": [
+            [
+              "bus",
+              0.8461
+            ],
+            [
+              "person",
+              0.8111
+            ],
+            [
+              "person",
+              0.8027
+            ],
+            [
+              "person",
+              0.7308
+            ],
+            [
+              "person",
+              0.3172
+            ]
+          ],
+          "matched": 5,
+          "max_confidence_difference": 0.00046170263290407076
+        },
+        {
+          "image": "coco_000000000139.jpg",
+          "size_wh": [
+            640,
+            426
+          ],
+          "onnx_320": [
+            [
+              "tv",
+              0.875
+            ],
+            [
+              "chair",
+              0.614
+            ],
+            [
+              "chair",
+              0.461
+            ],
+            [
+              "chair",
+              0.312
+            ],
+            [
+              "potted plant",
+              0.277
+            ]
+          ],
+          "onnx_640": [
+            [
+              "tv",
+              0.937
+            ],
+            [
+              "chair",
+              0.861
+            ],
+            [
+              "person",
+              0.723
+            ],
+            [
+              "potted plant",
+              0.643
+            ],
+            [
+              "chair",
+              0.641
+            ],
+            [
+              "vase",
+              0.635
+            ],
+            [
+              "clock",
+              0.571
+            ],
+            [
+              "tv",
+              0.548
+            ],
+            [
+              "potted plant",
+              0.329
+            ],
+            [
+              "refrigerator",
+              0.325
+            ],
+            [
+              "vase",
+              0.311
+            ],
+            [
+              "chair",
+              0.306
+            ],
+            [
+              "dining table",
+              0.299
+            ]
+          ],
+          "ultralytics_320": [
+            [
+              "tv",
+              0.8746
+            ],
+            [
+              "chair",
+              0.6152
+            ],
+            [
+              "chair",
+              0.4624
+            ],
+            [
+              "chair",
+              0.3117
+            ],
+            [
+              "potted plant",
+              0.2764
+            ]
+          ],
+          "matched": 5,
+          "max_confidence_difference": 0.001047651672363259
+        },
+        {
+          "image": "coco_000000000632.jpg",
+          "size_wh": [
+            640,
+            483
+          ],
+          "onnx_320": [
+            [
+              "bed",
+              0.898
+            ],
+            [
+              "potted plant",
+              0.632
+            ],
+            [
+              "tv",
+              0.279
+            ],
+            [
+              "book",
+              0.262
+            ]
+          ],
+          "onnx_640": [
+            [
+              "bed",
+              0.925
+            ],
+            [
+              "potted plant",
+              0.878
+            ],
+            [
+              "potted plant",
+              0.836
+            ],
+            [
+              "bottle",
+              0.548
+            ],
+            [
+              "chair",
+              0.38
+            ],
+            [
+              "vase",
+              0.274
+            ],
+            [
+              "book",
+              0.265
+            ]
+          ],
+          "ultralytics_320": [
+            [
+              "bed",
+              0.8981
+            ],
+            [
+              "potted plant",
+              0.6313
+            ],
+            [
+              "tv",
+              0.2787
+            ],
+            [
+              "book",
+              0.2616
+            ]
+          ],
+          "matched": 4,
+          "max_confidence_difference": 0.000962468338012723
+        },
+        {
+          "image": "coco_000000397133.jpg",
+          "size_wh": [
+            640,
+            427
+          ],
+          "onnx_320": [
+            [
+              "person",
+              0.789
+            ],
+            [
+              "bowl",
+              0.686
+            ],
+            [
+              "dining table",
+              0.591
+            ],
+            [
+              "bowl",
+              0.549
+            ],
+            [
+              "oven",
+              0.311
+            ],
+            [
+              "bowl",
+              0.311
+            ]
+          ],
+          "onnx_640": [
+            [
+              "person",
+              0.912
+            ],
+            [
+              "bowl",
+              0.724
+            ],
+            [
+              "oven",
+              0.7
+            ],
+            [
+              "bowl",
+              0.699
+            ],
+            [
+              "oven",
+              0.65
+            ],
+            [
+              "person",
+              0.61
+            ],
+            [
+              "bowl",
+              0.5
+            ],
+            [
+              "bowl",
+              0.475
+            ],
+            [
+              "cup",
+              0.442
+            ],
+            [
+              "cup",
+              0.404
+            ],
+            [
+              "bowl",
+              0.387
+            ],
+            [
+              "spoon",
+              0.344
+            ],
+            [
+              "potted plant",
+              0.325
+            ],
+            [
+              "spoon",
+              0.273
+            ],
+            [
+              "spoon",
+              0.263
+            ]
+          ],
+          "ultralytics_320": [
+            [
+              "person",
+              0.7883
+            ],
+            [
+              "bowl",
+              0.6861
+            ],
+            [
+              "dining table",
+              0.5907
+            ],
+            [
+              "bowl",
+              0.5493
+            ],
+            [
+              "bowl",
+              0.311
+            ],
+            [
+              "oven",
+              0.3109
+            ]
+          ],
+          "matched": 6,
+          "max_confidence_difference": 0.000547379779815671
+        }
+      ]
+    },
+    "target_classes_on_photos": {
+      "passed": true,
+      "person_320": true,
+      "chair_320": true,
+      "bottle_320": false,
+      "bottle_640": true,
+      "classes_320": [
+        "bed",
+        "book",
+        "bowl",
+        "bus",
+        "chair",
+        "dining table",
+        "oven",
+        "person",
+        "potted plant",
+        "tv"
+      ],
+      "classes_640": [
+        "bed",
+        "book",
+        "bottle",
+        "bowl",
+        "bus",
+        "chair",
+        "clock",
+        "cup",
+        "dining table",
+        "oven",
+        "person",
+        "potted plant",
+        "refrigerator",
+        "spoon",
+        "tv",
+        "vase"
+      ]
+    },
+    "stored_sim_frames_video": {
+      "passed": true,
+      "frames": 10,
+      "worker": {
+        "submitted": 50,
+        "processed": 50,
+        "dropped": 0,
+        "inference_hz": 9.979567985199836,
+        "inference_ms_mean": 1.7963816178962588,
+        "inference_ms_p95": 2.7467065723612856,
+        "submit_to_result_ms_mean": 2.3907701240386814,
+        "submit_to_result_ms_p95": 3.7955321051413136
+      },
+      "slowest_submit_call_ms": 0.0967250089161098,
+      "detections": {
+        "001_duration_end_rgb.png": [],
+        "001_standing_rgb.png": [],
+        "002_target_2m_rgb.png": [
+          [
+            "sports ball",
+            0.724
+          ]
+        ],
+        "003_target_5m_rgb.png": [],
+        "004_turn_start_rgb.png": [],
+        "005_turn_mid_rgb.png": [],
+        "006_turn_end_rgb.png": [],
+        "007_target_after_turn_rgb.png": [],
+        "008_after_reset_rgb.png": []
+      },
+      "note": "submit() is what the physics loop calls; it must return immediately"
+    }
+  },
+  "provider": "CUDAExecutionProvider",
+  "benchmark": [
+    {
+      "imgsz": 320,
+      "requested": "cuda:0",
+      "actual_provider": "CUDAExecutionProvider",
+      "preprocess_ms": {
+        "mean": 0.1911629765527323,
+        "p95": 0.2107967680785805
+      },
+      "inference_ms": {
+        "mean": 1.4303160121198744,
+        "p95": 1.449555705767125
+      },
+      "postprocess_ms": {
+        "mean": 0.10431904578581452,
+        "p95": 0.11024771665688604
+      },
+      "total_ms": {
+        "mean": 1.7257980344584212,
+        "p95": 1.7631095455726609
+      },
+      "max_rate_hz": 579.4420784085628
+    },
+    {
+      "imgsz": 320,
+      "requested": "cuda:1",
+      "actual_provider": "CUDAExecutionProvider",
+      "preprocess_ms": {
+        "mean": 0.20230585389072075,
+        "p95": 0.3986882424214855
+      },
+      "inference_ms": {
+        "mean": 1.6458648903062567,
+        "p95": 2.4466352188028395
+      },
+      "postprocess_ms": {
+        "mean": 0.11619541590334848,
+        "p95": 0.24276722397189585
+      },
+      "total_ms": {
+        "mean": 1.964366160100326,
+        "p95": 3.0942906683776528
+      },
+      "max_rate_hz": 509.0700605170917
+    },
+    {
+      "imgsz": 320,
+      "requested": "cpu:0",
+      "actual_provider": "CPUExecutionProvider",
+      "preprocess_ms": {
+        "mean": 0.23773059248924255,
+        "p95": 0.36526990588754416
+      },
+      "inference_ms": {
+        "mean": 7.193944152677432,
+        "p95": 7.708572249975987
+      },
+      "postprocess_ms": {
+        "mean": 0.1053327540284954,
+        "p95": 0.15083430625963956
+      },
+      "total_ms": {
+        "mean": 7.53700749919517,
+        "p95": 8.208932692650706
+      },
+      "max_rate_hz": 132.67865264918257
+    },
+    {
+      "imgsz": 640,
+      "requested": "cuda:0",
+      "actual_provider": "CUDAExecutionProvider",
+      "preprocess_ms": {
+        "mean": 0.5664967352640815,
+        "p95": 0.6715784285916016
+      },
+      "inference_ms": {
+        "mean": 2.0294557698071003,
+        "p95": 2.0718089974252507
+      },
+      "postprocess_ms": {
+        "mean": 0.42147461470449343,
+        "p95": 0.45249739778228104
+      },
+      "total_ms": {
+        "mean": 3.0174271197756752,
+        "p95": 3.1406409543706104
+      },
+      "max_rate_hz": 331.40817004201347
+    },
+    {
+      "imgsz": 640,
+      "requested": "cuda:1",
+      "actual_provider": "CUDAExecutionProvider",
+      "preprocess_ms": {
+        "mean": 0.6966124731115997,
+        "p95": 0.784098432632163
+      },
+      "inference_ms": {
+        "mean": 2.7218681247904897,
+        "p95": 2.8025450272252783
+      },
+      "postprocess_ms": {
+        "mean": 0.48009525489760563,
+        "p95": 0.5656122608343138
+      },
+      "total_ms": {
+        "mean": 3.898575852799695,
+        "p95": 4.1055833688005805
+      },
+      "max_rate_hz": 256.5039229086353
+    },
+    {
+      "imgsz": 640,
+      "requested": "cpu:0",
+      "actual_provider": "CPUExecutionProvider",
+      "preprocess_ms": {
+        "mean": 1.111488482565619,
+        "p95": 1.1979377159150317
+      },
+      "inference_ms": {
+        "mean": 27.78632750734687,
+        "p95": 28.38054388121236
+      },
+      "postprocess_ms": {
+        "mean": 0.5334029643563554,
+        "p95": 0.5947658180957659
+      },
+      "total_ms": {
+        "mean": 29.431218954268843,
+        "p95": 30.12163599487394
+      },
+      "max_rate_hz": 33.97752575433017
+    }
+  ],
+  "failed_tests": []
+}

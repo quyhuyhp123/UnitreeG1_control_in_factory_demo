@@ -1,0 +1,26 @@
+{
+  "source_commit": "d1b64da",
+  "factory": "v2",
+  "platform": "Ubuntu 22.04 / Isaac Sim 6.1 / Vulkan / RTX 4090",
+  "unit_tests": {
+    "run": 57,
+    "passed": 55,
+    "skipped_existing_sonic": 2
+  },
+  "headless_runtime": {
+    "duration_wall_seconds": 5,
+    "exit_code": 0,
+    "policy_fault": null,
+    "run_directory": "logs/keyboard_runs/20261111_132619",
+    "telemetry_rows": 133,
+    "base_height_range_m": [
+      0.783495306968689,
+      0.7846675515174866
+    ],
+    "gpu_samples": 3
+  },
+  "limits": [
+    "Visible desktop keyboard not manually tested",
+    "Full multi-route physics cycle not rerun for this launcher port"
+  ]
+}

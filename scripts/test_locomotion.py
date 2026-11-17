@@ -5,7 +5,7 @@ All movement after reset comes from joint drives under gravity. No real robot I/
 from pathlib import Path
 import argparse,json,math,re,sys,traceback
 from datetime import datetime
-PROJECT_ROOT=Path(r'D:\unitree_g1')
+PROJECT_ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(PROJECT_ROOT))
 sys.path.insert(0,str(PROJECT_ROOT/'scripts'))
 

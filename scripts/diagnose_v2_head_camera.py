@@ -1,8 +1,8 @@
 from pathlib import Path
 import sys,json
-R=Path(r'D:\unitree_g1'); sys.path[:0]=[str(R),str(R/'scripts')]
+R=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(R),str(R/'scripts')]
 from isaacsim import SimulationApp
-app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
 runtime=None
 try:
  from controllers.factory_g1_runtime import FactoryG1Runtime

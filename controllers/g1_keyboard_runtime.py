@@ -6,7 +6,7 @@ import numpy as np
 from controllers.keyboard_controller import KeyboardController,CarbKeyboardInput
 from controllers.g1_locomotion import G1Locomotion,inverse_rotate_wxyz
 
-PROJECT_ROOT=Path(r'D:\unitree_g1')
+PROJECT_ROOT=Path(__file__).resolve().parents[1]
 
 class G1KeyboardRuntime:
     def __init__(self,app,logical_test_keyboard=False,scene_setup=None,runtime_config=None):

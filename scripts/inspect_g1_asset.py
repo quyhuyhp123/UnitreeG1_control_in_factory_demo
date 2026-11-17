@@ -3,7 +3,7 @@ import json,math
 from isaacsim import SimulationApp
 app=SimulationApp({'headless':True,'width':640,'height':480,'renderer':'RaytracedLighting','multi_gpu':False})
 from pxr import Usd,UsdGeom,UsdPhysics,PhysxSchema
-root=Path(r'D:\unitree_g1')
+root=Path(__file__).resolve().parents[1]
 path=root/'assets/robot/unitree_model/G1/29dof/usd/g1_29dof_rev_1_0/g1_29dof_rev_1_0.usd'
 stage=Usd.Stage.Open(str(path))
 cache=UsdGeom.BBoxCache(Usd.TimeCode.Default(),['default','render','proxy','guide'],False,True)

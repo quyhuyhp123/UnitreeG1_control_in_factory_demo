@@ -1,0 +1,387 @@
+{
+  "status": "passed",
+  "camera_prim": "/World/G1/torso_link/RgbdCamera",
+  "run_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/keyboard_runs/20261117_080700",
+  "image_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/rgbd_runs/20261117_080700",
+  "config": {
+    "enabled": true,
+    "debug_window": false,
+    "prim_name": "RgbdCamera",
+    "parent_link": "torso_link",
+    "torso_offset_m": [
+      0.1,
+      0.0175,
+      0.43
+    ],
+    "pitch_down_deg": 15.0,
+    "resolution": [
+      640,
+      360
+    ],
+    "horizontal_fov_deg": 80.0,
+    "clipping_range_m": [
+      0.05,
+      50.0
+    ],
+    "valid_depth_range_m": [
+      0.1,
+      20.0
+    ],
+    "capture_hz": 10,
+    "pose_lag_ticks": 2,
+    "save_directory": "logs/rgbd_runs",
+    "note": "Forward RGB-D camera on the G1 torso (X offset in front of the head shell, Y/Z of the real D435 mount). Off by default; enable with --rgbd or --rgbd-debug. Perception only: never read by navigation, locomotion or the speed profile."
+  },
+  "tests": {
+    "frame_contract": {
+      "passed": true,
+      "rgb_shape": [
+        360,
+        640,
+        3
+      ],
+      "depth_shape": [
+        360,
+        640
+      ],
+      "depth_dtype": "float32",
+      "valid_fraction": 0.9831119791666667,
+      "depth_min_m": 1.439375877380371,
+      "depth_max_m": 18.451313018798828,
+      "rgb_std": 61.63154513413654,
+      "intrinsics": {
+        "fx": 381.36114333513405,
+        "fy": 381.3611394782521,
+        "cx": 320.0,
+        "cy": 180.0,
+        "width": 640,
+        "height": 360,
+        "K": [
+          [
+            381.36114333513405,
+            0,
+            320.0
+          ],
+          [
+            0,
+            381.3611394782521,
+            180.0
+          ],
+          [
+            0,
+            0,
+            1
+          ]
+        ],
+        "model": "pinhole, no distortion",
+        "horizontal_fov_deg": 80.00000093139583,
+        "vertical_fov_deg": 50.53401702419982
+      },
+      "sim_time_s": 3.36,
+      "saved": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/rgbd_runs/20261117_080700/001_standing"
+    },
+    "mount_pose": {
+      "passed": true,
+      "camera_position_world_m": [
+        -8.763912705977809,
+        -13.734565959529787,
+        1.2577621044501743
+      ],
+      "pitch_below_horizon_deg": 15.412473126460629,
+      "nominal_pitch_deg": 15.0,
+      "camera_heading_rad": -0.03801529367421632,
+      "robot_yaw_rad": -0.0075455623045231094,
+      "note": "Measured pitch includes the torso lean of the standing policy"
+    },
+    "floor_depth": {
+      "passed": true,
+      "max_abs_error_m": 0.015265872101531741,
+      "samples": [
+        {
+          "pixel": [
+            200,
+            230
+          ],
+          "expected_m": 3.200040747742401,
+          "measured_m": 3.184774875640869,
+          "error_m": -0.015265872101531741
+        },
+        {
+          "pixel": [
+            320,
+            230
+          ],
+          "expected_m": 3.196949282794912,
+          "measured_m": 3.181697368621826,
+          "error_m": -0.015251914173085801
+        },
+        {
+          "pixel": [
+            440,
+            230
+          ],
+          "expected_m": 3.193863785228653,
+          "measured_m": 3.1786270141601562,
+          "error_m": -0.015236771068496857
+        },
+        {
+          "pixel": [
+            200,
+            290
+          ],
+          "expected_m": 2.3090121343806262,
+          "measured_m": 2.297996997833252,
+          "error_m": -0.011015136547374293
+        },
+        {
+          "pixel": [
+            320,
+            290
+          ],
+          "expected_m": 2.307402146602583,
+          "measured_m": 2.2963943481445312,
+          "error_m": -0.011007798458051887
+        },
+        {
+          "pixel": [
+            440,
+            290
+          ],
+          "expected_m": 2.3057944024286514,
+          "measured_m": 2.2947940826416016,
+          "error_m": -0.01100031978704985
+        },
+        {
+          "pixel": [
+            200,
+            345
+          ],
+          "expected_m": 1.8394995241228143,
+          "measured_m": 1.830723762512207,
+          "error_m": -0.008775761610607224
+        },
+        {
+          "pixel": [
+            320,
+            345
+          ],
+          "expected_m": 1.8384775707359287,
+          "measured_m": 1.8297066688537598,
+          "error_m": -0.008770901882168891
+        },
+        {
+          "pixel": [
+            440,
+            345
+          ],
+          "expected_m": 1.8374567522325405,
+          "measured_m": 1.8286914825439453,
+          "error_m": -0.008765269688595145
+        }
+      ]
+    },
+    "timestamps": {
+      "passed": true,
+      "sim_times_s": [
+        3.46,
+        3.56,
+        3.66,
+        3.76,
+        3.86,
+        3.96,
+        4.06,
+        4.16,
+        4.26,
+        4.36
+      ],
+      "configured_capture_hz": 10
+    },
+    "target_depth_standing": {
+      "passed": true,
+      "max_abs_error_m": 0.010079033691036798,
+      "max_pixel_error": 0.6353877331505899,
+      "samples": [
+        {
+          "ground_truth_range_to_centre_m": 1.2570974645032407,
+          "expected_depth_m": 1.0944693097143694,
+          "measured_depth_m": 1.0967979431152344,
+          "error_m": 0.0023286334008649767,
+          "predicted_pixel": [
+            306.6799657332629,
+            236.55149503604997
+          ],
+          "target_centroid_pixel": [
+            306.51318087978404,
+            237.16460219151978
+          ],
+          "pixel_error": 0.6353877331505899,
+          "target_pixels": 6297,
+          "nominal_surface_distance_m": 1.0
+        },
+        {
+          "ground_truth_range_to_centre_m": 2.209178218375006,
+          "expected_depth_m": 2.05637997101525,
+          "measured_depth_m": 2.0587351322174072,
+          "error_m": 0.0023551612021570634,
+          "predicted_pixel": [
+            305.8757404264025,
+            165.9791746628665
+          ],
+          "target_centroid_pixel": [
+            305.86161616161615,
+            165.9969696969697
+          ],
+          "pixel_error": 0.02271911297758845,
+          "target_pixels": 1980,
+          "nominal_surface_distance_m": 2.0
+        },
+        {
+          "ground_truth_range_to_centre_m": 3.190691824029695,
+          "expected_depth_m": 3.0205646966018596,
+          "measured_depth_m": 3.024273633956909,
+          "error_m": 0.003708937355049624,
+          "predicted_pixel": [
+            305.5876748746132,
+            138.3234705928316
+          ],
+          "target_centroid_pixel": [
+            305.6030176899063,
+            138.21383975026015
+          ],
+          "pixel_error": 0.1106992485252047,
+          "target_pixels": 961,
+          "nominal_surface_distance_m": 3.0
+        },
+        {
+          "ground_truth_range_to_centre_m": 5.175006605952982,
+          "expected_depth_m": 4.948580980286413,
+          "measured_depth_m": 4.953124046325684,
+          "error_m": 0.004543066039270904,
+          "predicted_pixel": [
+            305.26132150243006,
+            114.35183194921696
+          ],
+          "target_centroid_pixel": [
+            305.33646112600536,
+            114.27747989276139
+          ],
+          "pixel_error": 0.10570804761326831,
+          "target_pixels": 373,
+          "nominal_surface_distance_m": 5.0
+        },
+        {
+          "ground_truth_range_to_centre_m": 8.165845809499572,
+          "expected_depth_m": 7.8398126289066195,
+          "measured_depth_m": 7.849891662597656,
+          "error_m": 0.010079033691036798,
+          "predicted_pixel": [
+            305.0842247594278,
+            100.11242005112054
+          ],
+          "target_centroid_pixel": [
+            305.14827586206894,
+            100.25862068965517
+          ],
+          "pixel_error": 0.1596156961501031,
+          "target_pixels": 145,
+          "nominal_surface_distance_m": 8.0
+        }
+      ],
+      "ground_truth": "USD world position of a collider-free test sphere and the camera world transform; evaluation only"
+    },
+    "turning_follow": {
+      "passed": true,
+      "robot_yaw_change_rad": 2.055073211667432,
+      "camera_heading_change_rad": 2.0809362927247372,
+      "mean_abs_rgb_change": 87.44240596064814,
+      "max_camera_minus_base_heading_rad": 0.10502090032335634,
+      "valid_fraction_after": 0.7362717013888889
+    },
+    "pose_image_sync": {
+      "passed": true,
+      "configured_pose_lag_ticks": 2,
+      "best_lag_ticks": 2,
+      "horizontal_error_by_lag": {
+        "0": {
+          "mean_abs_px": 11.069002409076145,
+          "mean_px": -9.208219835699476,
+          "samples": 42
+        },
+        "1": {
+          "mean_abs_px": 5.2304479791785115,
+          "mean_px": -4.207032886387336,
+          "samples": 42
+        },
+        "2": {
+          "mean_abs_px": 0.5244679329081114,
+          "mean_px": 0.5244679329081114,
+          "samples": 42
+        },
+        "3": {
+          "mean_abs_px": 5.87486237597163,
+          "mean_px": 4.997530018105023,
+          "samples": 42
+        },
+        "4": {
+          "mean_abs_px": 11.060484372458685,
+          "mean_px": 9.228106831949983,
+          "samples": 42
+        }
+      },
+      "meaning": "Which stored camera pose best explains where the world-fixed target appears while the robot rotates"
+    },
+    "target_depth_after_turn": {
+      "passed": true,
+      "max_abs_error_m": 0.0058871899183023935,
+      "samples": [
+        {
+          "ground_truth_range_to_centre_m": 1.256260063098403,
+          "expected_depth_m": 1.0952392425005208,
+          "measured_depth_m": 1.1011264324188232,
+          "error_m": 0.0058871899183023935,
+          "predicted_pixel": [
+            319.6975315333592,
+            234.23590977426767
+          ],
+          "target_centroid_pixel": [
+            319.63138569604087,
+            234.84099616858236
+          ],
+          "pixel_error": 0.6086910680955532,
+          "target_pixels": 6264,
+          "nominal_surface_distance_m": 1.0
+        },
+        {
+          "ground_truth_range_to_centre_m": 1.7260734887686122,
+          "expected_depth_m": 1.5755658418009506,
+          "measured_depth_m": 1.5809587240219116,
+          "error_m": 0.005392882220961015,
+          "predicted_pixel": [
+            319.81596751609186,
+            189.67989307657254
+          ],
+          "target_centroid_pixel": [
+            319.83155248271527,
+            189.68101822752985
+          ],
+          "pixel_error": 0.015625528769595526,
+          "target_pixels": 3182,
+          "nominal_surface_distance_m": 1.5
+        }
+      ]
+    },
+    "reset_rebuild": {
+      "passed": true,
+      "valid_fraction": 0.9830034722222222
+    },
+    "patrol_not_started": {
+      "passed": true,
+      "navigation_mode": "MANUAL",
+      "scheduler_state": "STOPPED"
+    }
+  },
+  "annotator_read_ms": 0.9517860016785562,
+  "frames_read": 351,
+  "files_saved": 8,
+  "failed_tests": []
+}

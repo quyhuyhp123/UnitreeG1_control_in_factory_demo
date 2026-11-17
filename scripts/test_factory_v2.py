@@ -1,7 +1,7 @@
 """Actual PhysX/G1 acceptance for selected factory; no walking pose updates."""
 from pathlib import Path
 import sys,json,math,time,argparse,statistics
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 def main():
     parser=argparse.ArgumentParser(); parser.add_argument('--factory',choices=['v1','v2'],default='v2'); parser.add_argument('--views-only',action='store_true'); args,_=parser.parse_known_args()
     from controllers.factory_selector import load_factory
@@ -10,7 +10,7 @@ def main():
     cfg['multi_route_enabled']=False # This regression covers legacy A/B protection.
     from isaacsim import SimulationApp
     start=time.perf_counter(); report={'factory':args.factory,'checks':{},'status':'running'}; runtime=None
-    app=SimulationApp({'headless':True,'width':960,'height':640,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+    app=SimulationApp({'headless':True,'width':960,'height':640,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     dest=ROOT/(f'docs/factory_{args.factory}_views.json' if args.views_only else f'docs/factory_{args.factory}_acceptance.json')
     def save(): dest.write_text(json.dumps(report,indent=2),encoding='utf-8')
     def check(name,passed,**values):

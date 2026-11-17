@@ -1,11 +1,11 @@
 """Real G1/PhysX route sequence acceptance; no pose-based walking."""
 from pathlib import Path
 import sys,json,argparse,time,statistics
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 def main():
     p=argparse.ArgumentParser(); p.add_argument('--mode',choices=['route_1_blue','route_2_brown','alternate'],default='alternate'); p.add_argument('--cycles',type=int,default=2); p.add_argument('--max-sim-seconds',type=float,default=1600); args,_=p.parse_known_args()
     from isaacsim import SimulationApp
-    app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+    app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     rt=None; report={'mode':args.mode,'status':'running','requested_cycles':args.cycles}
     dest=ROOT/'docs/navigation/multi_route_physics_results.json'
     try:

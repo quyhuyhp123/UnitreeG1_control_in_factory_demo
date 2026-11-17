@@ -10,7 +10,7 @@ import shutil
 from datetime import datetime
 from mathutils import Vector
 
-PROJECT_ROOT = Path(r'D:\unitree_g1')
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
 OUT = PROJECT_ROOT / 'assets' / 'factory'
 BLEND = PROJECT_ROOT / 'blender' / 'factory.blend'
 OUT.mkdir(parents=True, exist_ok=True)

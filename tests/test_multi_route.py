@@ -1,6 +1,6 @@
 import unittest,json,sys,copy
 from pathlib import Path
-ROOT=Path(r'D:\unitree_g1'); sys.path.append(str(ROOT/'scripts'))
+ROOT=Path(__file__).resolve().parents[1]; sys.path.append(str(ROOT/'scripts'))
 from check_route_geometry import build_grid
 from navigation.route_manager import RouteManager
 from navigation.global_planner import NoValidPath
@@ -35,7 +35,7 @@ class MultiRouteTests(unittest.TestCase):
         d['routes']['route_1_blue']['speed_limit_m_s']=load_speed_profile()['maximum_verified_m_s']+.01
         with self.assertRaisesRegex(ValueError,'velocity/tolerance'): RouteManager(self.cfg,d)
     def test_safe_actual_pose_can_connect_from_conservative_cell(self):
-        start=(-7.11,-8.)
+        start=(-7.21,-8.)
         self.assertTrue(self.grid.map.safe(start)); self.assertFalse(self.grid.point_free(start))
         m=RouteManager(self.cfg); index=m.data['routes']['route_1_blue']['ordered_nodes'].index('LEFT_BOTTOM')
         edge=m.edge(self.grid,'route_1_blue',index,start)

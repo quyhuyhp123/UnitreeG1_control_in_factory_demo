@@ -1,6 +1,6 @@
 import unittest,json,sys
 from pathlib import Path
-ROOT=Path(r'D:\unitree_g1'); sys.path.append(str(ROOT/'scripts'))
+ROOT=Path(__file__).resolve().parents[1]; sys.path.append(str(ROOT/'scripts'))
 from controllers.factory_selector import load_factory
 _original_path=list(sys.path)
 from run_factory_g1 import preflight
@@ -19,7 +19,7 @@ class FactorySelectorTests(unittest.TestCase):
         deploy=json.loads((ROOT/loco['deploy_config']).read_text())
         keys=KeyboardController(cfg,deploy); keys.set_focus(True); keys.set_running(True)
         keys.handle_key('W','PRESS')
-        for _ in range(50): keys.tick(.02)
+        for _ in range(150): keys.tick(.02)
         before=list(keys.command); stop_before=keys.stop_generation
         keys.handle_key('SPACE','PRESS'); keys.handle_key('SPACE','RELEASE')
         self.assertEqual(keys.tick(.02),before)

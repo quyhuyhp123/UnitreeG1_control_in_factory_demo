@@ -1,7 +1,7 @@
 """Interactive G1 keyboard control, or explicit Carb-input integration tests."""
 from pathlib import Path
 import argparse,json,math,sys,time,traceback
-PROJECT_ROOT=Path(r'D:\unitree_g1')
+PROJECT_ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(PROJECT_ROOT))
 sys.path.insert(0,str(PROJECT_ROOT/'scripts'))
 

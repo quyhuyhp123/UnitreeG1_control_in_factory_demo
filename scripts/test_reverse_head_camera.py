@@ -1,14 +1,14 @@
 """Regression: lost W release, reverse, SPACE follow, mounted head preview."""
 from pathlib import Path
 import argparse,json,sys,time
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 def main():
     p=argparse.ArgumentParser(); p.add_argument('--hold-seconds',type=float,default=0); args,_=p.parse_known_args()
     cfg=json.loads((ROOT/'configs/factory_g1.json').read_text())
     from isaacsim import SimulationApp
     app=SimulationApp({'headless':False,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,
-        'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
+        'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
             '--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None
     try:

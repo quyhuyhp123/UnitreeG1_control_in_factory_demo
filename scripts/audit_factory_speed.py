@@ -1,7 +1,7 @@
 """Independent edge-order/footprint audit for a completed speed candidate."""
 from pathlib import Path
 import json,sys,argparse,math,statistics
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 from check_route_geometry import build_grid
 
 def audit(speed):

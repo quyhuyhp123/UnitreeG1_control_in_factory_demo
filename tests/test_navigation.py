@@ -105,7 +105,7 @@ class SafetyTests(unittest.TestCase):
     def setUp(self):
         import json
         from pathlib import Path
-        c=json.loads(Path(r'D:\unitree_g1\configs\navigation.json').read_text())
+        c=json.loads((Path(__file__).resolve().parents[1]/'configs/navigation.json').read_text())
         self.supervisor=SafetySupervisor(c['safety'],{'validated':True,'conservative_deceleration_m_s2':.32})
         self.state={'base_position_m':[0,0,.78],'base_orientation_wxyz':[1,0,0,0],
                     'base_linear_velocity_world_m_s':[.2,0,0],'base_angular_velocity_world_rad_s':[0,0,0]}

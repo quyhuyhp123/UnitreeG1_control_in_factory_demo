@@ -7,8 +7,14 @@ class CorridorGrid:
         self.base=base; self.map=base.map; self.a=a; self.b=b; self.allowance=allowance
         self.start=tuple(start) if start is not None else None
         self.start_cell=base.world_to_cell(self.start) if self.start is not None else None
-    def __getattr__(self,name): return getattr(self.base,name)
-    def contains(self,p): return segment_distance(p,self.a,self.b)<=self.allowance
+        # Collinear follow-on segments (pass-through nodes). Used only by the
+        # safety prediction; A* planning happens before this is assigned.
+        self.extra=[]
+    def __getattr__(self,name):
+        if name in ('base','extra'): raise AttributeError(name)
+        return getattr(self.base,name)
+    def contains(self,p):
+        return segment_distance(p,self.a,self.b)<=self.allowance or any(segment_distance(p,a,b)<=self.allowance for a,b in self.extra)
     def cell_to_world(self,c): return self.start if c==self.start_cell else self.base.cell_to_world(c)
     def free(self,c):
         if c==self.start_cell: return self.map.safe(self.start) and self.contains(self.start)

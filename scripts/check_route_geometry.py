@@ -1,6 +1,6 @@
 import json,sys
 from pathlib import Path
-ROOT=Path(r'D:\unitree_g1'); sys.path.insert(0,str(ROOT))
+ROOT=Path(__file__).resolve().parents[1]; sys.path.insert(0,str(ROOT))
 from navigation.route_manager import RouteManager
 from navigation.lane_map import LaneMap
 from navigation.occupancy_grid import OccupancyGrid

@@ -39,15 +39,15 @@
       -11.4
     ],
     "TOP_RIGHT_TURN": [
-      6.95,
+      6.985645933014354,
       10.952830188679245
     ],
     "RIGHT_CORRIDOR": [
-      6.95,
+      6.985645933014354,
       0.0
     ],
     "BOTTOM_RIGHT_TURN": [
-      6.95,
+      6.985645933014354,
       -11.4
     ],
     "BOTTOM_EXIT_CORRIDOR": [
@@ -101,7 +101,7 @@
         "ENTRY_INNER",
         "EXIT"
       ],
-      "speed_limit_m_s": 0.3,
+      "speed_limit_m_s": 1.0,
       "turn_speed_limit_rad_s": 0.3,
       "waypoint_tolerance_m": 0.13,
       "exit_node": "EXIT",
@@ -155,7 +155,7 @@
         "ENTRY_INNER",
         "EXIT"
       ],
-      "speed_limit_m_s": 0.3,
+      "speed_limit_m_s": 1.0,
       "turn_speed_limit_rad_s": 0.3,
       "waypoint_tolerance_m": 0.13,
       "exit_node": "EXIT",
@@ -174,6 +174,6 @@
   "corridor_center_allowance_m": 0.4,
   "notes": [
     "World coordinates derived from actual outer/holes and verified spawn, not image pixels.",
-    "Right lane uses verified grid centre x=6.95. End inside entry marker; no outside floor/apron exists."
+    "Right lane uses corridor midpoint x=6.9856 (mirror of left lane). End inside entry marker; no outside floor/apron exists."
   ]
 }

@@ -1,6 +1,6 @@
 from pathlib import Path
 import sys,json
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from isaacsim import SimulationApp
 app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','width':640,'height':480,'multi_gpu':False})

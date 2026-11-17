@@ -1,7 +1,7 @@
 """Real G1/PhysX route sequence acceptance; no pose-based walking."""
 from pathlib import Path
 import sys,json,argparse,time,statistics
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 def main():
     p=argparse.ArgumentParser(); p.add_argument('--speed',type=float,required=True); p.add_argument('--mode',choices=['route_1_blue','route_2_brown','alternate'],default='alternate'); p.add_argument('--cycles',type=int,default=2); p.add_argument('--max-sim-seconds',type=float,default=1600); args,_=p.parse_known_args()
     sweep=json.loads((ROOT/'docs/navigation/speed_sweep_results.json').read_text())
@@ -10,7 +10,7 @@ def main():
     trial=next((r for r in sweep['trials'] if abs(r['command_m_s']-args.speed)<1e-6 and r['passed']),None)
     if trial is None: raise ValueError('Factory candidate must first pass flat-floor speed test')
     from isaacsim import SimulationApp
-    app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+    app=SimulationApp({'headless':True,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     rt=None; report={'mode':args.mode,'status':'running','requested_cycles':args.cycles}
     dest=ROOT/f'docs/navigation/factory_speed_{args.speed:.2f}_results.json'
     try:

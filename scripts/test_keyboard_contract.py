@@ -1,7 +1,7 @@
 """Input-state unit tests, separate from Carb/physics integration tests."""
 from pathlib import Path
 import json,sys
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 sys.path.insert(0,str(ROOT))
 from controllers.keyboard_controller import KeyboardController
 cfg=json.loads((ROOT/'configs/keyboard.yaml').read_text())

@@ -11,6 +11,9 @@ from navigation.global_planner import NoValidPath
 from navigation.lane_map import segment_distance
 from navigation.speed_profile import load_speed_profile
 
+TURN_SLOWDOWN_START_M=2.0
+TURN_SLOWDOWN_END_M=1.2
+
 class MultiRouteController(PatrolController):
     def __init__(self,runtime):
         super().__init__(runtime)
@@ -24,10 +27,16 @@ class MultiRouteController(PatrolController):
         self.position_recovery=False
         self.velocity_history=deque(maxlen=30)
         self.config['safety']['reaction_latency_seconds']=.65
+        self.safety.swept=True
         self.speed_profile=load_speed_profile(); self.speed_limit=self.speed_profile['maximum_verified_m_s']
         self.config['local']['max_speed_m_s']=self.speed_profile['default_m_s']
         self.config['safety']['max_actual_speed_m_s']=self.speed_profile['max_actual_speed_m_s']
         self.reason='Select route, PREVIEW / VALIDATE, then START. No automatic start.'
+    def envelope_speed(self,distance):
+        """Largest speed whose supervisor look-ahead (prediction + reaction + braking) fits in distance."""
+        s=self.config['safety']; a=self.braking['conservative_deceleration_m_s2']
+        t=s['prediction_seconds']+s['reaction_latency_seconds']; room=distance-s['stopping_extra_m']
+        return 0. if room<=0 else a*(-t+math.sqrt(t*t+2*room/a))
     def selected_route(self,completed=None):
         return self.route_manager.route_id(self.route_mode,self.scheduler.completed if completed is None else completed,self.alternate_first)
     def select_route(self,mode,first=None):
@@ -74,6 +83,12 @@ class MultiRouteController(PatrolController):
         for a,b in zip(self.edge['path'],self.edge['path'][1:]):
             count=max(1,math.ceil(math.dist(a,b)/.2))
             dense.extend([(a[0]+(b[0]-a[0])*j/count,a[1]+(b[1]-a[1])*j/count) for j in range(1,count+1)])
+        nodes=self.route_manager.data['routes'][self.active_route]['ordered_nodes']; N=self.route_manager.data['nodes']; i=self.segment_index
+        if i<len(nodes)-2 and not is_corner(N[nodes[i]],N[nodes[i+1]],N[nodes[i+2]]):
+            # Pass-through node: keep look-ahead targets on the next collinear
+            # segment so the robot does not brake to a crawl at the checkpoint.
+            b,c=N[nodes[i+1]],N[nodes[i+2]]; length=math.dist(b,c); reach=min(length,4.); count=math.ceil(reach/.2)
+            dense.extend([(b[0]+(c[0]-b[0])*reach*j/count/length,b[1]+(c[1]-b[1])*reach*j/count/length) for j in range(1,count+1)])
         self.local.reset(dense); self.path=self.route_plan['path']; self.movement_started=self.now
         self.local.position_reached=holding
         self.progress_time=self.now; self.best_distance=math.dist(pose(state)[:2],self.edge['goal']); self.progress_yaw=pose(state)[2]
@@ -138,17 +153,40 @@ class MultiRouteController(PatrolController):
         nodes=route['ordered_nodes']; i=self.segment_index; goal=self.edge['goal']
         final=i==len(nodes)-2; corner=not final and is_corner(self.route_manager.data['nodes'][nodes[i]],goal,self.route_manager.data['nodes'][nodes[i+2]])
         distance=math.dist(p[:2],goal)
+        through=not final and not corner; N=self.route_manager.data['nodes']
+        # Distance to the next node where the robot must stop/turn (corner or
+        # EXIT), measured through any collinear pass-through checkpoints.
+        stop_distance=distance; chain=[]; j=i
+        while j<len(nodes)-2 and not is_corner(N[nodes[j]],N[nodes[j+1]],N[nodes[j+2]]):
+            chain.append((N[nodes[j+1]],N[nodes[j+2]])); stop_distance+=math.dist(*chain[-1]); j+=1
+        self.edge['grid'].extra=chain
         requested=min(self.config['local']['max_speed_m_s'],route['speed_limit_m_s'])
         self.local.config=dict(self.config['local'])
-        self.local.config['max_speed_m_s']=requested
-        if requested>.22 and (corner or final) and distance<1.2:
-            self.local.config['max_speed_m_s']=min(requested,.22)
+        cap=requested
+        if requested>.22:
+            # Slow down from TURN_SLOWDOWN_START_M before a turn/EXIT, reaching the
+            # verified 0.22 m/s approach speed TURN_SLOWDOWN_END_M before it.
+            if stop_distance<TURN_SLOWDOWN_START_M:
+                cap=.22+(requested-.22)*max(0.,stop_distance-TURN_SLOWDOWN_END_M)/(TURN_SLOWDOWN_START_M-TURN_SLOWDOWN_END_M)
+            # Never command a speed whose predicted stopping point lies beyond
+            # the turn; otherwise the supervisor would stop the robot instead.
+            cap=min(cap,max(.12,self.envelope_speed(stop_distance-.2)))
+        self.local.config['max_speed_m_s']=cap
+        # The tracker commands 0.7 x look-ahead distance, so high speed needs a
+        # proportionally longer look-ahead.
+        self.local.config['lookahead_m']=max(self.config['local']['lookahead_m'],cap/.7+.05)
         self.local.config['max_yaw_rate']=route['turn_speed_limit_rad_s']; self.local.config['position_tolerance_m']=route['waypoint_tolerance_m']
-        if not final and not corner and distance<route['waypoint_tolerance_m']:
-            self.finish_edge(state); return self.command(dt)
+        if through:
+            a=N[nodes[i]]; length=math.dist(a,goal)
+            passed=((p[0]-goal[0])*(goal[0]-a[0])+(p[1]-goal[1])*(goal[1]-a[1]))/length>=0
+            if distance<route['waypoint_tolerance_m'] or (passed and distance<self.config['safety']['max_path_deviation_m']):
+                self.finish_edge(state); return self.command(dt)
         target_yaw=heading(goal,self.route_manager.data['nodes'][nodes[i+2]]) if corner else (0. if final else None)
         if corner: target_yaw=route.get('heading_at_turns_rad',{}).get(nodes[i+1],target_yaw)
-        desired,arrived,self.last_distance=self.local.command(state,[*goal,target_yaw],dt)
+        desired,arrived,self.last_distance=self.local.command(state,[*self.local.path[-1],None] if through else [*goal,target_yaw],dt)
+        if through: arrived=False; self.last_distance=distance
+        lateral=min(self.selector.high[1],-self.selector.low[1])
+        if abs(desired[1])>lateral: desired[:2]=[v*lateral/abs(desired[1]) for v in desired[:2]]
         if self.local.position_reached:
             if distance>route['waypoint_tolerance_m']: self.position_recovery=True
             if distance<route['waypoint_tolerance_m']*.65: self.position_recovery=False

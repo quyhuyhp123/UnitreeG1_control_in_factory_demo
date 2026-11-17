@@ -1,7 +1,7 @@
 """Restart-only factory selection; no live scene switching."""
 from pathlib import Path
 import json
-ROOT=Path(r'D:\unitree_g1')
+ROOT=Path(__file__).resolve().parents[1]
 def load_factory(factory=None,config=None):
     selector=json.loads((ROOT/'configs/factory_selector.json').read_text())
     name=factory or selector['default_factory']

@@ -2,7 +2,7 @@
 from pathlib import Path
 import json,hashlib,math
 from pxr import Usd,UsdGeom,UsdPhysics,UsdShade,Gf,Sdf
-ROOT=Path(r'D:\unitree_g1'); OUT=ROOT/'assets/factory/factory_layout_v2'
+ROOT=Path(__file__).resolve().parents[1]; OUT=ROOT/'assets/factory/factory_layout_v2'
 source=OUT/'factory_layout_v2.usd'; src=Usd.Stage.Open(str(source))
 assert UsdGeom.GetStageMetersPerUnit(src)==1 and UsdGeom.GetStageUpAxis(src)=='Z'
 manifest=json.loads((OUT/'object_manifest.json').read_text()); nav=json.loads((OUT/'navigation_allowed_areas.json').read_text())

@@ -1,0 +1,7 @@
+.deps/
+.ultralytics/
+runs/
+weights/*.pt
+__pycache__/
+*.pyc
+ui_settings.json

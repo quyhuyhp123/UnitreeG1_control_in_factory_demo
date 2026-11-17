@@ -1,7 +1,7 @@
 """Actual G1 PhysX patrol tests plus measured braking calibration; no robot pose writes."""
 from pathlib import Path
 import sys,json,math,time,argparse,statistics
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 
 def main():
@@ -9,7 +9,7 @@ def main():
     args,_=parser.parse_known_args()
     from isaacsim import SimulationApp
     app=SimulationApp({'headless':not args.gui,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,
-        'extra_args':['--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
+        'extra_args':['--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false','--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None; report={'tests':{},'input_source':'Carb logical device and programmatic UI; no physical OS keyboard'}
     def save():
         name='braking_test_results.json' if args.calibrate_only else 'physics_test_results.json'

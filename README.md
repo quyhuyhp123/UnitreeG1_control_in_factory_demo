@@ -1,3 +1,36 @@
+## Chạy Factory V2 trên Linux
+
+Dùng bản Isaac Sim **6.1 cho Linux** và Python đi kèm. Tại máy hiện tại:
+
+```bash
+cd /home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2
+export ISAAC_SIM_ROOT=/home/g1sim/projects/isaacsim-6.1.0
+./run_sim.sh --check
+./run_sim.sh
+```
+
+`./run_sim.sh` mặc định mở **Factory V2**, giữ nguyên multi-route patrol và cấu
+hình tốc độ 0.30 m/s của nhánh nguồn. SPACE đưa camera về Follow; X dừng lệnh tay
+hoặc tạm dừng AUTO. Chạy giao diện từ Terminal trong desktop Ubuntu.
+
+```bash
+./run_sim.sh --factory v2 --headless --duration 10
+./run_sim.sh --factory v1
+./run_sim.sh --flat
+./scripts/isaac_python.sh -m unittest discover -s tests -v
+```
+
+Nếu cài Isaac Sim ở nơi khác, đổi `ISAAC_SIM_ROOT` thành thư mục chứa `python.sh`.
+Launcher có thể tự tìm Isaac Sim ở thư mục cha, `$HOME/isaacsim` hoặc `/opt/isaacsim`.
+Toàn bộ tham số như `--factory`, `--config`, `--duration`, `--overview` được chuyển
+vào Python. Log lưu tại `logs/linux_*.log`, telemetry tại `logs/keyboard_runs` và
+`logs/patrol_runs`. `--check` kiểm tra cấu hình/asset/checkpoint mà chưa mở mô phỏng;
+có thể chạy bằng `python3 scripts/run_factory_g1.py --check` mà không cần Isaac Sim.
+Không cần sửa `configs/environment.json` vốn dành cho launcher Windows cũ.
+Xem [kiểm tra Linux](docs/linux_port.md).
+
+---
+
 # G1_factory_keyboard
 
 ## Factory V2 — nhà xưởng Blender mới

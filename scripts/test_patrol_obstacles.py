@@ -4,14 +4,14 @@ Fixture transforms move obstacle actors only. G1 always uses locomotion joint ta
 """
 from pathlib import Path
 import argparse,sys,json,math
-ROOT=Path(r'D:\unitree_g1'); sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
+ROOT=Path(__file__).resolve().parents[1]; sys.path[:0]=[str(ROOT),str(ROOT/'scripts')]
 
 
 def main():
     parser=argparse.ArgumentParser(); parser.add_argument('--gui',action='store_true'); args,_=parser.parse_known_args()
     from isaacsim import SimulationApp
     app=SimulationApp({'headless':not args.gui,'renderer':'RaytracedLighting','anti_aliasing':1,'multi_gpu':False,'extra_args':[
-        '--/app/vulkan=false','--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
+        '--/app/vulkan='+str(sys.platform.startswith('linux')).lower(),'--/exts/isaacsim.physics.newton/auto_switch_on_startup=false',
         '--/exts/isaacsim.core.simulation_manager/default_engine=physx']})
     runtime=None; results={}
     def add(name,passed,**values):

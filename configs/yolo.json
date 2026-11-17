@@ -1,0 +1,23 @@
+{
+  "enabled": false,
+  "model": "checkpoints/yolo/yolo11n_640.onnx",
+  "model_sha256": "ce2c9408f475e758629ae369381535f2869426f38fa53037beaf705130f327dc",
+  "class_names": "checkpoints/yolo/coco_names.json",
+  "imgsz": 640,
+  "confidence_threshold": 0.25,
+  "iou_threshold": 0.45,
+  "max_detections": 100,
+  "classes": null,
+  "target_hz": 10,
+  "provider": "cuda",
+  "cuda_device_id": 0,
+  "save_directory": "logs/yolo_runs",
+  "note": "YOLO11n COCO-pretrained, exported to ONNX at a fixed imgsz. Started at imgsz 320; raised to 640 after the benchmark: on the 640x360 camera, 320 missed the person and the bottle that 640 detects, and 640 costs about 3 ms per frame on the GPU. To go back to 320 copy the three values from alternatives.imgsz_320. Off by default; enable with --yolo or --yolo-debug (these also switch the RGB-D camera on). Detection output only: never produces velocity commands and is not read by navigation or locomotion.",
+  "alternatives": {
+    "imgsz_320": {
+      "model": "checkpoints/yolo/yolo11n.onnx",
+      "model_sha256": "39aef0b882b27eb843e2e004d67b7aeebe598d44cd0dfda6d8232b7455944ff5",
+      "imgsz": 320
+    }
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "status": "passed",
+  "model": "checkpoints/yolo/yolo11n_640.onnx",
+  "imgsz": 640,
+  "provider": "CUDAExecutionProvider",
+  "cuda_device_id": 0,
+  "run_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/keyboard_runs/20261117_082709",
+  "image_directory": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/yolo_runs/20261117_082709",
+  "tests": {
+    "live_pipeline": {
+      "passed": true,
+      "results": 30,
+      "provider": "CUDAExecutionProvider",
+      "result_fields": [
+        "control_step",
+        "detections",
+        "frame_index",
+        "image_size_wh",
+        "result_index",
+        "sim_time",
+        "timing",
+        "wall_time_capture",
+        "wall_time_result"
+      ],
+      "example_detection": null,
+      "worker": {
+        "submitted": 60,
+        "processed": 60,
+        "dropped": 0,
+        "inference_hz": 7.259394514365473,
+        "inference_ms_mean": 2.642649953486398,
+        "inference_ms_p95": 3.1381606531795114,
+        "submit_to_result_ms_mean": 4.852642819363003,
+        "submit_to_result_ms_p95": 5.574518453795463
+      }
+    },
+    "factory_entrance_view": {
+      "passed": null,
+      "detections": {
+        "chair": {
+          "detection_rate": 0.03333333333333333,
+          "mean_confidence": 0.26375842094421387,
+          "max_confidence": 0.26375842094421387
+        }
+      },
+      "note": "Informational: what the pretrained model reports on the stylised factory with no props"
+    },
+    "props_scene": {
+      "passed": true,
+      "detections": {
+        "bottle": {
+          "detection_rate": 1.0,
+          "mean_confidence": 0.6677786201238632,
+          "max_confidence": 0.7639707326889038
+        },
+        "chair": {
+          "detection_rate": 1.0,
+          "mean_confidence": 0.8926509916782379,
+          "max_confidence": 0.8973492383956909
+        },
+        "person": {
+          "detection_rate": 1.0,
+          "mean_confidence": 0.9061047777533531,
+          "max_confidence": 0.9107518196105957
+        }
+      },
+      "props": {
+        "person": {
+          "asset": "/Isaac/People/Characters/male_adult_construction_05_new/male_adult_construction_05_new.usd",
+          "meters_per_unit": 1.0,
+          "up_axis": "Z",
+          "size_m": [
+            0.5683840513229375,
+            2.087988018989563,
+            1.9268168210983276
+          ],
+          "position_m": [
+            -4.264090801853914,
+            -13.534999604382303,
+            0.0
+          ],
+          "distance_from_camera_m": 4.504442251822083
+        },
+        "chair": {
+          "asset": "/Isaac/Environments/Office/Props/SM_Chair.usd",
+          "meters_per_unit": 1.0,
+          "up_axis": "Z",
+          "size_m": [
+            0.7688639636341239,
+            0.7683721578814412,
+            0.8772270603304672
+          ],
+          "position_m": [
+            -6.4640908018539145,
+            -12.684999604382302,
+            0.0
+          ],
+          "distance_from_camera_m": 2.5283393759541064
+        },
+        "bottle": {
+          "asset": "/Isaac/Props/YCB/Axis_Aligned/006_mustard_bottle.usd",
+          "meters_per_unit": 1.0,
+          "up_axis": "Z",
+          "size_m": [
+            0.0960241582388246,
+            0.05824893821219494,
+            0.1913009982265308
+          ],
+          "position_m": [
+            -7.614090801853914,
+            -14.134999604382303,
+            0.8
+          ],
+          "distance_from_camera_m": 1.217579566188592
+        }
+      },
+      "screenshot": "/home/g1sim/projects/UnitreeG1_control_in_factory_demo/factory_v2/logs/yolo_runs/20261117_082709/002_props_person_chair_bottle.png",
+      "imgsz": 640
+    },
+    "props_scene_imgsz_320": {
+      "passed": null,
+      "detections": [
+        [
+          "chair",
+          0.791
+        ]
+      ],
+      "inference_ms": 1.7728970269672573
+    },
+    "bottle_closeup": {
+      "passed": null,
+      "detections": {
+        "bottle": {
+          "detection_rate": 1.0,
+          "mean_confidence": 0.7344436466693878,
+          "max_confidence": 0.7922667264938354
+        },
+        "chair": {
+          "detection_rate": 1.0,
+          "mean_confidence": 0.8872865398724874,
+          "max_confidence": 0.8906751275062561
+        },
+        "person": {
+          "detection_rate": 1.0,
+          "mean_confidence": 0.9043174107869466,
+          "max_confidence": 0.9088886976242065
+        }
+      },
+      "bottle_detected": true,
+      "distance_from_camera_m": 0.7
+    },
+    "non_blocking": {
+      "passed": true,
+      "tick_ms_median_normal": 31.342992500867695,
+      "tick_ms_p95_normal": 41.712142145843245,
+      "tick_ms_median_with_350ms_detector": 29.035862011369318,
+      "tick_ms_p95_with_350ms_detector": 37.70377609471325,
+      "frames_dropped_while_slow": 23,
+      "meaning": "With inference artificially slowed to 350 ms the simulation tick time is unchanged; stale frames are dropped, not queued"
+    },
+    "factory_operator_view": {
+      "passed": null,
+      "detections": {},
+      "robot_yaw_rad": 2.0255396497295792,
+      "person_detected": false,
+      "note": "Informational: low-poly blocky operator about 2.3 m ahead"
+    },
+    "no_commands_from_yolo": {
+      "passed": true,
+      "ticks_with_detections_running": 1450,
+      "nonzero_commands": 0,
+      "navigation_mode": "MANUAL",
+      "scheduler_state": "IDLE",
+      "total_detections": 334,
+      "meaning": "While YOLO was producing detections and no key was held, the velocity command stayed exactly zero"
+    },
+    "reset_keeps_running": {
+      "passed": true,
+      "new_results_after_reset": 30
+    }
+  },
+  "worker": {
+    "submitted": 410,
+    "processed": 384,
+    "dropped": 25,
+    "inference_hz": 5.718490255555641,
+    "inference_ms_mean": 3.1385233206674457,
+    "inference_ms_p95": 4.434808454243466,
+    "submit_to_result_ms_mean": 42.107078358531,
+    "submit_to_result_ms_p95": 409.16124870709604
+  },
+  "results_logged": 384,
+  "failed_tests": []
+}
