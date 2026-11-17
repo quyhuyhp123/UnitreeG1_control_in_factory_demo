@@ -26,11 +26,11 @@ def main():
         except ValueError: rejected=True
         report['checks']['reject_above_verified_speed']=rejected
         panel.speed.model.set_value(initial_speed); panel.apply_schedule()
-        panel.route_choice.model.get_item_value_model().set_value(2); panel.apply_route(); panel.preview_route()
-        report['checks']['alternate_selection_and_preview']=nav.route_mode=='alternate' and all(v['status']=='VALID' for v in nav.route_manager.status.values())
+        panel.route_choice.model.get_item_value_model().set_value(1); panel.preview_route()
+        report['checks']['route2_selection_and_preview']=nav.route_mode=='route_2_brown' and nav.route_manager.status['route_2_brown']['status']=='VALID'
         path=runtime.directory/'route_settings_roundtrip.json'; nav.save(path)
-        nav.select_route('route_2_brown'); nav.load(path); panel.sync()
-        report['checks']['save_load_alternate']=nav.route_mode=='alternate' and panel.route_choice.model.get_item_value_model().as_int==2
+        nav.select_route('route_1_blue'); nav.load(path); panel.sync()
+        report['checks']['save_load_selected_route']=nav.route_mode=='route_2_brown' and panel.route_choice.model.get_item_value_model().as_int==1
         panel.start(); runtime.inject('W'); advance(.3); runtime.inject('W','RELEASE')
         report['checks']['wasd_not_added_to_auto']=nav.last_command==[0,0,0] and nav.scheduler.state=='WAITING_START'
         runtime.inject('X'); advance(.1); runtime.inject('X','RELEASE')

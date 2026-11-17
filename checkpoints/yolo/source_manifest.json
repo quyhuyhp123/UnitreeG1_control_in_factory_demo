@@ -1,0 +1,20 @@
+[
+  {
+    "path": "checkpoints\\yolo\\yolo11n.pt",
+    "url": "https://github.com/ultralytics/assets/releases/download/v8.3.0/yolo11n.pt",
+    "sha256": "0ebbc80d4a7680d14987a577cd21342b65ecfd94632bd9a8da63ae6417644ee1",
+    "bytes": 5613764
+  },
+  {
+    "path": "logs\\yolo_samples\\bus.jpg",
+    "url": "https://raw.githubusercontent.com/ultralytics/ultralytics/v8.3.221/ultralytics/assets/bus.jpg",
+    "sha256": "c02019c4979c191eb739ddd944445ef408dad5679acab6fd520ef9d434bfbc63",
+    "bytes": 137419
+  },
+  {
+    "path": "logs\\yolo_samples\\coco128.zip",
+    "url": "https://github.com/ultralytics/assets/releases/download/v0.0.0/coco128.zip",
+    "sha256": "61e5e3028863d8ffc3b81d6a514603954889f0edd5e4b44c4ce60b2da99aeb8e",
+    "bytes": 6983030
+  }
+]

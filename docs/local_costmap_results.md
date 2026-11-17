@@ -1,0 +1,13 @@
+# Actual Local Costmap results
+
+Final live run: `D:\unitree_g1\logs\keyboard_runs\20261116_185045`; log `logs/costmap_final.log`. Real RGB-D, YOLO, policy and PhysX; test explicitly remained MANUAL and issued test keyboard A then W. Saved snapshots: rgbd/yolo_standing/costmap, rgbd/yolo_rotated/costmap, rgbd/costmap_slow_walk/costmap. Each contains occupancy/cost arrays, image, origin/timestamp and semantic annotations. Test input is logical keyboard, not a native keyboard audit.
+
+60×60 grid, 6×6 m, 0.1 m cells, world-aligned rolling pelvis-centered frame. Circular inflation radius 0.62 m. Unknown is retained distinctly in occupancy even where inflated cost overlays it. Allowed/Forbidden Factory V2 polygons and static collider projections cannot be ray-cleared.
+
+Final live test completed passed=true, policy_fault=null. Last sampled loop FPS 5.486; whole-device peak VRAM 4567 MiB (~4.46 GiB), including other applications. Last saved costmap update latency 78.781 ms, excludes subsequent UI provider upload and does not represent p95. This is not real-time 200 Hz simulation and performance remains a limitation. First heavier preview run 20261116_181610 also completed standing/rotation/slow motion, but last loop FPS was 3.199 and saved costmap update 195.372 ms, peak VRAM 4147 MiB. Different session memory totals are not an isolated YOLO/costmap memory delta.
+
+Logic tests passed: measured-depth replay retains unknown/occupied/inflation; free evidence expires after 2 seconds; static restrictions remain. Explicit synthetic 2 m depth endpoint is occupied; ray at 1 m is free; rear blind cell remains unknown; all sensor evidence expires to unknown when new returns are invalid. These checks do not establish recall on all physical obstacles. Existing stage 4 sampled cube images serve as depth replay input, not proof of tracking a moving cube.
+
+Live snapshots were collected while standing, after turning and after slow walking. This verifies runtime update/save and policy continuity, not accuracy of every obstacle boundary during motion. Semantic annotations remain optional; low-poly person detection limitation from stage 3 remains. No dynamic avoidance or route changes. No commit/push. Images under docs/costmap_screenshots are copies of final live outputs.
+
+Files: controllers/local_costmap.py, scripts/test_costmap_logic.py, docs/local_costmap.md, this results report and screenshots (new); controllers/rgbd_camera.py, controllers/factory_g1_runtime.py and README (modified). Repeatable live test source used is logs/test_costmap_final.py (derived from existing test_yolo_live.py, adds short W motion); original test and route files were not edited.

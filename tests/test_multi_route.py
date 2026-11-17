@@ -41,10 +41,11 @@ class MultiRouteTests(unittest.TestCase):
         edge=m.edge(self.grid,'route_1_blue',index,start)
         self.assertEqual(tuple(edge['path'][0]),start)
         self.assertTrue(all(edge['grid'].segment_free(a,b) for a,b in zip(edge['path'],edge['path'][1:])))
-    def test_alternate_only_completed_count(self):
+    def test_repeat_keeps_the_selected_route(self):
         m=RouteManager(self.cfg)
-        self.assertEqual([m.route_id('alternate',i) for i in range(4)],['route_1_blue','route_2_brown']*2)
-        self.assertEqual(m.route_id('alternate',0,'route_2_brown'),'route_2_brown')
+        for rid in ('route_1_blue','route_2_brown'):
+            self.assertEqual([m.route_id(rid,i) for i in range(4)],[rid]*4)
+        with self.assertRaises(ValueError): m.route_id('alternate')
     def test_fault_zeros_command_telemetry_without_waiting_for_policy_tick(self):
         from types import SimpleNamespace
         from navigation.patrol_controller import PatrolController

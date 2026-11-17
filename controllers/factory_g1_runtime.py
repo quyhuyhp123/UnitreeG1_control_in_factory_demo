@@ -31,6 +31,8 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         self.controller_message.text=self.controller_selector.request('sonic' if index else 'locomotion')
 
     def __init__(self,app,cfg,flat=False,self_test=False):
+        cfg=dict(cfg)
+        cfg['head_camera']={**cfg.get('head_camera',{}),'enabled':False}
         self.factory_cfg=cfg
         self.flat=flat
         self.scene_checks={}
@@ -46,6 +48,8 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         self.contact_subscription=None
         self.head_window=None
         self.head_widget=None
+        self.rgbd=None
+        self.yolo=None
         self.last_follow_generation=0
         super().__init__(app,logical_test_keyboard=self_test,scene_setup=self._compose,
             runtime_config={'scene_output':cfg.get('scene_output','assets/robot/g1_factory_base.usd'),'locomotion_config':cfg['locomotion_config'],
@@ -267,6 +271,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         main_focused=any(w.viewport_api==self.context['viewport'] and w.focused for w in get_viewport_window_instances())
         return bool(main_focused or (self.hud is not None and self.hud.focused) or (self.head_window is not None and self.head_window.focused)
                     or (getattr(self,'controller_window',None) is not None and self.controller_window.focused)
+                    or (self.rgbd is not None and self.rgbd.window is not None and self.rgbd.window.focused)
                     or (getattr(self,'patrol_panel',None) is not None and self.patrol_panel.window.focused
                         and self.navigation.mode=='AUTO PATROL'))
 
@@ -371,7 +376,11 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             self.head_window.visible=False
             self.head_widget.destroy(); self.head_widget=None; self.head_window=None
             for _ in range(5): self.app.update()
+        rebuild_rgbd=safe and self.rgbd is not None and self.rgbd.sensor is not None
+        if safe and self.yolo is not None: self.yolo.clear()
+        if rebuild_rgbd: self.rgbd.disable()
         result=super().safe_reset(source)
+        if rebuild_rgbd: self.rgbd.enable()
         if result and nav is not None and hasattr(nav,'on_robot_reset'): nav.on_robot_reset()
         if result and view is not None:
             camera=self.context['camera']
@@ -419,6 +428,21 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         return value
 
     def tick(self):
+        if self.rgbd is not None:
+            try:
+                frame=self.rgbd.poll(self.steps/self.loco_cfg['control_hz'])
+                if frame is not None and self.yolo is not None:
+                    self.yolo.submit(frame[0],frame[2],frame[1] if self.rgbd.cfg.get('processing_enabled',True) else None)
+            except Exception as error:
+                self.rgbd.error=str(error)
+                print('RGBD_ERROR '+str(error),flush=True)
+                self.rgbd.disable()
+        if self.yolo is not None: self.yolo.update_debug()
+        if self.yolo is not None and self.rgbd is not None and self.rgbd.cfg.get('processing_enabled',True) and hasattr(self.rgbd.costmap,'last_time'):
+            with self.yolo.lock: detection=self.yolo.latest
+            if detection:
+                localized=detection[1].get('obstacle_localization',{})
+                self.rgbd.costmap.add_semantics(localized.get('semantic_obstacles',[]))
         nav=getattr(self,'navigation',None)
         if nav is not None: nav.before_tick(self.timeline.is_playing())
         try: result=super().tick()
@@ -471,6 +495,8 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         return result
 
     def close(self):
+        if self.yolo is not None: self.yolo.close(); self.yolo=None
+        if self.rgbd is not None: self.rgbd.close(); self.rgbd=None
         self.contact_subscription=None
         if getattr(self,'patrol_panel',None) is not None: self.patrol_panel.close(); self.patrol_panel=None
         if getattr(self,'navigation',None) is not None: self.navigation.close(); self.navigation=None

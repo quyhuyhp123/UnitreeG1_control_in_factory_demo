@@ -1,0 +1,14 @@
+{
+  "enabled": false,
+  "debug": true,
+  "python": ".venv/yolo/Scripts/python.exe",
+  "model": "checkpoints/yolo/yolo11n.pt",
+  "device": "cpu",
+  "imgsz": 320,
+  "target_hz": 6.0,
+  "confidence": 0.25,
+  "iou": 0.45,
+  "max_detections": 100,
+  "cpu_threads": 2,
+  "stale_after_s": 1.0
+}

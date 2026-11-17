@@ -2,9 +2,8 @@
   "version": 1,
   "factory_id": "v2",
   "route_mode": "route_1_blue",
-  "alternate_first": "route_1_blue",
   "schedule": {
-    "start_delay_seconds": 5.0,
+    "start_delay_seconds": 0.0,
     "repeat_interval_seconds": 120.0,
     "dwell_at_b_seconds": 0.0,
     "repeat_enabled": false,

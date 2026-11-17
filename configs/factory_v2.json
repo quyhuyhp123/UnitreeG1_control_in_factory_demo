@@ -11,7 +11,7 @@
       -13.75,
       0
     ],
-    "clearance_radius_m": 0.67,
+    "clearance_radius_m": 0.62,
     "units": "meters; heading degrees about +Z; robot forward +X"
   },
   "physics_dt": 0.005,

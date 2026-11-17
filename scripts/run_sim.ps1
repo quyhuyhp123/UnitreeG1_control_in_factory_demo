@@ -1,4 +1,4 @@
-param([switch]$Flat,[switch]$SelfTest,[switch]$Headless,[switch]$Overview,[double]$Duration=0,
+param([switch]$Flat,[switch]$SelfTest,[switch]$Headless,[switch]$Overview,[switch]$Rgbd,[switch]$NoRgbd,[switch]$Yolo,[switch]$NoYolo,[double]$Duration=0,
     [ValidateSet('locomotion','sonic')][string]$Controller='locomotion',
     [ValidateSet('v1','v2')][string]$Factory)
 $ErrorActionPreference='Stop'
@@ -9,6 +9,10 @@ if (-not (Test-Path -LiteralPath $launcher)) { throw "Missing Isaac launcher: $l
 $log=Join-Path $projectRoot ('logs\factory_g1_'+(Get-Date -Format yyyyMMdd_HHmmss)+'.log')
 $runArgs=@((Join-Path $projectRoot 'scripts\run_factory_g1.py'),'--no-ros-env')
 $runArgs+=@('--controller',$Controller)
+if ($Rgbd -and $NoRgbd) { throw 'Choose either -Rgbd or -NoRgbd' }
+if ($Rgbd) { $runArgs+='--rgbd' }; if ($NoRgbd) { $runArgs+='--no-rgbd' }
+if ($Yolo -and $NoYolo) { throw 'Choose either -Yolo or -NoYolo' }
+if ($Yolo) { $runArgs+='--yolo' }; if ($NoYolo) { $runArgs+='--no-yolo' }
 if ($Factory) { $runArgs+=@('--factory',$Factory) }
 if ($Flat) { $runArgs+='--flat' }; if ($SelfTest) { $runArgs+='--self-test' }
 if ($Headless) { $runArgs+='--headless' }; if ($Overview) { $runArgs+='--overview' }

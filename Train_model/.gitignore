@@ -1,0 +1,8 @@
+__pycache__/
+images/
+labels/
+video_frames/
+exports/
+backups/
+*.tmp
+labelme_sources/

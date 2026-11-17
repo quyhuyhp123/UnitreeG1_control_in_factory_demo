@@ -1,11 +1,29 @@
 """Simulation-only monitor, not certified industrial safety. No pose writes."""
 import math
-from navigation.lane_map import box_distance
+from navigation.lane_map import box_distance,segment_distance
 from navigation.local_planner import pose
 
 
+def segment_box_distance(a,b,bounds):
+    """Exact planar segment-to-AABB distance for a circular swept footprint."""
+    lo,hi=bounds; near,far=0.,1.
+    for i in (0,1):
+        delta=b[i]-a[i]
+        if abs(delta)<1e-12:
+            if a[i]<lo[i] or a[i]>hi[i]: break
+        else:
+            t0,t1=sorted(((lo[i]-a[i])/delta,(hi[i]-a[i])/delta))
+            near=max(near,t0); far=min(far,t1)
+            if near>far: break
+    else:
+        return 0.
+    corners=((lo[0],lo[1]),(lo[0],hi[1]),(hi[0],lo[1]),(hi[0],hi[1]))
+    return min(box_distance(a,bounds),box_distance(b,bounds),*(segment_distance(p,a,b) for p in corners))
+
+
 class SafetySupervisor:
-    def __init__(self,config,braking): self.config=config; self.braking=braking
+    def __init__(self,config,braking,swept_static_braking=False):
+        self.config=config; self.braking=braking; self.swept_static_braking=swept_static_braking
     def stop_distance(self,speed):
         if not self.braking.get('validated'): raise ValueError('Measured braking calibration required')
         return speed*self.config['reaction_latency_seconds']+speed*speed/(2*self.braking['conservative_deceleration_m_s2'])+self.config['stopping_extra_m']
@@ -31,7 +49,16 @@ class SafetySupervisor:
             lo,hi=o['bounds']
             nearest=[max(lo[i],min(hi[i],p[i])) for i in [0,1]]
             toward=sum((nearest[i]-p[i])*travel[i] for i in [0,1])>0
-            if d<braking+extra and (o['kind']=='human' or toward or d<.05):
+            directional=self.swept_static_braking and o['kind']!='human' and not o.get('dynamic')
+            if directional:
+                if d<.05: return 'WAITING_FOR_CLEAR_PATH','Obstacle near footprint'
+                for v in (world,actual):
+                    length=math.hypot(*v)
+                    reach=self.config['prediction_seconds']+(self.stop_distance(length)/length if length>1e-6 else 0.)
+                    end=(x+v[0]*reach,y+v[1]*reach)
+                    if segment_box_distance(p,end,o['bounds'])<=grid.map.radius:
+                        return 'WAITING_FOR_CLEAR_PATH','Obstacle intersects swept braking footprint'
+            elif d<braking+extra and (o['kind']=='human' or toward or d<.05):
                 return 'WAITING_FOR_CLEAR_PATH','Human near' if o['kind']=='human' else 'Obstacle in braking envelope'
             # Predict moving volumes through the stopping horizon, not just their current centers.
             horizon=self.config['prediction_seconds']
@@ -43,7 +70,8 @@ class SafetySupervisor:
                 return 'WAITING_FOR_CLEAR_PATH','Predicted crossing obstacle/human'
         for velocity in [world,actual]:
             length=math.hypot(*velocity)
+            stopping=self.stop_distance(length) if self.swept_static_braking else braking
             end=(x+velocity[0]*self.config['prediction_seconds'],y+velocity[1]*self.config['prediction_seconds'])
-            if length>1e-6: end=(end[0]+velocity[0]/length*braking,end[1]+velocity[1]/length*braking)
+            if length>1e-6: end=(end[0]+velocity[0]/length*stopping,end[1]+velocity[1]/length*stopping)
             if not grid.segment_free(p,end): return 'WAITING_FOR_CLEAR_PATH','Predicted trajectory/footprint blocked'
         return None,''

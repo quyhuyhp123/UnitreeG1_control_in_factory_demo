@@ -30,12 +30,13 @@ for row in manifest['objects']:
     colliders.append({'path':str(cube.GetPath()),'source_proxy':row['object_name'],'bounds':[lo,hi],'semantic_class':row['semantic_class']})
 stage.GetRootLayer().Save()
 base=json.loads((ROOT/'configs/factory_g1.json').read_text())
+footprint=dict(nav['footprint']); footprint['margin_m']=.05
 base.update(factory_id='v2',factory_usd=str(dest.relative_to(ROOT)).replace('\\','/'),floor_prim_relative='PhysicsColliders/Floor',
     navigation_map='configs/navigation_map_v2.json',patrol_user_config='configs/patrol_v2_user.json',scene_output='logs/generated_g1_factory_v2_base.usd',
     source_factory_usd=str(source.relative_to(ROOT)).replace('\\','/'),source_factory_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
     standing_configuration_reference='configs/locomotion_mjlab.yaml: deploy default_joint_pos and existing FK height',
     navigation_map_verified=True,hide_source_object_ids=['Factory_Roof'],top_view={'height_m':45,'projection':'perspective','focal_length_mm':19,'horizontal_aperture':20.955,'vertical_aperture':13.97,'clipping_m':[.1,100]})
-base['robot_spawn']={'marker_prefix':'Robot_Entry_Spawn','position_override_m':None,'heading_deg':nav['robot_spawn']['yaw_deg'],'position_from_marker_m':nav['robot_spawn']['position_m'],'clearance_radius_m':.67,'units':'meters; heading degrees about +Z; robot forward +X'}
+base['robot_spawn']={'marker_prefix':'Robot_Entry_Spawn','position_override_m':None,'heading_deg':nav['robot_spawn']['yaw_deg'],'position_from_marker_m':nav['robot_spawn']['position_m'],'clearance_radius_m':sum(footprint.values()),'units':'meters; heading degrees about +Z; robot forward +X'}
 base['entrance_apron']={'enabled':False}; base['head_camera']['enabled']=True
 base['multi_route_enabled']=True
 base['head_camera']['torso_offset_m']=[.1,0,.52]
@@ -45,7 +46,7 @@ base['keyboard_overrides']['keyboard_mapping']=keys
 base['camera'].update(mode='free',free_eye_m=[-12,-16,3],free_target_m=[-8,-13.5,.8],overview_eye_m=[22,-29,30],overview_target_m=[0,0,0])
 base['note']='One V2 factory, one unchanged G1/ONNX, main viewport plus 320x180 live head-camera preview. Roof hidden visually at runtime; roof collision remains.'
 (ROOT/'configs/factory_v2.json').write_text(json.dumps(base,indent=2),encoding='utf-8')
-map_config={'factory_id':'v2','source_factory_sha256':base['source_factory_sha256'],'resolution_m':.1,'footprint':nav['footprint'],
+map_config={'factory_id':'v2','source_factory_sha256':base['source_factory_sha256'],'resolution_m':.1,'footprint':footprint,
     'allowed_lanes':[{'name':p['id'],'polygon':p['outer']} for p in nav['allowed_polygons']],
     'forbidden_zones':[{'polygon':h} for p in nav['allowed_polygons'] for h in p['holes']],
     'static_obstacles':[],'obstacle_height_range_m':[.06,1.9]}

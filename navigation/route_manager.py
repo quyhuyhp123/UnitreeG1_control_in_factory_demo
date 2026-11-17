@@ -7,7 +7,7 @@ from navigation.speed_profile import load_speed_profile
 ROOT=Path(r'D:\unitree_g1')
 class RouteManager:
     def __init__(self,factory_config,data=None):
-        self.data=data if data is not None else json.loads((ROOT/'configs/patrol_routes.json').read_text())
+        self.data=data if data is not None else json.loads((ROOT/'configs/patrol_routes.json').read_text(encoding='utf-8-sig'))
         if self.data['factory_id']!='v2' or self.data['source_factory_sha256']!=factory_config['source_factory_sha256']:
             raise ValueError('Route factory identity/hash mismatch')
         if self.data.get('version')!=1 or self.data['factory_usd']!=factory_config['factory_usd']: raise ValueError('Route schema/factory path mismatch')
@@ -27,11 +27,8 @@ class RouteManager:
                 raise ValueError('Invalid route velocity/tolerance')
             if any(k not in nodes or not math.isfinite(v) for k,v in route.get('heading_at_turns_rad',{}).items()): raise ValueError('Invalid optional turn heading')
         self.status={}; self.plans={}
-    def route_id(self,mode,completed=0,first='route_1_blue'):
-        if mode=='alternate':
-            if first not in self.data['routes']: raise ValueError('Unknown first alternate route')
-            return first if completed%2==0 else ('route_2_brown' if first=='route_1_blue' else 'route_1_blue')
-        if mode not in self.data['routes']: raise ValueError('Unknown route')
+    def route_id(self,mode,completed=0):
+        if mode not in self.data['routes']: raise ValueError('Choose Route 1 or Route 2; automatic alternation is no longer supported')
         return mode
     def edge(self,grid,route_id,index,start=None):
         route=self.data['routes'][route_id]; nodes=route['ordered_nodes']; a=self.data['nodes'][nodes[index]]; b=self.data['nodes'][nodes[index+1]]

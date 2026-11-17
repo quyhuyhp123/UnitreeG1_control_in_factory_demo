@@ -26,3 +26,11 @@ class CorridorGrid:
         return True
 def heading(a,b): return math.atan2(b[1]-a[1],b[0]-a[0])
 def is_corner(a,b,c): return abs(wrap(heading(b,c)-heading(a,b)))>.5
+
+class CorridorChainGrid(CorridorGrid):
+    """Safety footprint checks across consecutive validated straight edges only."""
+    def __init__(self,base,segments,allowance):
+        super().__init__(base,*segments[0],allowance)
+        self.segments=segments
+    def contains(self,p):
+        return any(segment_distance(p,a,b)<=self.allowance for a,b in self.segments)

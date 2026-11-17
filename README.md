@@ -1,5 +1,7 @@
 # G1_factory_keyboard
 
+**Giao diện nhẹ hiện hành:** chạy `run_sim.bat -Factory v2`. Giữ một cửa sổ camera robot có nút Save và YOLO on/off, Keyboard Control và Navigation nâng cao. Head-preview trùng và debug YOLO/costmap riêng được tắt/ẩn; xử lý depth localization/costmap tạm dừng để giảm lag. Camera lưu RGB gốc 640×360, preview 5 Hz. Chi tiết và FPS đo thực tế: [lightweight_camera_ui](docs/lightweight_camera_ui.md). Các phần head-preview/costmap bên dưới mô tả workflow trước thay đổi này.
+
 ## Factory V2 — nhà xưởng Blender mới
 
 ```powershell
@@ -18,17 +20,23 @@ V2 còn cho phép F khóa camera. Space không ngắt di chuyển hoặc AUTO. W
 Camera Free, Follow, Overview và Top View có trên panel.
 
 V2 dùng `configs/navigation_map_v2.json` và Multi-Route trong `configs/patrol_routes.json`.
-Trong **ROUTE SELECTION**, chọn Route 1 (giữa), Route 2 (phải), hoặc Alternate;
-Apply khi STOP/đứng chậm, PREVIEW/VALIDATE rồi START. Mỗi tuyến có checkpoint bắt buộc,
-không tìm đường tắt qua nhánh khác. Mặc định mới: delay 5 s, interval 120 s,
-Repeat off, Max Cycles=1; bật Repeat và >=2 cycles để kiểm tra Alternate.
+Trong **ROUTE SELECTION**, chọn Route 1 (giữa) hoặc Route 2 (phải);
+START tự áp dụng tuyến đang chọn khi STOP/đứng chậm; PREVIEW/VALIDATE cũng dùng lựa chọn đó. Mỗi tuyến có checkpoint bắt buộc,
+không tìm đường tắt qua nhánh khác. START tự Play nếu mô phỏng đang Pause; không cần nút Play riêng.
+Mặc định mới: delay 0 s, interval 120 s,
+Repeat off, Max Cycles=1; bật Repeat và >=2 cycles để lặp lại chính tuyến đã chọn. Đã bỏ Alternate.
 Cấu hình route lưu riêng `configs/patrol_route_user.json`. Không load A/B V1 vào V2.
-Tốc độ tuần tra V2 mặc định và giới hạn đã kiểm thử là **0.30 m/s** (11/11/2026).
-Trong **Schedule / limits**, chọn nhanh **0.22 / 0.25 / 0.30 m/s**, rồi Apply khi STOP
-hoặc trước START. Robot giảm về tối đa 0.22 m/s trong 1.2 m trước góc/đích,
-và tiếp tục giảm tốc để dừng/quay. Các mức cao hơn chưa đạt kiểm thử toàn xưởng;
-giới hạn 1 m/s của policy chỉ đạt bài đi thẳng ngắn trên sàn trống.
-Xem [báo cáo thử tốc độ](docs/navigation/speed_test_report.md).
+Tốc độ tuần tra V2 mặc định **0.30 m/s**. Theo user override, trần chọn hiện là
+**1.0 m/s chưa được xác nhận hoàn tất hai tuyến**; audit hoàn tất gần nhất vẫn 0.30 m/s.
+Trong **Schedule / limits**, chọn **0.22 / 0.30 / 0.50 / 0.80 / 1.0 m/s**, rồi Apply
+ở trạng thái cho phép hoặc START để áp dụng mức đang chọn. Không tự khởi chạy.
+Look-ahead nối qua waypoint thẳng; giảm tốc dần trong 2.0–1.2 m trước góc/đích,
+đạt cap tiếp cận 0.22 m/s và bị giới hạn thêm bởi khoảng dừng. Giữ dừng/quay ở góc.
+Khi lệnh tiếp cận rơi dưới ngưỡng gait, robot có thể dùng bước hiệu chỉnh 0.10–0.12 m/s
+trong vùng gần waypoint, chỉ khi kiểm tra footprint/quãng phanh cho phép. Nếu đã trong
+tolerance nhưng bước căn giữa thêm không an toàn, robot giữ vị trí và quay thay vì chờ vô hạn.
+Xem [cập nhật override và kiểm tra logic](docs/navigation/speed_override_update.md),
+[báo cáo đo tốc độ trước đó](docs/navigation/speed_test_report.md).
 Legacy A/B V2 còn được giữ qua `multi_route_enabled=false`; khi đó B vẫn UNSET.
 Các ví dụ A/B gần `(0,-4)` trong tài liệu V1 phía dưới không áp dụng cho V2.
 
@@ -196,3 +204,31 @@ Get-Content 'D:\unitree_g1\logs\factory_g1_run_summary.json'
 Các báo cáo lịch sử: docs/environment_report.md, factory_scene.md, factory_physics.md, g1_articulation_report.md, g1_joint_indices.md, locomotion_report.md, keyboard_report.md và factory_g1_integration.md. Trạng thái policy/spawn mới ở docs/entrance_in_place_turning.md. Không cần Blender chạy để mở USD đã tạo. Không training lại RL; đã đổi sang checkpoint velocity có sẵn chính thức của Unitree sau kiểm thử port.
 
 Chi tiết sửa lùi/SPACE/head preview và bằng chứng: docs/reverse_space_head_camera.md.
+
+## Camera RGB-D phía trước G1 (tùy chọn, chưa dùng YOLO)
+
+```powershell
+Set-Location D:\unitree_g1
+.\run_sim.bat -Factory v2 -Rgbd
+```
+
+Cửa sổ **G1 RGB-D** hiển thị RGB và optical Z-depth (mét), có nút lưu ảnh/metadata và bật/tắt sensor. Camera theo torso, không điều khiển Patrol. Chạy với `-NoRgbd` hoặc bỏ `-Rgbd` để dùng mặc định tắt. Cấu hình riêng: `configs/rgbd_camera.json`; hướng dẫn, phép đo và giới hạn timestamp: `docs/rgbd_camera.md`.
+
+## YOLO Detection — giai đoạn 3
+
+```powershell
+cd D:\unitree_g1
+.\run_sim.bat -Factory v2 -Yolo
+# Giữ RGB-D nhưng không bật YOLO:
+.\run_sim.bat -Factory v2 -Rgbd -NoYolo
+```
+
+YOLO11n pretrained chạy CPU trong `.venv/yolo`, tiến trình riêng, imgsz=320, mục tiêu 6 Hz. `-Yolo` tự bật RGB-D. Cửa sổ **G1 YOLO11n** hiển thị bounding box/class/confidence và có nút Enable/Disable/Save. YOLO không phát vận tốc và không tự bật Patrol. Mặc định YOLO tắt.
+
+Đã nhận diện person/chair/bottle trên ảnh thật lưu sẵn; **chưa nhận diện đúng người Blender dạng khối trong bài thử live**, có false positive sports ball trên đầu người. Chưa dùng kết quả này cho tránh vật cản. Hướng dẫn: [YOLO](docs/yolo_detection.md); [số đo, ảnh và giới hạn](docs/yolo_detection_results.md).
+
+## RGB-D obstacle localization — giai đoạn 4
+
+Local Costmap giai đoạn 5 được bật cùng RGB-D: cửa sổ **Local Costmap**, 6×6 m / 0.1 m, inflation 0.62 m. Camera Save lưu cả ảnh/map; chưa nối Navigation. Xem [hướng dẫn costmap](docs/local_costmap.md).
+
+`-Yolo` giữ depth/transform đúng frame gốc để tính tọa độ vật thể; `-Rgbd -NoYolo` vẫn phát hiện hình học không cần class. Dữ liệu 3D ở `rgbd/geometric_obstacles.jsonl` và `yolo/detections.jsonl` trong log phiên chạy. Hệ robot là pelvis; vị trí là bề mặt nhìn thấy, không phải tâm vật thể. Chưa phát lệnh né. Cấu hình `configs/obstacle_localization.json`; xem [hướng dẫn và giới hạn](docs/obstacle_localization.md), [kết quả đo](docs/obstacle_localization_results.md).

@@ -101,7 +101,7 @@
         "ENTRY_INNER",
         "EXIT"
       ],
-      "speed_limit_m_s": 0.3,
+      "speed_limit_m_s": 1.0,
       "turn_speed_limit_rad_s": 0.3,
       "waypoint_tolerance_m": 0.13,
       "exit_node": "EXIT",
@@ -155,7 +155,7 @@
         "ENTRY_INNER",
         "EXIT"
       ],
-      "speed_limit_m_s": 0.3,
+      "speed_limit_m_s": 1.0,
       "turn_speed_limit_rad_s": 0.3,
       "waypoint_tolerance_m": 0.13,
       "exit_node": "EXIT",

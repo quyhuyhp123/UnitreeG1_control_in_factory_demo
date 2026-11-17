@@ -1,0 +1,14 @@
+{
+  "scope": "Independent near-corner initial pose from failed live run; not a complete route",
+  "status": "failed",
+  "segment_index": 0,
+  "state": "FAULT",
+  "reason": "No progress on mandatory segment",
+  "position": [
+    -7.0867414474487305,
+    -12.840888023376465,
+    0.7844207286834717
+  ],
+  "completed_cycles": 0,
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261111_215718"
+}

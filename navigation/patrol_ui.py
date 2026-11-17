@@ -2,11 +2,15 @@
 import math,time
 from navigation.local_planner import pose
 
+def speed_presets(limit):
+    return tuple(value for value in (.22,.30,.50,.80,1.) if value<=limit+1e-9)
+
 
 class PatrolPanel:
     def __init__(self,nav):
         import omni.ui as ui
         self.nav=nav; self.runtime=nav.runtime; self.last_update=0; self.visible_map=True
+        self.start_pending=False
         self.window=ui.Window('G1 PATROL NAVIGATION',width=365,height=600)
         self.window.position_x=16; self.window.position_y=64
         self.runtime.controller_window.visible=False
@@ -22,8 +26,8 @@ class PatrolPanel:
                     if hasattr(nav,'route_manager'):
                         with ui.CollapsableFrame('ROUTE SELECTION',collapsed=False):
                             with ui.VStack(spacing=3):
-                                self.route_choice=ui.ComboBox(0,'Route 1 - Blue / Center','Route 2 - Brown / Right','Alternate Routes',height=24)
-                                self.first_route=ui.ComboBox(0,'Alternate starts Route 1','Alternate starts Route 2',height=22)
+                                self.route_choice=ui.ComboBox(0,'Route 1 - Blue / Center','Route 2 - Brown / Right',height=24)
+                                ui.Label('START uses this route. Repeat repeats the same route.',word_wrap=True,height=34)
                                 ui.Button('Apply route (STOP + settle first)',height=24,clicked_fn=lambda:self.call(self.apply_route))
                                 with ui.HStack(height=24):
                                     ui.Button('PREVIEW ROUTE',clicked_fn=lambda:self.call(self.preview_route))
@@ -56,12 +60,14 @@ class PatrolPanel:
                             ui.Label(('Each cycle = complete route back to ENTRY. ' if hasattr(nav,'route_manager') else 'Each cycle = A > B > A. ')+'Repeat must be enabled. Wait uses selected clock; simulation seconds may run slower than real time.',word_wrap=True,height=44)
                             if hasattr(nav,'speed_limit'):
                                 with ui.HStack(height=22):
-                                    for value in sorted(set([v for v in (.22,.25,.30,nav.speed_limit) if v<=nav.speed_limit])):
+                                    for value in speed_presets(nav.speed_limit):
                                         ui.Button(f'{value:g} m/s',clicked_fn=lambda v=value:self.speed.model.set_value(v))
+                                if nav.speed_profile.get('unverified_user_override'):
+                                    ui.Label(nav.speed_profile['override_note'],word_wrap=True,height=66)
                             ui.Button('Apply schedule / speed (while waiting)',height=24,clicked_fn=lambda:self.call(self.apply_schedule))
                     with ui.HStack(height=26):
                         ui.Button('START PATROL',clicked_fn=lambda:self.call(self.start))
-                        ui.Button('STOP',clicked_fn=lambda:self.call(nav.stop))
+                        ui.Button('STOP',clicked_fn=lambda:self.call(self.stop))
                     with ui.HStack(height=24):
                         ui.Button('PAUSE Auto',clicked_fn=lambda:self.call(nav.pause))
                         ui.Button('RESUME Auto',clicked_fn=lambda:self.call(nav.resume))
@@ -87,10 +93,16 @@ class PatrolPanel:
     def apply_mode(self):
         self.nav.set_mode('AUTO PATROL' if self.mode.model.get_item_value_model().as_int else 'MANUAL')
     def apply_route(self):
-        modes=['route_1_blue','route_2_brown','alternate']; first=['route_1_blue','route_2_brown']
-        self.nav.select_route(modes[self.route_choice.model.get_item_value_model().as_int],first[self.first_route.model.get_item_value_model().as_int])
+        modes=['route_1_blue','route_2_brown']
+        self.nav.select_route(modes[self.route_choice.model.get_item_value_model().as_int])
         self.nav.reason='Selected '+self.nav.selected_route()+'; validate before start'
-    def preview_route(self): self.nav.validate_route(); self.visible_map=True; self.draw()
+    def apply_pending_route(self):
+        if not hasattr(self,'route_choice'): return
+        mode=['route_1_blue','route_2_brown'][self.route_choice.model.get_item_value_model().as_int]
+        if mode!=self.nav.route_mode:
+            self.apply_route() # Retain STOP/settle checks; never switch a moving robot's route.
+    def preview_route(self):
+        self.apply_pending_route(); self.nav.validate_route(); self.visible_map=True; self.draw()
     def reset_routes(self): self.nav.reset_route_configuration(); self.sync(); self.draw()
     def apply_points(self):
         if hasattr(self.nav,'route_manager'): raise ValueError('Multi-route uses mandatory nodes; edit patrol_routes.json while stopped')
@@ -104,8 +116,7 @@ class PatrolPanel:
         self.sync()
     def sync(self):
         if hasattr(self,'route_choice'):
-            self.route_choice.model.get_item_value_model().set_value(['route_1_blue','route_2_brown','alternate'].index(self.nav.route_mode))
-            self.first_route.model.get_item_value_model().set_value(0 if self.nav.alternate_first=='route_1_blue' else 1)
+            self.route_choice.model.get_item_value_model().set_value(['route_1_blue','route_2_brown'].index(self.nav.route_mode))
         for key,value in [('A',self.nav.a),('B',self.nav.b)]:
             if value:
                 row=self.points[key]; row[0].set_value(value[0]); row[1].set_value(value[1]); row[2].set_value(math.degrees(value[2]) if value[2] is not None else 0); row[3].set_value(value[2] is not None)
@@ -130,8 +141,40 @@ class PatrolPanel:
         self.nav.before_tick(self.runtime.timeline.is_playing())
         self.nav.reason='Schedule/speed applied; wait measured from completed return to A'
     def start(self):
-        self.apply_schedule(); self.nav.start(); self.mode.model.get_item_value_model().set_value(1)
-    def save(self): self.apply_schedule(); path=self.nav.save(); self.nav.reason='Saved '+str(path)
+        if getattr(self,'start_pending',False): return
+        if self.nav.scheduler.state=='FAULT' or getattr(self.runtime,'fault',None):
+            raise ValueError('Reset/acknowledge FAULT before START')
+        self.apply_pending_route(); self.apply_schedule()
+        if not self.runtime.timeline.is_playing():
+            # Play becomes effective on the next Kit frame. Do not call
+            # app.update() recursively from an omni.ui click callback.
+            self.start_pending=True; self.start_deadline=time.perf_counter()+5.
+            self.start_stop_generation=getattr(getattr(self.runtime,'keys',None),'stop_generation',0)
+            self.runtime.timeline.play()
+            self.nav.reason='Starting simulation; selected patrol will start automatically.'
+            return
+        self.nav.start(); self.mode.model.get_item_value_model().set_value(1)
+    def finish_pending_start(self):
+        self.start_pending=False
+        try:
+            self.nav.before_tick(True); self.nav.start()
+            self.mode.model.get_item_value_model().set_value(1)
+        except Exception:
+            self.runtime.timeline.pause()
+            raise
+    def stop(self):
+        if getattr(self,'start_pending',False):
+            self.start_pending=False; self.runtime.timeline.pause()
+        self.nav.stop()
+    def process_pending_start(self):
+        if not getattr(self,'start_pending',False): return
+        stopped=getattr(getattr(self.runtime,'keys',None),'stop_generation',0)!=self.start_stop_generation
+        if stopped or time.perf_counter()>self.start_deadline:
+            self.start_pending=False; self.runtime.timeline.pause()
+            self.nav.reason='START cancelled by stop input.' if stopped else 'Simulation could not enter Play; press START again.'
+            return
+        if self.runtime.timeline.is_playing(): self.call(self.finish_pending_start)
+    def save(self): self.apply_pending_route(); self.apply_schedule(); path=self.nav.save(); self.nav.reason='Saved '+str(path)
     def load(self): self.nav.load(); self.sync(); self.draw()
     def toggle_map(self):
         self.visible_map=not self.visible_map
@@ -198,6 +241,7 @@ class PatrolPanel:
         circle=[[x+radius*math.cos(i*math.pi/16),y+radius*math.sin(i*math.pi/16)] for i in range(33)]
         lines('RobotHeading',[circle,[[x,y],[x+.8*math.cos(yaw),y+.8*math.sin(yaw)]]],(.2,.5,1))
     def update(self):
+        self.process_pending_start()
         now=time.perf_counter()
         if now-self.last_update<.3: return
         self.last_update=now; s=self.nav.snapshot()
@@ -218,5 +262,11 @@ class PatrolPanel:
             f'FPS {s["loop_fps"]:.1f} | planner {s["planner_latency_ms"]:.2f} ms | VRAM {gpu} MiB')
         if hasattr(self.nav,'route_manager'):
             status=s['route_validation']; self.monitor.text+=f'\nRoute {s["selected_route"]} ({s["route_mode"]})\nSegment {s["current_segment"]}\nWaypoint {s["current_waypoint"]}\nValidation {status["status"]} | length {status.get("length_m")} m\nWaypoints {status.get("waypoints")} | ETA estimate {status.get("estimated_travel_seconds")} sim s\nNext cycle route {s["next_route"]}'
+            requested=['route_1_blue','route_2_brown'][self.route_choice.model.get_item_value_model().as_int]
+            self.monitor.text+=f'\nUI route: {requested}'+(' (pending: STOP + START)' if requested!=s['route_mode'] else ' (applied)')
+            cap=s.get('active_speed_cap_m_s'); effective='-' if cap is None else f'{cap:.2f}'
+            clearance_cap=s.get('clearance_speed_cap_m_s'); clearance_text='-' if clearance_cap is None else f'{clearance_cap:.2f}'
+            self.monitor.text+=f'\nSpeed request {s["max_speed_m_s"]:.2f} | brake/turn cap {effective}\nClearance target {clearance_text} | command XY {math.hypot(*s["command"][:2]):.2f} m/s'
+            if s['state']=='TURNING': self.monitor.text+='\nTurning at corner: forward speed is reduced.'
         self.draw()
     def close(self): self.window.destroy()

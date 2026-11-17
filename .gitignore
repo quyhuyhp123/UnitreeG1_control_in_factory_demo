@@ -30,3 +30,7 @@ Desktop.ini
 checkpoints/sonic/*.onnx
 checkpoints/sonic/*.pt
 checkpoints/sonic/*.part
+
+# Downloaded official YOLO checkpoint; source/hash manifest remains reviewable.
+checkpoints/yolo/*.pt
+checkpoints/yolo/*.part

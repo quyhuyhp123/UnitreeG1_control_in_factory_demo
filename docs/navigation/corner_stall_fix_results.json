@@ -1,0 +1,14 @@
+{
+  "scope": "Independent near-corner initial pose from failed live run; not a complete route",
+  "status": "passed",
+  "segment_index": 1,
+  "state": "MOVING_SEGMENT",
+  "reason": "Following ENTRY_INNER__LEFT_BOTTOM",
+  "position": [
+    -7.042771339416504,
+    -12.931367874145508,
+    0.7842639684677124
+  ],
+  "completed_cycles": 0,
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261111_220448"
+}

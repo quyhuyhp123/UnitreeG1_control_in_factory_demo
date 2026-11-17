@@ -1,0 +1,13 @@
+{
+  "mode": "alternate",
+  "status": "aborted_for_continuous_centering_fix",
+  "requested_cycles": 2,
+  "run_directory": "D:\\unitree_g1\\logs\\keyboard_runs\\20261111_220518",
+  "patrol_directory": "D:\\unitree_g1\\logs\\patrol_runs\\20261111_220518",
+  "candidate_speed_m_s": 0.8,
+  "raw_speed_envelope_m_s": 1.25,
+  "headless_render_decimation": 5,
+  "state": "MOVING_SEGMENT",
+  "completed_cycles": 0,
+  "reason": "Following TOP_CENTER_JUNCTION__CENTER_CORRIDOR"
+}

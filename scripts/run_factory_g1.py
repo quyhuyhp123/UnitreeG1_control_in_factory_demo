@@ -150,6 +150,12 @@ def main():
     parser.add_argument('--flat',action='store_true'); parser.add_argument('--self-test',action='store_true')
     parser.add_argument('--headless',action='store_true'); parser.add_argument('--duration',type=float,default=0)
     parser.add_argument('--overview',action='store_true')
+    rgbd_group=parser.add_mutually_exclusive_group()
+    rgbd_group.add_argument('--rgbd',action='store_true',help='Enable optional front RGB-D acquisition/debug')
+    rgbd_group.add_argument('--no-rgbd',action='store_true')
+    yolo_group=parser.add_mutually_exclusive_group()
+    yolo_group.add_argument('--yolo',action='store_true',help='Enable isolated asynchronous YOLO11n; also enables RGB-D')
+    yolo_group.add_argument('--no-yolo',action='store_true')
     parser.add_argument('--controller',choices=['locomotion','sonic'],default='locomotion')
     args,_=parser.parse_known_args()
     app=runtime=None
@@ -160,6 +166,13 @@ def main():
         cfg=load_factory(args.factory,args.config)
         if args.overview: cfg['camera']['mode']='overview'
         preflight(cfg,args.flat)
+        yolo_cfg=json.loads((ROOT/'configs/yolo_detection.json').read_text())
+        if args.yolo: yolo_cfg['enabled']=True
+        if args.no_yolo: yolo_cfg['enabled']=False
+        if yolo_cfg['enabled']:
+            if args.no_rgbd: raise ValueError('YOLO camera input requires RGB-D; remove --no-rgbd')
+            from controllers.yolo_detection import load_config
+            load_config() # Validate local environment/model before starting Isaac.
         from isaacsim import SimulationApp
         render=cfg['rendering']
         app=SimulationApp({'headless':args.headless,'width':render['width'],'height':render['height'],
@@ -180,6 +193,31 @@ def main():
                 settings.set(key,False)
         from controllers.factory_g1_runtime import FactoryG1Runtime
         runtime=FactoryG1Runtime(app,cfg,flat=args.flat,self_test=args.self_test)
+        rgbd_cfg=json.loads((ROOT/'configs/rgbd_camera.json').read_text())
+        if args.rgbd: rgbd_cfg['enabled']=True
+        if args.no_rgbd: rgbd_cfg['enabled']=False
+        if yolo_cfg['enabled']: rgbd_cfg['enabled']=True
+        if rgbd_cfg['enabled']:
+            settings.set('/app/asyncRendering',False)
+            from controllers.rgbd_camera import RobotRgbdCamera
+            runtime.rgbd=RobotRgbdCamera(runtime.stage,runtime.directory,rgbd_cfg)
+        if yolo_cfg['enabled']:
+            from controllers.yolo_detection import AsyncYoloDetector
+            runtime.yolo=AsyncYoloDetector(runtime.directory,yolo_cfg)
+            runtime.rgbd.yolo=runtime.yolo
+        if runtime.rgbd is not None:
+            def toggle_yolo():
+                if runtime.yolo is None:
+                    from controllers.yolo_detection import AsyncYoloDetector,load_config
+                    runtime.yolo=AsyncYoloDetector(runtime.directory,load_config())
+                    runtime.rgbd.yolo=runtime.yolo
+                else: runtime.yolo.set_enabled(not runtime.yolo.enabled)
+            runtime.rgbd.toggle_yolo=toggle_yolo
+        # Hide editing inspectors; keep viewport, manual HUD, advanced patrol and one sensor image.
+        import omni.ui as ui
+        for title in ['Stage','Property','Content','Console','Layer','Layers','G1 CONTROLLER MANAGER']:
+            window=ui.Workspace.get_window(title)
+            if window is not None: window.visible=False
         print('FACTORY_READY '+str(runtime.directory),flush=True)
         if args.self_test: validation(runtime)
         else:
@@ -188,6 +226,8 @@ def main():
                 app.update(); runtime.tick()
                 if args.duration and time.perf_counter()-started>=args.duration: break
             if args.duration:
+                if runtime.rgbd is not None: runtime.rgbd.save()
+                if runtime.yolo is not None: runtime.yolo.save()
                 runtime.context['capture'](runtime.directory/'factory_g1_gui.png')
                 runtime.capture_head_preview(runtime.directory/'head_camera.png')
                 (runtime.directory/'gui_snapshot.json').write_text(json.dumps(runtime.snapshot(),indent=2),encoding='utf-8')

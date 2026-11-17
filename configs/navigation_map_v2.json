@@ -6,7 +6,7 @@
     "body_radius_m": 0.45,
     "step_sway_m": 0.08,
     "pose_error_m": 0.04,
-    "margin_m": 0.1
+    "margin_m": 0.05
   },
   "allowed_lanes": [
     {

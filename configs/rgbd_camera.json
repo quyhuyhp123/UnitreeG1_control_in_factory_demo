@@ -1,0 +1,23 @@
+{
+  "enabled": true,
+  "debug": true,
+  "prim_path": "/World/G1/torso_link/RgbdCamera",
+  "mount_position_m": [
+    0.15,
+    0.0,
+    0.52
+  ],
+  "pitch_down_deg": 10.0,
+  "resolution_wh": [
+    640,
+    360
+  ],
+  "horizontal_fov_deg": 80.0,
+  "clipping_m": [
+    0.1,
+    30.0
+  ],
+  "capture_hz": 5.0,
+  "debug_depth_max_m": 10.0,
+  "processing_enabled": false
+}

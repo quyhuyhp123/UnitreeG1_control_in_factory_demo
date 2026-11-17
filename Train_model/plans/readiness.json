@@ -1,0 +1,25 @@
+{
+  "training_started": false,
+  "status": "WAITING_FOR_DATASET_REVIEW_AND_USER_DECISION",
+  "dataset_audit": {
+    "images": 0,
+    "groups": 0,
+    "instances": {
+      "person": 0,
+      "machine": 0,
+      "box": 0,
+      "shelf": 0
+    },
+    "errors": [
+      "Ch\u01b0a c\u00f3 \u1ea3nh dataset th\u1ef1c t\u1ebf",
+      "C\u1ea7n \u00edt nh\u1ea5t 3 group \u0111\u1ed9c l\u1eadp \u0111\u1ec3 t\u00e1ch train/val/test",
+      "Class person ch\u01b0a c\u00f3 box",
+      "Class machine ch\u01b0a c\u00f3 box",
+      "Class box ch\u01b0a c\u00f3 box",
+      "Class shelf ch\u01b0a c\u00f3 box"
+    ],
+    "note": "Kh\u00f4ng c\u00f3 ng\u01b0\u1ee1ng \u1ea3nh t\u1ed1i thi\u1ec3u b\u1ea3o \u0111\u1ea3m ch\u1ea5t l\u01b0\u1ee3ng. C\u1ea7n th\u00eam d\u1eef li\u1ec7u \u0111a d\u1ea1ng v\u00e0 \u0111\u00e1nh gi\u00e1 ri\u00eang."
+  },
+  "gpu_training_backend": "not installed or validated",
+  "inference_backend": "unchanged CPU-only"
+}
