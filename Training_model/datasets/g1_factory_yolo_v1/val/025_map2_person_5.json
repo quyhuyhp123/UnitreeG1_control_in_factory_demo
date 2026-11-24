@@ -1,0 +1,100 @@
+{
+  "version": "7.11.0",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "table",
+      "points": [
+        [
+          286.04154969118474,
+          90.34250421111736
+        ],
+        [
+          353.23975294778216,
+          282.594048287479
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "table",
+      "points": [
+        [
+          417.56316676024704,
+          125.19932622122403
+        ],
+        [
+          449.18585064570465,
+          202.45929253228525
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "table",
+      "points": [
+        [
+          452.7793374508703,
+          109.38798427849522
+        ],
+        [
+          510.2751263335205,
+          238.03481190342507
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "table",
+      "points": [
+        [
+          216.68725435148792,
+          126.6367209432903
+        ],
+        [
+          247.5912408759124,
+          201.02189781021897
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "table",
+      "points": [
+        [
+          129.36552498596294,
+          110.8253790005615
+        ],
+        [
+          182.54912970241438,
+          232.6445816956766
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "025_map2_person_5.png",
+  "imageData": null,
+  "imageHeight": 360,
+  "imageWidth": 640
+}

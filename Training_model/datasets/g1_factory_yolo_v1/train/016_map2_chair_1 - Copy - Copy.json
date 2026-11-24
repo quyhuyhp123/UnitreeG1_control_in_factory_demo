@@ -1,0 +1,46 @@
+{
+  "version": "7.11.0",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "chair",
+      "points": [
+        [
+          281.01066816395286,
+          147.11959573273444
+        ],
+        [
+          347.49017405951713,
+          239.11285794497473
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          560.943290286356,
+          34.284110050533414
+        ],
+        [
+          638.9219539584503,
+          280.4379562043796
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "016_map2_chair_1.png",
+  "imageData": null,
+  "imageHeight": 360,
+  "imageWidth": 640
+}

@@ -1,0 +1,28 @@
+{
+  "version": "7.11.0",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "chair",
+      "points": [
+        [
+          297.54070746771475,
+          149.99438517686693
+        ],
+        [
+          350.7243121841662,
+          233.3632790567097
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "002_map2_chair_2.png",
+  "imageData": null,
+  "imageHeight": 360,
+  "imageWidth": 640
+}

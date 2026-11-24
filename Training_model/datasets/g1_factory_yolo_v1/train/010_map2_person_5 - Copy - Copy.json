@@ -1,0 +1,28 @@
+{
+  "version": "7.11.0",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "person",
+      "points": [
+        [
+          291.7911285794498,
+          98.24817518248176
+        ],
+        [
+          348.2088714205503,
+          277.2038180797305
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "010_map2_person_5.png",
+  "imageData": null,
+  "imageHeight": 360,
+  "imageWidth": 640
+}

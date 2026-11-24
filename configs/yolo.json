@@ -1,8 +1,8 @@
 {
   "enabled": false,
-  "model": "checkpoints/yolo/yolo11n_640.onnx",
-  "model_sha256": "ce2c9408f475e758629ae369381535f2869426f38fa53037beaf705130f327dc",
-  "class_names": "checkpoints/yolo/coco_names.json",
+  "model": "Training_model/runs/g1_person_chair_box_v1_2/weights/best_640.onnx",
+  "model_sha256": "c49e3df6c377b236ca5fa984777991b47f4ee81daa53375ace70434a34bcf802",
+  "class_names": "Training_model/runs/g1_person_chair_box_v1_2/weights/class_names.json",
   "imgsz": 640,
   "confidence_threshold": 0.35,
   "iou_threshold": 0.45,

@@ -1,0 +1,118 @@
+{
+  "version": "7.11.0",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "person",
+      "points": [
+        [
+          293.9472206625491,
+          108.6692869174621
+        ],
+        [
+          345.33408197641774,
+          262.82987085906797
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          388.815272318922,
+          133.82369455362158
+        ],
+        [
+          417.2038180797305,
+          201.74059517125212
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          424.0314430095452,
+          123.04323413812466
+        ],
+        [
+          468.5906793935991,
+          227.61370016844472
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          559.5058955642897,
+          83.8742279618192
+        ],
+        [
+          639.2813026389668,
+          323.20044918585063
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          203.75070185289164,
+          133.82369455362158
+        ],
+        [
+          234.29533969679954,
+          202.8186412128018
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          139.42728804042673,
+          121.96518809657496
+        ],
+        [
+          184.70522178551377,
+          229.41044357102754
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "022_map2_person_2.png",
+  "imageData": null,
+  "imageHeight": 360,
+  "imageWidth": 640
+}
