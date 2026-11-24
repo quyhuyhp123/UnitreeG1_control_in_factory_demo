@@ -197,12 +197,22 @@ class YoloPerception:
     def __init__(self,runtime,config):
         import omni.kit.app
         manager=omni.kit.app.get_app().get_extension_manager()
-        for name in ['isaacsim.pip.onnx','isaacsim.pip.nv']: manager.set_extension_enabled_immediate(name,True)
+        import sys,os
+        manager.set_extension_enabled_immediate('isaacsim.pip.onnx',True)
+        if sys.platform=='win32':
+            # This Windows install has no isaacsim.pip.nv extension. Enabling
+            # it triggers registry dependency resolution instead of inference.
+            if config['provider']=='cuda' and os.environ.get('G1_YOLO_CUDA')!='1':
+                config=dict(config,provider='cpu')
+                print('YOLO_PROVIDER CPU: Windows CUDA inference backend not validated; no Isaac package changes',flush=True)
+        else: manager.set_extension_enabled_immediate('isaacsim.pip.nv',True)
         self.runtime=runtime; self.config=config
         self.detector=YoloOnnx(config); self.worker=YoloWorker(self.detector,config['target_hz'])
         self.directory=ROOT/config['save_directory']/runtime.directory.name; self.directory.mkdir(parents=True,exist_ok=True)
         self.log=(self.directory/'detections.jsonl').open('w',encoding='utf-8')
         self.logged=0; self.saved=0; self.result=None
+        self.perception_epoch=0
+        self.costmap_epoch=0
         # Optional RGB-D obstacle localisation, run on the inference thread with the very frame YOLO saw.
         self.localizer=None; self.obstacle_log=None
         if runtime.factory_cfg.get('obstacle_localization',{}).get('enabled',False):
@@ -216,7 +226,8 @@ class YoloPerception:
         if runtime.factory_cfg.get('local_costmap',{}).get('enabled',False):
             if self.localizer is None: raise ValueError('The local costmap needs obstacle localisation enabled')
             from perception.local_costmap import LocalCostmap
-            settings=runtime.factory_cfg['local_costmap']; map_file=runtime.factory_cfg.get('navigation_map')
+            settings=dict(runtime.factory_cfg['local_costmap']); map_file=runtime.factory_cfg.get('navigation_map')
+            settings['human_class_id']=next((int(cid) for cid,name in self.detector.names.items() if name=='person'),-2)
             navigation_map=json.loads((ROOT/map_file).read_text(encoding='utf-8-sig')) if map_file and not runtime.flat else None
             self.costmap=LocalCostmap(settings,navigation_map)
             self.costmap_directory=ROOT/settings['save_directory']/runtime.directory.name; self.costmap_directory.mkdir(parents=True,exist_ok=True)
@@ -226,8 +237,10 @@ class YoloPerception:
 
     def submit(self,frame):
         """Hand the newest camera frame to the worker. Does not block the physics loop."""
+        if self.costmap is not None: frame={**frame,'perception_epoch':self.perception_epoch}
         self.worker.submit(frame['rgb'],{'frame_index':frame['index'],'sim_time':frame['sim_time'],'control_step':frame['control_step'],
-                                         'wall_time_capture':frame['wall_time'],'image_size_wh':[frame['rgb'].shape[1],frame['rgb'].shape[0]]},
+                                         'wall_time_capture':frame['wall_time'],'image_size_wh':[frame['rgb'].shape[1],frame['rgb'].shape[0]],
+                                         'perception_epoch':self.perception_epoch,'confidence_threshold':self.config['confidence_threshold']},
                            payload=frame if self.localizer is not None else None)
 
     def _localize(self,frame,detections):
@@ -235,17 +248,38 @@ class YoloPerception:
         located=self.localizer.process(frame,detections)
         located['_grid']=self.localizer.grid
         if self.costmap is not None:
+            epoch=frame['perception_epoch']
+            if epoch!=self.costmap_epoch:
+                self.costmap.reset()
+                self.costmap_epoch=epoch
             pose=located['robot_pose_world']
             snapshot=self.costmap.update(self.localizer.observation,(pose['x'],pose['y']),located['sim_time'])
             located['_costmap']=snapshot; located['costmap']=self.costmap.summary(snapshot)
+            located['perception_epoch']=epoch
         return located
+
+    def invalidate_costmap(self):
+        """Discard in-flight snapshots after a map change or robot reset."""
+        self.perception_epoch+=1
+        self.result=None
+
+    def set_confidence_threshold(self, value):
+        value=round(float(value),2)
+        if not .01<=value<=.99:
+            raise ValueError('YOLO score must be between 0.01 and 0.99')
+        if value!=self.config['confidence_threshold']:
+            self.config['confidence_threshold']=value
+            self.invalidate_costmap()
+        return value
 
     def poll(self):
         """Main thread, every tick: pick up a finished result and log it."""
         if self.worker.error: raise RuntimeError('YOLO inference thread failed: '+self.worker.error)
         result=self.worker.latest()
         if result is None or result['result_index']==self.logged: return None
-        self.logged=result['result_index']; self.result=result
+        self.logged=result['result_index']
+        if result['perception_epoch']!=self.perception_epoch: return None
+        self.result=result
         self.log.write(json.dumps(self.record(result))+'\n')
         if self.obstacle_log is not None and 'obstacles' in result:
             self.obstacle_log.write(json.dumps({k:result[k] for k in ('sim_time','frame_index','control_step','robot_pose_world','obstacles','points','sync')})+'\n')
@@ -276,7 +310,8 @@ class YoloPerception:
         Image.fromarray(self.costmap_image(result,ground_truth)).save(str(stem)+'_costmap.png')
         Image.fromarray(annotate(result['rgb'],result['detections'],f"t={result['sim_time']:.2f} s")).save(str(stem)+'_rgb.png')
         np.savez_compressed(str(stem)+'_layers.npz',state=snapshot['state'],cost=snapshot['cost'],static_lethal=snapshot['static_lethal'],
-                            class_id=snapshot['class_id'],traversable=snapshot['traversable'])
+                            class_id=snapshot['class_id'],traversable=snapshot['traversable'],distance_m=snapshot['distance_m'],
+                            free_age_s=snapshot['free_age_s'],human_cells=snapshot['human_cells'])
         Path(str(stem)+'.json').write_text(json.dumps({**result['costmap'],'robot_pose_world':result['robot_pose_world'],
             'layers':'state: 0 unknown, 1 free, 2 occupied | cost: 0 free, 1-252 inflation, 253 inscribed, 254 lethal, 255 no information',
             'array_indexing':'[ix, iy]; cell covers world origin + [ix, ix+1) * resolution along X, same for Y',
@@ -301,7 +336,7 @@ class YoloPerception:
         result=self.result
         if result is None: return rgb
         stats=self.worker.stats()
-        footer=f"YOLO {self.config['imgsz']} | {len(result['detections'])} det | {result['timing']['inference_ms']:.1f} ms | {stats.get('inference_hz',0):.1f} Hz | frame {result['frame_index']}"
+        footer=f"YOLO {self.config['imgsz']} | score > {result['confidence_threshold']:.2f} | {len(result['detections'])} det | {result['timing']['inference_ms']:.1f} ms | {stats.get('inference_hz',0):.1f} Hz | frame {result['frame_index']}"
         return annotate(rgb,result['detections'],footer)
 
     def save(self,result=None,tag='detections'):

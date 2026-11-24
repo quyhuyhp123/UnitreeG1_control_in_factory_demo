@@ -10,6 +10,7 @@ from navigation.local_planner import LocalPlanner,pose,wrap
 from navigation.global_planner import NoValidPath
 from navigation.lane_map import segment_distance
 from navigation.speed_profile import load_speed_profile
+from navigation.dynamic_local_planner import DynamicLocalPlanner
 
 TURN_SLOWDOWN_START_M=2.0
 TURN_SLOWDOWN_END_M=1.2
@@ -29,14 +30,56 @@ class MultiRouteController(PatrolController):
         self.config['safety']['reaction_latency_seconds']=.65
         self.safety.swept=True
         self.speed_profile=load_speed_profile(); self.speed_limit=self.speed_profile['maximum_verified_m_s']
+        self.safety.simulation_braking_bypass=self.speed_profile.get('simulation_braking_bypass') is True
         self.config['local']['max_speed_m_s']=self.speed_profile['default_m_s']
         self.config['safety']['max_actual_speed_m_s']=self.speed_profile['max_actual_speed_m_s']
+        self.dynamic_enabled=runtime.factory_cfg.get('dynamic_avoidance',False)
+        self.dynamic=DynamicLocalPlanner(self.safety)
+        self.dynamic_wait=False
         self.reason='Select route, PREVIEW / VALIDATE, then START. No automatic start.'
+    def set_dynamic_avoidance(self, enabled):
+        if self.scheduler.state not in ('IDLE','STOPPED','PAUSED','WAITING_FOR_CLEAR_PATH'):
+            raise ValueError('Pause or STOP patrol before changing avoidance')
+        if math.hypot(*self.runtime.last_state['base_linear_velocity_world_m_s'][:2])>.10:
+            raise ValueError('Wait for G1 to settle before changing avoidance')
+        source=self.runtime.yolo
+        if enabled and (source is None or source.costmap is None or source.worker.error):
+            raise ValueError('Costmap unavailable. Launch with -DynamicAvoidance or -YoloDebug.')
+        self.dynamic_enabled=enabled
+        self.dynamic.telemetry={}
+        self.selector.stop()
+        self.reason='Dynamic avoidance '+('ON' if enabled else 'OFF')
+
     def envelope_speed(self,distance):
         """Largest speed whose supervisor look-ahead (prediction + reaction + braking) fits in distance."""
         s=self.config['safety']; a=self.braking['conservative_deceleration_m_s2']
         t=s['prediction_seconds']+s['reaction_latency_seconds']; room=distance-s['stopping_extra_m']
         return 0. if room<=0 else a*(-t+math.sqrt(t*t+2*room/a))
+
+    def chair_bypass_command(self, p, cap):
+        """Begin the Map 2 bypass before the centered approach enters inflation."""
+        guide=self.map_config.get('map_2_chair_bypass')
+        if (not self.dynamic_enabled or self.runtime.factory_cfg.get('map_id')!=2 or not guide or
+                self.edge['id']!=guide['edge'] or p[1]<guide['approach_y_m']):
+            return None
+        if not any(o['id'].endswith('/shared_left_chair/Collider') for o in self.detector.obstacles):
+            return None
+        index=self.edge.get('chair_bypass_index',0)
+        points=guide['points']
+        if index<len(points) and math.dist(p[:2],points[index])<.09:
+            index+=1
+            self.edge['chair_bypass_index']=index
+            self.progress_time=self.now
+        if index==len(points):
+            return None
+        x,y=points[index]
+        err=wrap(math.atan2(y-p[1],x-p[0])-p[2])
+        yaw=max(-.30,min(.30,1.2*err))
+        if abs(err)>.35:
+            return [0.,0.,yaw]
+        guide_cap=cap if self.safety.simulation_braking_bypass else min(cap,.22)
+        speed=min(guide_cap,max(.12,math.dist(p[:2],points[index])*.7))
+        return [speed*math.cos(err),speed*math.sin(err),yaw]
     def selected_route(self,completed=None):
         return self.route_manager.route_id(self.route_mode,self.scheduler.completed if completed is None else completed,self.alternate_first)
     def select_route(self,mode,first=None):
@@ -64,6 +107,7 @@ class MultiRouteController(PatrolController):
         self.validate_route(); self.selector.select('AUTO PATROL'); self.scheduler.start(self.now)
         self.active_route=None; self.edge=None; self.return_only=False; self.blocked_since=None
         self.route_complete_history=[]; self.cycle_durations=[]
+        self.dynamic_wait=False
         self.last_stop_generation=self.runtime.keys.stop_generation
     def begin_cycle(self,state):
         if math.dist(pose(state)[:2],self.route_manager.data['nodes']['ENTRY'])>.2:
@@ -136,16 +180,25 @@ class MultiRouteController(PatrolController):
         if early=='FAULT': self.fail(reason)
         status=self.scheduler.state
         if status in ('IDLE','WAITING_START','CYCLE_COMPLETE','PAUSED','STOPPED','FAULT'): return self.record(state,self.selector.stop())
+        perception=None
+        if self.dynamic_enabled:
+            source=self.runtime.yolo
+            result=source.result if source is not None and not source.worker.error else None
+            perception=self.dynamic.observation(result,source.perception_epoch if source else None,self.sim_time,time.time())
+            if perception is None:
+                return self.wait_for_perception(state,'stale','RGB-D costmap missing or stale')
+            # Unlocalized RGB detections are debug output. Valid geometric
+            # costmap cells and localized people still constrain movement.
         try:
             if status=='VALIDATING_ROUTE': self.begin_cycle(state)
             elif status in ('REPLANNING','WAITING_FOR_CLEAR_PATH'):
                 if self.blocked_since is not None and self.now-self.blocked_since>self.scheduler.config['obstacle_wait_timeout_seconds']:
                     self.fail('PATH_BLOCKED timeout'); return self.record(state,self.selector.stop())
-                if status=='WAITING_FOR_CLEAR_PATH' and self.sim_time-self.last_replan<1.: return self.record(state,self.selector.stop())
+                if status=='WAITING_FOR_CLEAR_PATH' and not self.dynamic_wait and self.sim_time-self.last_replan<1.: return self.record(state,self.selector.stop())
                 self.last_replan=self.sim_time
                 # Preserve the original per-leg deadline during obstacle retries.
                 if self.edge is None: self.begin_cycle(state)
-                else:
+                elif not self.dynamic_wait:
                     started=self.movement_started; self.begin_edge(state); self.movement_started=started
         except NoValidPath as exc:
             self.wait(str(exc)); return self.record(state,self.selector.stop())
@@ -160,10 +213,12 @@ class MultiRouteController(PatrolController):
         while j<len(nodes)-2 and not is_corner(N[nodes[j]],N[nodes[j+1]],N[nodes[j+2]]):
             chain.append((N[nodes[j+1]],N[nodes[j+2]])); stop_distance+=math.dist(*chain[-1]); j+=1
         self.edge['grid'].extra=chain
-        requested=min(self.config['local']['max_speed_m_s'],route['speed_limit_m_s'])
+        self.edge['grid'].detour=(self.map_config.get('local_detours',{}).get(self.edge['id'])
+                                  if self.dynamic_enabled else None)
+        requested=min(self.config['local']['max_speed_m_s'],route['speed_limit_m_s'],self.speed_limit)
         self.local.config=dict(self.config['local'])
         cap=requested
-        if requested>.22:
+        if requested>.22 and not self.safety.simulation_braking_bypass:
             # Slow down from TURN_SLOWDOWN_START_M before a turn/EXIT, reaching the
             # verified 0.22 m/s approach speed TURN_SLOWDOWN_END_M before it.
             if stop_distance<TURN_SLOWDOWN_START_M:
@@ -172,19 +227,29 @@ class MultiRouteController(PatrolController):
             # the turn; otherwise the supervisor would stop the robot instead.
             cap=min(cap,max(.12,self.envelope_speed(stop_distance-.2)))
         self.local.config['max_speed_m_s']=cap
+        self.local.config['slow_endpoint']=not self.safety.simulation_braking_bypass
         # The tracker commands 0.7 x look-ahead distance, so high speed needs a
         # proportionally longer look-ahead.
         self.local.config['lookahead_m']=max(self.config['local']['lookahead_m'],cap/.7+.05)
         self.local.config['max_yaw_rate']=route['turn_speed_limit_rad_s']; self.local.config['position_tolerance_m']=route['waypoint_tolerance_m']
         if through:
             a=N[nodes[i]]; length=math.dist(a,goal)
-            passed=((p[0]-goal[0])*(goal[0]-a[0])+(p[1]-goal[1])*(goal[1]-a[1]))/length>=0
-            if distance<route['waypoint_tolerance_m'] or (passed and distance<self.config['safety']['max_path_deviation_m']):
+            along=((p[0]-goal[0])*(goal[0]-a[0])+(p[1]-goal[1])*(goal[1]-a[1]))/length
+            passed=along>=0
+            if distance<route['waypoint_tolerance_m'] or (not self.dynamic_enabled and passed and distance<self.config['safety']['max_path_deviation_m']):
                 self.finish_edge(state); return self.command(dt)
         target_yaw=heading(goal,self.route_manager.data['nodes'][nodes[i+2]]) if corner else (0. if final else None)
         if corner: target_yaw=route.get('heading_at_turns_rad',{}).get(nodes[i+1],target_yaw)
         desired,arrived,self.last_distance=self.local.command(state,[*self.local.path[-1],None] if through else [*goal,target_yaw],dt)
         if through: arrived=False; self.last_distance=distance
+        cross_track=math.sqrt(max(0.,distance*distance-along*along)) if through else 0.
+        if self.dynamic_enabled and through and along>-.2 and (passed or cross_track>route['waypoint_tolerance_m']*.75):
+            # Finish a detour at the mandatory node instead of following the
+            # look-ahead target that already lies on the next straight edge.
+            dx,dy=goal[0]-p[0],goal[1]-p[1]
+            scale=min(cap,.12)/distance
+            desired[:2]=[scale*(math.cos(p[2])*dx+math.sin(p[2])*dy),
+                         scale*(-math.sin(p[2])*dx+math.cos(p[2])*dy)]
         lateral=min(self.selector.high[1],-self.selector.low[1])
         if abs(desired[1])>lateral: desired[:2]=[v*lateral/abs(desired[1]) for v in desired[:2]]
         if self.local.position_reached:
@@ -202,20 +267,55 @@ class MultiRouteController(PatrolController):
             return self.record(state,self.selector.stop()) if finished else self.command(dt)
         self.deviation=min(segment_distance(p[:2],a,b) for a,b in zip(self.edge['path'],self.edge['path'][1:]))
         if self.now-self.movement_started>self.scheduler.config['movement_timeout_seconds']: self.fail('Movement timeout'); return self.record(state,self.selector.stop())
-        if self.deviation>self.config['safety']['max_path_deviation_m']: self.fail('Route path deviation'); return self.record(state,self.selector.stop())
+        if self.deviation>self.config['safety']['max_path_deviation_m'] and not self.edge['grid'].in_detour(p[:2]):
+            self.fail('Route path deviation'); return self.record(state,self.selector.stop())
         if distance<self.best_distance-.04 or abs(wrap(p[2]-self.progress_yaw))>.08:
             self.best_distance=min(distance,self.best_distance); self.progress_time=self.now; self.progress_yaw=p[2]
         if self.now-self.progress_time>self.config['safety']['no_progress_seconds']: self.fail('No progress on mandatory segment'); return self.record(state,self.selector.stop())
+        bypass=None
+        if self.dynamic_enabled:
+            corridor=self.edge['grid']; tolerance=route['waypoint_tolerance_m']
+            bypass=self.chair_bypass_command(p,cap)
+            if bypass is not None: desired=bypass
+            if not self.dynamic.trace(perception,corridor,p,[0.,0.,0.],goal,tolerance,actual=velocity):
+                return self.wait_for_perception(state,'braking','Current velocity has no clear braking sweep')
+            people=[*self.detector.obstacles,*result.get('obstacles',[])]
+            def command_blocker(candidate):
+                filtered=self.selector.auto(candidate,dt,preserve_linear_direction=True,preview=True)
+                if not self.dynamic.trace(perception,corridor,p,filtered,goal,tolerance):
+                    return self.dynamic.trace_blocker
+                status, reason=self.safety.check(state,filtered,corridor,self.detector.obstacles,
+                                                 self.sim_time-self.detector.timestamp,velocity)
+                return reason if status else None
+            desired=self.dynamic.choose(perception,corridor,p,desired,self.selector.low,self.selector.high,cap,goal,tolerance,
+                                        people,allow_detour=not self.local.position_reached,command_blocker=command_blocker)
+            if desired is None:
+                return self.wait_for_perception(state,self.dynamic.telemetry['status'],'No clear detour inside the current route lane')
         command=self.selector.auto(desired,dt,preserve_linear_direction=True)
+        if self.dynamic_enabled and (math.hypot(*command[:2])>requested+1e-9 or
+                                     not self.dynamic.trace(perception,corridor,p,command,goal,tolerance)):
+            return self.wait_for_perception(state,'braking','Filtered command has no clear braking sweep')
         safety,reason=self.safety.check(state,command,self.edge['grid'],self.detector.obstacles,self.sim_time-self.detector.timestamp,velocity)
         if safety:
             if safety=='FAULT': self.fail(reason)
+            elif self.dynamic_enabled: return self.wait_for_perception(state,'safety_wait',reason)
             else: self.wait(reason)
             return self.record(state,self.selector.stop())
         self.blocked_since=None
+        self.dynamic_wait=False
         phase='TURNING' if self.local.position_reached and corner else ('APPROACHING_TURN' if corner and distance<.6 else ('MOVING_TO_EXIT' if final else 'MOVING_SEGMENT'))
         if self.scheduler.state!=phase: self.scheduler.transition(phase,self.now)
-        self.reason='Following '+self.edge['id']; return self.record(state,command)
+        self.reason=('Map 2 chair bypass' if bypass is not None else 'Following '+self.edge['id'])
+        return self.record(state,command)
+    def wait_for_perception(self,state,status,reason):
+        self.dynamic.telemetry.update(status=status,predicted_end_xy=None,predicted_obstacle_cell_distance_m=None)
+        self.dynamic_wait=True
+        if self.blocked_since is not None and self.now-self.blocked_since>self.scheduler.config['obstacle_wait_timeout_seconds']:
+            self.fail('PATH_BLOCKED timeout: '+reason)
+        elif self.scheduler.state!='WAITING_FOR_CLEAR_PATH' or self.reason!=reason:
+            self.wait(reason)
+        self.progress_time=self.now
+        return self.record(state,self.selector.stop())
     def snapshot(self):
         value=super().snapshot()
         if not hasattr(self,'route_manager'): return value
@@ -224,6 +324,7 @@ class MultiRouteController(PatrolController):
             speed=min(self.config['local']['max_speed_m_s'],self.route_manager.data['routes'][rid]['speed_limit_m_s'])
             status['estimated_travel_seconds']=status['length_m']/speed
         value.update(route_mode=self.route_mode,selected_route=rid,next_route=self.selected_route(self.scheduler.completed+1),route_validation=status,current_segment=self.edge['id'] if self.edge else None,current_waypoint=self.edge['end_node'] if self.edge else None,route_history=self.route_complete_history,route_length_m=self.route_plan['length_m'] if self.route_plan else None)
+        value['dynamic_avoidance']={'enabled':self.dynamic_enabled,**self.dynamic.telemetry}
         return value
     def reset_route_configuration(self):
         if self.scheduler.state not in ('IDLE','STOPPED'): raise ValueError('STOP before resetting route settings')
@@ -236,6 +337,8 @@ class MultiRouteController(PatrolController):
     def on_robot_reset(self):
         self.edge=None; self.active_route=None; self.route_plan=None; self.path=[]; self.segment_index=0
         self.return_only=False; self.blocked_since=None; self.position_recovery=False; self.local.reset([]); self.velocity_history.clear()
+        self.dynamic_wait=False
+        if self.runtime.yolo is not None: self.runtime.yolo.invalidate_costmap()
         self.scheduler.goal='ENTRY'; self.reason='Robot reset to ENTRY; route cancelled, Manual takeover'
     def save(self,path=None):
         payload={'version':1,'factory_id':'v2','source_factory_sha256':self.runtime.factory_cfg['source_factory_sha256'],'route_mode':self.route_mode,'alternate_first':self.alternate_first,'schedule':self.scheduler.config,'routes':self.route_manager.data,'navigation':self.config}

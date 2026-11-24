@@ -161,6 +161,7 @@ class LocalCostmap:
         # Traversable for the robot centre: actually observed free, walkable in the factory map, and outside every inflated obstacle.
         traversable=(state==FREE)&~static&(cost==0)
         return {'state':state,'cost':cost,'static_lethal':static,'class_id':class_id,'traversable':traversable,'distance_m':distance,
+            'human_cells':np.argwhere(human[p:-p,p:-p]),
             'origin_cell':self.origin,'origin_world_m':[self.origin[0]*self.res,self.origin[1]*self.res],'resolution_m':self.res,
             'size_cells':self.n,'robot_xy':[float(robot_xy[0]),float(robot_xy[1])],'sim_time':float(now),
             'occupied_age_s':np.where(occupied,occupied_age,np.nan),'free_age_s':np.where(free,free_age,np.nan)}

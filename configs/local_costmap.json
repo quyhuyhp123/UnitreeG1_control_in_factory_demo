@@ -16,5 +16,5 @@
     "margin_m": 0.1
   },
   "save_directory": "logs/costmap_runs",
-  "note": "Rolling 6x6 m local costmap, world-aligned and centred on the robot. Footprint/inflation radii are read from the factory navigation map (body radius = inscribed, body + sway + pose error + margin = inflation); people get human_extra_m more. Observations older than their memory fall back to UNKNOWN, never to FREE. Off by default; enable with --costmap or --costmap-debug. Output only: not read by navigation, the safety supervisor or locomotion."
+  "note": "Rolling 6x6 m world-aligned RGB-D costmap. Factory V2 avoidance expands the window to 8x8 m for the full braking sweep at the configured 1 m/s ceiling. Expired observations become UNKNOWN."
 }

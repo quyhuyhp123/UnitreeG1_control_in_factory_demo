@@ -50,7 +50,7 @@ class LocalPlanner:
             vx=math.cos(yaw)*dx+math.sin(yaw)*dy; vy=-math.sin(yaw)*dx+math.cos(yaw)*dy
             length=math.hypot(vx,vy)
             speed=min(c['max_speed_m_s'],max(.12,.7*length))
-            if final<.5: speed=min(speed,.10)
+            if final<.5 and c.get('slow_endpoint',True): speed=min(speed,.10)
             vx,vy=max(0.,vx/length*speed),vy/length*speed
             if self.turning or vx==0: vx=vy=0
         speed=math.hypot(*state['base_linear_velocity_world_m_s'][:2])

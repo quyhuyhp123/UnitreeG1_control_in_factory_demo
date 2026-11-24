@@ -1,3 +1,21 @@
+## Windows (current machine)
+
+Map switching now uses resident props instead of reloading USD: measured ~20–33 ms per transaction (previously ~1.1–1.4 s). Relaunch Isaac to load the change. Details: [map-switch performance](docs/map_switch_performance.md).
+
+Factory V2 has **Map 1 (original), Map 2 and Map 3 (seeded lane obstacles)**. Use `run_sim.bat -Factory v2 -Map 2 -YoloDebug`, or select FACTORY MAP then Route1/Route2 in Navigation and START. Switch only while stopped at ENTRY. RESET first if away. See [map variants](docs/factory_map_variants.md).
+
+Stage 6 costmap avoidance is OFF by default. To opt in, run `run_sim.bat -Factory v2 -Map 2 -DynamicAvoidance`. Select a route, set **Max speed m/s** (default 0.30, configurable up to 1.0), and start manually in Navigation. See [Stage 6 test report](docs/perception/dynamic_avoidance.md).
+
+```powershell
+cd D:\unitree_g1
+.\run_sim.bat -Factory v2 -Check
+.\run_sim.bat -Factory v2
+.\run_sim.bat -Factory v2 -YoloDebug
+.\Training_model\run_ui.bat
+```
+
+Native Windows launchers are supported; no WSL/bash is required. YOLO uses ONNX CPU on this installation. GPU training has not been prepared or run. See [Windows audit and measured tests](docs/windows_compatibility.md). The Linux instructions below remain available for Linux machines.
+
 ## Chạy Factory V2 trên Linux
 
 Dùng bản Isaac Sim **6.1 cho Linux** và Python đi kèm. Tại máy hiện tại:

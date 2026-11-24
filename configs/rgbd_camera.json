@@ -3,14 +3,34 @@
   "debug_window": false,
   "prim_name": "RgbdCamera",
   "parent_link": "torso_link",
-  "torso_offset_m": [0.10, 0.0175, 0.43],
+  "torso_offset_m": [
+    0.1,
+    0.0175,
+    0.43
+  ],
   "pitch_down_deg": 15.0,
-  "resolution": [640, 360],
+  "resolution": [
+    640,
+    360
+  ],
   "horizontal_fov_deg": 80.0,
-  "clipping_range_m": [0.05, 50.0],
-  "valid_depth_range_m": [0.10, 20.0],
+  "clipping_range_m": [
+    0.05,
+    50.0
+  ],
+  "valid_depth_range_m": [
+    0.1,
+    20.0
+  ],
   "capture_hz": 10,
   "pose_lag_ticks": 2,
   "save_directory": "logs/rgbd_runs",
-  "note": "Forward RGB-D camera on the G1 torso (X offset in front of the head shell, Y/Z of the real D435 mount). Off by default; enable with --rgbd or --rgbd-debug. Perception only: never read by navigation, locomotion or the speed profile."
+  "note": "Forward RGB-D camera on the G1 torso (X offset in front of the head shell, Y/Z of the real D435 mount). Off by default; enable with --rgbd or --rgbd-debug. Perception only: never read by navigation, locomotion or the speed profile.",
+  "stabilization": {
+    "enabled": true,
+    "position_tau_s": 0.12,
+    "height_tau_s": 0.25,
+    "yaw_tau_s": 0.1,
+    "max_position_lag_m": 0.08
+  }
 }

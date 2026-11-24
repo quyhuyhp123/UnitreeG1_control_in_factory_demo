@@ -56,6 +56,14 @@
         ],
         [
           -6.172248803827751,
+          -3.4
+        ],
+        [
+          -5.08,
+          -3.4
+        ],
+        [
+          -5.08,
           -8.943396226415096
         ]
       ]
@@ -81,6 +89,14 @@
       ]
     }
   ],
+  "local_detours": {
+    "LEFT_BOTTOM__LEFT_CORRIDOR": [[-6.22, -8.75], [-6.22, -3.75]]
+  },
+  "map_2_chair_bypass": {
+    "edge": "LEFT_BOTTOM__LEFT_CORRIDOR",
+    "approach_y_m": -9.1,
+    "points": [[-5.93, -8.25], [-5.93, -5.8], [-6.985645933014354, -4.5]]
+  },
   "static_obstacles": [],
   "obstacle_height_range_m": [
     0.06,

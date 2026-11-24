@@ -59,12 +59,12 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         (self.directory/'scene_checks.json').write_text(json.dumps(self.scene_checks,indent=2),encoding='utf-8')
         self.update_camera()
         self._build_head_preview()
-        # Optional perception-only RGB-D sensor; never feeds navigation or the policy.
+        # Optional RGB-D sensor shared by preview and perception.
         self.rgbd=None
         if cfg.get('rgbd_camera',{}).get('enabled',False):
             from perception.rgbd_camera import RgbdCamera
             self.rgbd=RgbdCamera(self,cfg['rgbd_camera']); self.rgbd.start()
-        # Optional YOLO detection on the RGB frames. Output only: it has no path to the command selector.
+        # Optional YOLO and costmap. Only opt-in V2 avoidance reads the map.
         self.yolo=None
         if cfg.get('yolo',{}).get('enabled',False):
             if self.rgbd is None: raise ValueError('YOLO needs the RGB-D camera: enable rgbd_camera as well')
@@ -225,8 +225,41 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             self.rgbd_camera_path,self.rgbd_mount=author_camera(stage,rc)
             self.scene_checks['rgbd_camera']={'path':self.rgbd_camera_path,'resolution':rc['resolution'],'horizontal_fov_deg':rc['horizontal_fov_deg'],
                 'torso_offset_m':rc['torso_offset_m'],'pitch_down_deg':rc['pitch_down_deg']}
+        if not self.flat and cfg.get('factory_id')=='v2':
+            from controllers.factory_maps import author
+            author(stage,int(cfg.get('map_id',1)))
+
+    def set_obstacle_map(self,map_id):
+        """Switch test props only at ENTRY while stopped; never teleport robot."""
+        import math
+        from pxr import Sdf
+        from controllers.factory_maps import author,author_layer
+        nav=self.navigation
+        if map_id not in (1,2,3):raise ValueError('Invalid map')
+        if map_id==int(self.factory_cfg.get('map_id',1)):return
+        if nav.scheduler.state not in ('IDLE','STOPPED'):raise ValueError('STOP patrol before changing map')
+        if math.hypot(*self.last_state['base_linear_velocity_world_m_s'][:2])>.12:raise ValueError('Wait for robot to settle')
+        entry=nav.route_manager.data['nodes']['ENTRY']
+        if math.dist(self.last_state['base_position_m'][:2],entry)>.2:raise ValueError('RESET robot to ENTRY before changing map')
+        # Change initial map opinion without copying current robot joint/pose state.
+        layer=Sdf.Layer.CreateAnonymous();layer.ImportFromString(self.initial_layer)
+        author_layer(layer,map_id)
+        playing=self.timeline.is_playing();self.timeline.pause()
+        try:
+            nav.stop('Map change; explicit START required');nav.selector.select('MANUAL')
+            author(self.stage,map_id);self.initial_layer=layer.ExportToString();self.factory_cfg['map_id']=map_id
+            nav.last_scan=-1e9;nav.path=[];nav.edge=None;nav.active_route=None;nav.route_plan=None
+            if self.yolo is not None: self.yolo.invalidate_costmap()
+            nav.refresh_obstacles(force=True)
+            nav.reason=f'Map {map_id} loaded; select route then START.'
+        finally:
+            if playing:
+                self.timeline.play()
 
     def _build_head_preview(self):
+        self.head_stabilizer=None
+        from perception.rgbd_config import load_config
+        self.head_stabilization=self.factory_cfg.get('rgbd_camera',{}).get('stabilization',load_config().get('stabilization',{}))
         if not self.factory_cfg.get('head_camera',{}).get('enabled',False): return
         import omni.appwindow
         from omni.kit.viewport.utility import create_viewport_window
@@ -433,6 +466,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             camera_world_transform=[list(row) for row in UsdGeom.XformCache().GetLocalToWorldTransform(self.context['camera'].GetPrim())])
         value['head_camera_path']=getattr(self,'head_camera_path',None)
         value['rgbd_camera_path']=getattr(self,'rgbd_camera_path',None)
+        value['factory_map_id']=int(self.factory_cfg.get('map_id',1))
         nav=getattr(self,'navigation',None)
         if nav is not None and nav.mode=='AUTO PATROL':
             value['applied_command']=nav.last_command
@@ -453,7 +487,11 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             frame=self.rgbd.update()
             if getattr(self,'yolo',None) is not None:
                 if frame is not None: self.yolo.submit(frame)  # constant time; inference runs on its own thread
-                self.yolo.poll()
+                if self.yolo.worker.error and getattr(nav,'dynamic_enabled',False):
+                    if nav.scheduler.state!='FAULT':
+                        nav.fail('Perception worker fault: '+self.yolo.worker.error)
+                else:
+                    self.yolo.poll()
         if self.keys.follow_generation!=self.last_follow_generation:
             self.last_follow_generation=self.keys.follow_generation
             self.set_camera_mode('follow')
@@ -467,9 +505,22 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             xf=UsdGeom.Xformable(self.stage.GetPrimAtPath(self.head_camera_path))
             ops=xf.GetOrderedXformOps()
             if len(ops)==1 and ops[0].GetOpType()==UsdGeom.XformOp.TypeTransform:
-                if ops[0].Get()!=self.head_mount_matrix: ops[0].Set(self.head_mount_matrix)
+                if not self.head_stabilization.get('enabled',False) and ops[0].Get()!=self.head_mount_matrix: ops[0].Set(self.head_mount_matrix)
             else:
                 xf.ClearXformOpOrder(); xf.AddTransformOp().Set(self.head_mount_matrix)
+            settings=self.head_stabilization
+            if settings.get('enabled',False):
+                from perception.camera_stabilizer import CameraStabilizer
+                from perception.rgbd_camera import matrix
+                from pxr import Gf
+                import math
+                if self.head_stabilizer is None:self.head_stabilizer=CameraStabilizer(settings)
+                parent=matrix(UsdGeom.XformCache().GetLocalToWorldTransform(xf.GetPrim().GetParent()))
+                raw=parent@matrix(self.head_mount_matrix);w,x,y,z=self.last_state['base_orientation_wxyz']
+                yaw=math.atan2(2*(w*z+x*y),1-2*(y*y+z*z))
+                T=self.head_stabilizer.step(raw[:3,3],yaw,self.factory_cfg['head_camera']['pitch_down_deg'],1/self.loco_cfg['control_hz'])
+                xf.SetResetXformStack(True);xf.GetOrderedXformOps()[0].Set(Gf.Matrix4d(*T.T.ravel().tolist()))
+            else:xf.SetResetXformStack(False)
             self.head_widget.viewport_api.camera_path=self.head_camera_path
             desired=tuple(self.factory_cfg['head_camera']['resolution'])
             if tuple(self.head_widget.viewport_api.resolution or ())!=desired: self.head_widget.viewport_api.resolution=desired

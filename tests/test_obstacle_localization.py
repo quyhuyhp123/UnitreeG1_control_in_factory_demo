@@ -75,5 +75,16 @@ class ObstacleLocalizationTests(unittest.TestCase):
         result=self.localizer.process(frame([((.25,-.1,.9),(.35,.1,1.1))]),[])  # something 0.3 m from the base axis
         self.assertEqual(result['obstacles'],[]); self.assertGreater(result['points']['robot_body'],0)
 
+    def test_person_box_range_requires_every_depth_pixel_to_be_valid(self):
+        f=frame([((9.,-3.,0.),(9.2,3.,3.))])
+        box=[315,80,325,90]
+        item={'class_id':0,'class_name':'person','confidence':.9,'bbox_xyxy':box}
+        self.localizer.process(f,[item])
+        self.assertFalse(item['localized'])
+        self.assertGreater(item['nearest_box_depth_xy_m'],8.)
+        f['valid'][82,317]=False
+        self.localizer.process(f,[item])
+        self.assertIsNone(item['nearest_box_depth_xy_m'])
+
 
 if __name__=='__main__': unittest.main()

@@ -25,7 +25,7 @@ ROOT=Path(__file__).resolve().parents[1]
 OUT=ROOT/'assets/factory/factory_layout_v2'
 PHYSICS=OUT/'factory_layout_v2_physics.usd'; SOURCE=OUT/'factory_layout_v2.usd'
 LAYER=OUT/'factory_layout_v2_workers.usda'; SUBLAYER='./factory_layout_v2_workers.usda'
-WORKER='./props/worker/male_adult_construction_05_new.usd'   # faces -Y, T-pose, arms along X, feet at Z=0
+WORKER='./props/worker/working.usda'  # Faces -Y with elbows bent, feet at Z=0.
 CHAIR='./props/chair/SM_Chair.usd'                            # faces +X
 OLD=re.compile(r'^((?:Operator_(?:Inner|Outer)_(?:Left|Right)_\d+)|(?:Person_\d+)|(?:Chair_\d+))(?:_(.+))?$')
 SIDE_STEP_M=.75          # a standing figure cannot sit: it stands beside the chair, facing the desk

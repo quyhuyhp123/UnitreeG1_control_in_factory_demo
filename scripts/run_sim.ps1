@@ -1,6 +1,6 @@
-param([switch]$Flat,[switch]$SelfTest,[switch]$Headless,[switch]$Overview,[double]$Duration=0,
+param([switch]$Check,[switch]$Rgbd,[switch]$RgbdDebug,[switch]$NoRgbd,[switch]$Yolo,[switch]$YoloDebug,[switch]$NoYolo,[switch]$Obstacles,[switch]$ObstaclesDebug,[switch]$NoObstacles,[switch]$Costmap,[switch]$CostmapDebug,[switch]$NoCostmap,[switch]$DynamicAvoidance,[switch]$Flat,[switch]$SelfTest,[switch]$Headless,[switch]$Overview,[double]$Duration=0,
     [ValidateSet('locomotion','sonic')][string]$Controller='locomotion',
-    [ValidateSet('v1','v2')][string]$Factory)
+    [ValidateSet('v1','v2')][string]$Factory,[ValidateRange(1,3)][int]$Map=1)
 $ErrorActionPreference='Stop'
 $projectRoot='D:\unitree_g1'
 $cfg=Get-Content (Join-Path $projectRoot 'configs\environment.json') -Raw | ConvertFrom-Json
@@ -9,6 +9,10 @@ if (-not (Test-Path -LiteralPath $launcher)) { throw "Missing Isaac launcher: $l
 $log=Join-Path $projectRoot ('logs\factory_g1_'+(Get-Date -Format yyyyMMdd_HHmmss)+'.log')
 $runArgs=@((Join-Path $projectRoot 'scripts\run_factory_g1.py'),'--no-ros-env')
 $runArgs+=@('--controller',$Controller)
+$runArgs+=@('--map',"$Map")
+if ($DynamicAvoidance) { $runArgs+='--dynamic-avoidance' }
+foreach ($flag in @(@($Check,'--check'),@($Rgbd,'--rgbd'),@($RgbdDebug,'--rgbd-debug'),@($NoRgbd,'--no-rgbd'),@($Yolo,'--yolo'),@($YoloDebug,'--yolo-debug'),@($NoYolo,'--no-yolo'),@($Obstacles,'--obstacles'),@($ObstaclesDebug,'--obstacles-debug'),@($NoObstacles,'--no-obstacles'),@($Costmap,'--costmap'),@($CostmapDebug,'--costmap-debug'),@($NoCostmap,'--no-costmap'))) { if ($flag[0]) { $runArgs+=$flag[1] } }
+
 if ($Factory) { $runArgs+=@('--factory',$Factory) }
 if ($Flat) { $runArgs+='--flat' }; if ($SelfTest) { $runArgs+='--self-test' }
 if ($Headless) { $runArgs+='--headless' }; if ($Overview) { $runArgs+='--overview' }
@@ -29,7 +33,7 @@ try {
     $errors=@(Select-String -LiteralPath $log -Pattern '\[Error\]|\[Fatal\]|Traceback \(most recent call last\)')
     $summary=[ordered]@{exit_code=$exitCode;error_lines=$errors.Count;log=$log;flat_mode=[bool]$Flat;self_test=[bool]$SelfTest;checked_at=(Get-Date -Format o)}
     $summary['native_stderr_diagnostics']=@(Select-String -LiteralPath $log -Pattern 'Unsupported:|NativeCommandError').Count
-    $summary['finished_marker_seen']=[bool](Select-String -LiteralPath $log -Pattern '^FACTORY_FINISHED ')
+    $summary['finished_marker_seen']=[bool](Select-String -LiteralPath $log -Pattern $(if ($Check) {'^PREFLIGHT_OK '} else {'^FACTORY_FINISHED '}))
     $summary['status']=if ($exitCode -eq 0 -and $errors.Count -eq 0 -and $summary['finished_marker_seen']) {'completed'} else {'failed_or_crashed'}
     if (Select-String -LiteralPath $log -Pattern '^CONTROLLER_UNAVAILABLE ') { $summary['status']='controller_unavailable' }
     $summary['controller']=$Controller

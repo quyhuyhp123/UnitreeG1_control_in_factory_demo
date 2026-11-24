@@ -1,0 +1,20 @@
+#usda 1.0
+(
+    defaultPrim = "FactoryVariant"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "FactoryVariant"
+{
+    def Xform "Factory" (
+        prepend references = @../factory_layout_v2_physics.usd@
+    )
+    {
+    }
+
+    def Xform "Obstacles"
+    {
+    }
+}
+

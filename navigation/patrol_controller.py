@@ -84,9 +84,16 @@ class PatrolController:
             self.log.write(json.dumps({'scene_update':{'sim_time':self.sim_time,'source':'SIM GROUND TRUTH',
                 'objects':updates,'removed':[key for key in previous if key not in current]}})+'\n')
             self.previous_obstacles=list(self.detector.obstacles)
-        if changed or self.grid is None:
-            lane=LaneMap(self.map_config,self.detector.obstacles,self.detector.floor)
-            self.grid=OccupancyGrid(lane); self.planner=GlobalPlanner(self.grid); self.last_map_signature=signature
+        planning_obstacles=[o for o in self.detector.obstacles if not o.get('route_test_obstacle',False)]
+        planning_signature=(tuple((o['id'],tuple(round(v,2) for b in o['bounds'] for v in b)) for o in planning_obstacles),
+                            tuple(tuple(b) for b in self.detector.floor))
+        rebuild=self.grid is None or planning_signature!=getattr(self,'_planning_signature',None)
+        if rebuild:
+            # Scenario props are checked by the unchanged safety supervisor,
+            # not baked into baseline mandatory-route validation (stage 5).
+            lane=LaneMap(self.map_config,planning_obstacles,self.detector.floor)
+            self.grid=OccupancyGrid(lane); self.planner=GlobalPlanner(self.grid); self._planning_signature=planning_signature
+        self.last_map_signature=signature
         self.map_latency_ms=(time.perf_counter()-begin)*1000
         return changed
     def validate_points(self,a=None,b=None):

@@ -15,11 +15,17 @@ class PatrolPanel:
             with ui.ScrollingFrame():
                 with ui.VStack(spacing=4):
                     ui.Label('Locomotion RL | SIM GROUND TRUTH',height=22)
-                    ui.Label('SONIC disabled: full PhysX backend not validated. No sensor AI.',word_wrap=True,height=30)
+                    ui.Label('Locomotion policy + Safety Supervisor',word_wrap=True,height=22)
                     self.mode=ui.ComboBox(0,'MANUAL','AUTO PATROL',height=24)
                     ui.Button('Apply Mode / explicit Manual takeover',height=24,clicked_fn=lambda:self.call(self.apply_mode))
                     ui.Button('Backend details',height=22,clicked_fn=lambda:setattr(self.runtime.controller_window,'visible',not self.runtime.controller_window.visible))
                     if hasattr(nav,'route_manager'):
+                        with ui.CollapsableFrame('FACTORY MAP',collapsed=False):
+                            with ui.VStack(spacing=3):
+                                self.map_choice=ui.ComboBox(int(self.runtime.factory_cfg.get('map_id',1))-1,'Map 1 - Original','Map 2 - Obstacles (seed 5102)','Map 3 - Obstacles (seed 5103)',height=24)
+                                ui.Button('Apply Map (STOP + ENTRY)',clicked_fn=lambda:self.call(self.apply_factory_map))
+                                self.avoidance_button=ui.Button('Dynamic avoidance',height=24,clicked_fn=lambda:self.call(self.toggle_avoidance))
+                                ui.Label('Avoidance stays in the green lane and waits if both sides are blocked.',word_wrap=True,height=34)
                         with ui.CollapsableFrame('ROUTE SELECTION',collapsed=False):
                             with ui.VStack(spacing=3):
                                 self.route_choice=ui.ComboBox(0,'Route 1 - Blue / Center','Route 2 - Brown / Right','Alternate Routes',height=24)
@@ -86,6 +92,13 @@ class PatrolPanel:
         except Exception as error: self.message.text=str(error)
     def apply_mode(self):
         self.nav.set_mode('AUTO PATROL' if self.mode.model.get_item_value_model().as_int else 'MANUAL')
+    def toggle_avoidance(self):
+        self.nav.set_dynamic_avoidance(not self.nav.dynamic_enabled)
+
+    def apply_factory_map(self):
+        self.runtime.set_obstacle_map(self.map_choice.model.get_item_value_model().as_int+1)
+        self.mode.model.get_item_value_model().set_value(0)
+        self.draw()
     def apply_route(self):
         modes=['route_1_blue','route_2_brown','alternate']; first=['route_1_blue','route_2_brown']
         self.nav.select_route(modes[self.route_choice.model.get_item_value_model().as_int],first[self.first_route.model.get_item_value_model().as_int])
@@ -130,6 +143,13 @@ class PatrolPanel:
         self.nav.before_tick(self.runtime.timeline.is_playing())
         self.nav.reason='Schedule/speed applied; wait measured from completed return to A'
     def start(self):
+        if hasattr(self,'map_choice'):
+            selected=self.map_choice.model.get_item_value_model().as_int+1
+            if selected!=int(self.runtime.factory_cfg.get('map_id',1)):self.apply_factory_map()
+            self.apply_route()
+        if not self.runtime.timeline.is_playing():
+            self.runtime.timeline.play()
+            self.runtime.app.update()
         self.apply_schedule(); self.nav.start(); self.mode.model.get_item_value_model().set_value(1)
     def save(self): self.apply_schedule(); path=self.nav.save(); self.nav.reason='Saved '+str(path)
     def load(self): self.nav.load(); self.sync(); self.draw()
@@ -218,5 +238,11 @@ class PatrolPanel:
             f'FPS {s["loop_fps"]:.1f} | planner {s["planner_latency_ms"]:.2f} ms | VRAM {gpu} MiB')
         if hasattr(self.nav,'route_manager'):
             status=s['route_validation']; self.monitor.text+=f'\nRoute {s["selected_route"]} ({s["route_mode"]})\nSegment {s["current_segment"]}\nWaypoint {s["current_waypoint"]}\nValidation {status["status"]} | length {status.get("length_m")} m\nWaypoints {status.get("waypoints")} | ETA estimate {status.get("estimated_travel_seconds")} sim s\nNext cycle route {s["next_route"]}'
+            avoidance=s['dynamic_avoidance']
+            self.avoidance_button.text='Turn dynamic avoidance '+('OFF' if avoidance['enabled'] else 'ON')
+            label=avoidance.get('status','ready') if avoidance['enabled'] else 'OFF'
+            self.monitor.text+=f'\nDynamic avoidance {label}'
+            if label=='blocked' and avoidance.get('nominal_blocker'):
+                self.monitor.text+=' | '+avoidance['nominal_blocker'].replace('_',' ')
         self.draw()
     def close(self): self.window.destroy()

@@ -4,7 +4,7 @@
   "model_sha256": "ce2c9408f475e758629ae369381535f2869426f38fa53037beaf705130f327dc",
   "class_names": "checkpoints/yolo/coco_names.json",
   "imgsz": 640,
-  "confidence_threshold": 0.25,
+  "confidence_threshold": 0.35,
   "iou_threshold": 0.45,
   "max_detections": 100,
   "classes": null,

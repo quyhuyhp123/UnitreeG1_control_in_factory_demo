@@ -1,0 +1,247 @@
+#usda 1.0
+(
+    defaultPrim = "FactoryVariant"
+    metersPerUnit = 1
+    upAxis = "Z"
+)
+
+def Xform "FactoryVariant"
+{
+    def Xform "Factory" (
+        prepend references = @../factory_layout_v2_physics.usd@
+    )
+    {
+    }
+
+    def Xform "Obstacles"
+    {
+        def Xform "shared_left_chair"
+        {
+            custom string navigation:kind = "static"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 0
+            double3 xformOp:translate = (-6.955337634030383, -6.817873075730412, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Xform "Visual" (
+                prepend references = @../props/chair/SM_Chair.usd@
+            )
+            {
+                over "SM_Chair"
+                {
+                    bool physics:collisionEnabled = 0
+                }
+            }
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                token visibility = "invisible"
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.65, 1.1)
+                double3 xformOp:translate = (0, 0, 0.55)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Xform "shared_left_person"
+        {
+            custom string navigation:kind = "human"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 180
+            double3 xformOp:translate = (-7.022352108705201, 1.4587612988350145, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Xform "Visual" (
+                prepend references = @../props/worker/standing.usda@
+            )
+            {
+            }
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                token visibility = "invisible"
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.55, 1.85)
+                double3 xformOp:translate = (0, 0, 0.925)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Xform "shared_left_box"
+        {
+            custom string navigation:kind = "static"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 0
+            double3 xformOp:translate = (-6.960022515095324, 6.956538861578334, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                color3f[] primvars:displayColor = [(0.55, 0.32, 0.12)]
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.65, 0.65)
+                double3 xformOp:translate = (0, 0, 0.325)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Xform "route_1_center_chair"
+        {
+            custom string navigation:kind = "static"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 180
+            double3 xformOp:translate = (0.05044815793015235, -5.674079118997945, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Xform "Visual" (
+                prepend references = @../props/chair/SM_Chair.usd@
+            )
+            {
+                over "SM_Chair"
+                {
+                    bool physics:collisionEnabled = 0
+                }
+            }
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                token visibility = "invisible"
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.65, 1.1)
+                double3 xformOp:translate = (0, 0, 0.55)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Xform "route_1_center_person"
+        {
+            custom string navigation:kind = "human"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 0
+            double3 xformOp:translate = (0.06826479112273538, 1.0564254044678518, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Xform "Visual" (
+                prepend references = @../props/worker/standing.usda@
+            )
+            {
+            }
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                token visibility = "invisible"
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.55, 1.85)
+                double3 xformOp:translate = (0, 0, 0.925)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Xform "route_1_center_box"
+        {
+            custom string navigation:kind = "static"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 270
+            double3 xformOp:translate = (-0.033089874757055854, 6.595459164080718, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                color3f[] primvars:displayColor = [(0.55, 0.32, 0.12)]
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.65, 0.65)
+                double3 xformOp:translate = (0, 0, 0.325)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Xform "route_2_right_chair"
+        {
+            custom string navigation:kind = "static"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 270
+            double3 xformOp:translate = (7.0016850419956, -5.895900568623103, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Xform "Visual" (
+                prepend references = @../props/chair/SM_Chair.usd@
+            )
+            {
+                over "SM_Chair"
+                {
+                    bool physics:collisionEnabled = 0
+                }
+            }
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                token visibility = "invisible"
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.65, 1.1)
+                double3 xformOp:translate = (0, 0, 0.55)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Xform "route_2_right_person"
+        {
+            custom string navigation:kind = "human"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 90
+            double3 xformOp:translate = (6.937920268084946, 1.0579154954228065, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Xform "Visual" (
+                prepend references = @../props/worker/standing.usda@
+            )
+            {
+            }
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                token visibility = "invisible"
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.55, 1.85)
+                double3 xformOp:translate = (0, 0, 0.925)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+
+        def Xform "route_2_right_box"
+        {
+            custom string navigation:kind = "static"
+            custom bool navigation:routeTestObstacle = 1
+            float xformOp:rotateZ = 0
+            double3 xformOp:translate = (6.965282562657355, 6.502582687815578, 0)
+            uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
+
+            def Cube "Collider" (
+                prepend apiSchemas = ["PhysicsCollisionAPI"]
+            )
+            {
+                color3f[] primvars:displayColor = [(0.55, 0.32, 0.12)]
+                double size = 1
+                float3 xformOp:scale = (0.65, 0.65, 0.65)
+                double3 xformOp:translate = (0, 0, 0.325)
+                uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:scale"]
+            }
+        }
+    }
+}
+

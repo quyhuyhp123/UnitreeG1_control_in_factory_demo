@@ -35,7 +35,9 @@ STATE_TEXT={'starting':'Đang khởi động','preparing':'Đang chuẩn bị d�
 
 
 # ---------------------------------------------------------------- dữ liệu của các lần train
-def deps_ready(): return (DEPS/'ultralytics').is_dir()
+from platform_runtime import ml_command,worker_environment,process_options,stop_process,dependencies_ready,cuda_available
+
+def deps_ready(): return dependencies_ready()
 
 def read_results(run):
     """results.csv của Ultralytics -> {tên cột: [giá trị theo epoch]}."""
@@ -72,7 +74,7 @@ def list_runs(): return sorted((p for p in RUNS.iterdir() if p.is_dir()),key=lam
 def gpu_info():
     try:
         out=subprocess.run(['nvidia-smi','--query-gpu=index,name,memory.used,memory.total,utilization.gpu','--format=csv,noheader,nounits'],
-                           capture_output=True,text=True,timeout=5).stdout
+                           capture_output=True,text=True,encoding="utf-8",errors="replace",timeout=5).stdout
         return [[v.strip() for v in line.split(',')] for line in out.splitlines() if line.strip()]
     except Exception: return []
 
@@ -188,12 +190,15 @@ class App(tk.Tk):
     def build_banner(self):
         for child in self.banner.winfo_children(): child.destroy()
         if deps_ready():
-            ttk.Label(self.banner,text='Môi trường train: sẵn sàng (Ultralytics trong .deps, PyTorch/CUDA của Isaac Sim).',style='Good.TLabel').pack(side='left')
+            ttk.Label(self.banner,text=('Windows ML backend: '+('CUDA available' if cuda_available() else 'CPU only') if os.name=='nt' else 'Linux .deps + Isaac ML environment available'),style='Good.TLabel').pack(side='left')
         else:
             ttk.Label(self.banner,text='Chưa cài môi trường train (Ultralytics). Cần cài một lần trước khi train hoặc chạy thử mô hình.',style='Bad.TLabel').pack(side='left')
-            self.setup_button=ttk.Button(self.banner,text='Cài môi trường (setup_env.sh)',command=self.run_setup); self.setup_button.pack(side='left',padx=10)
+            self.setup_button=ttk.Button(self.banner,text=('Check environment' if os.name=='nt' else 'Setup environment'),command=self.run_setup); self.setup_button.pack(side='left',padx=10)
 
     def run_setup(self):
+        if os.name=="nt":
+            messagebox.showinfo("Windows environment", "Use Training_model/.venv or set G1_TRAINING_PYTHON to an isolated Python with PyTorch and Ultralytics.")
+            return
         if self.setup_process is not None and self.setup_process.poll() is None: return
         if not messagebox.askyesno('Cài môi trường','Sẽ tải Ultralytics (~230 MB) vào Training_model/.deps và trọng số yolo11n.pt.\n'
                                    'Không cài hay sửa gì trong Isaac Sim. Cần mạng Internet.\n\nTiếp tục?'): return
@@ -289,7 +294,7 @@ class App(tk.Tk):
         field(4,'imgsz',ttk.Combobox(form,textvariable=self.imgsz_var,values=['320','416','512','640','800','960','1280'],width=12),'bội số của 32')
         self.model_var=tk.StringVar(value=saved.get('base_model','yolo11n.pt')); self.model_box=ttk.Combobox(form,textvariable=self.model_var,width=12,state='readonly')
         field(5,'Mô hình gốc',self.model_box,'n nhanh nhất, l chính xác nhất')
-        self.device_var=tk.StringVar(value=saved.get('device','GPU 0')); self.device_box=ttk.Combobox(form,textvariable=self.device_var,width=12,state='readonly')
+        self.device_var=tk.StringVar(value=saved.get('device','CPU' if os.name=='nt' else 'GPU 0')); self.device_box=ttk.Combobox(form,textvariable=self.device_var,width=12,state='readonly')
         field(6,'Thiết bị',self.device_box)
         self.name_var=tk.StringVar(value=saved.get('run_name','train')); field(7,'Tên lần train',ttk.Entry(form,textvariable=self.name_var,width=14),'chữ, số, _ -')
         form.columnconfigure(1,weight=1)
@@ -383,8 +388,8 @@ class App(tk.Tk):
         (run/'config.json').write_text(json.dumps(config,ensure_ascii=False,indent=2),encoding='utf-8')
         (run/'status.json').write_text(json.dumps({'state':'starting','time':time.time()}),encoding='utf-8')
         handle=(run/'train.log').open('ab')
-        self.process=subprocess.Popen(['bash',str(ML_PYTHON),str(HERE/'train_worker.py'),str(run/'config.json')],stdout=handle,stderr=subprocess.STDOUT,
-                                      cwd=str(HERE),start_new_session=True)
+        self.process=subprocess.Popen(ml_command(HERE/'train_worker.py',run/'config.json'),stdout=handle,stderr=subprocess.STDOUT,
+                                      cwd=str(HERE),env=worker_environment(),**process_options())
         self.active_run=run; self.log_offset=(run/'train.log').stat().st_size if resume_run is not None else 0; self.log_tail=''; self.train_started=time.time()
         self.log_clear(); self.log_append(f'== {run.name} ==\n')
         self.start_button.configure(state='disabled'); self.stop_button.configure(state='normal')
@@ -398,12 +403,7 @@ class App(tk.Tk):
     def kill_training(self):
         process=self.process
         if process is None or process.poll() is not None: return
-        try: os.killpg(process.pid,signal.SIGTERM)
-        except ProcessLookupError: pass
-        try: process.wait(timeout=15)
-        except subprocess.TimeoutExpired:
-            try: os.killpg(process.pid,signal.SIGKILL)
-            except ProcessLookupError: pass
+        stop_process(process)
         if self.active_run is not None:
             (self.active_run/'status.json').write_text(json.dumps({'state':'stopped','time':time.time()}),encoding='utf-8')
 
@@ -497,6 +497,7 @@ class App(tk.Tk):
         self.conf_var=tk.DoubleVar(value=self.settings.get('conf',0.25)); self.conf_label=tk.StringVar(value=f'{self.conf_var.get():.2f}')
         scale=ttk.Scale(top,from_=0.05,to=0.95,variable=self.conf_var,length=150,command=lambda v:self.conf_label.set(f'{float(v):.2f}')); scale.pack(side='left',padx=4)
         scale.bind('<ButtonRelease-1>',lambda e:self.run_predict()); ttk.Label(top,textvariable=self.conf_label,width=5).pack(side='left')
+        ttk.Button(top,text='Thử ngưỡng 0.05',command=self.test_low_confidence).pack(side='left',padx=4)
         ttk.Label(top,text='imgsz:').pack(side='left',padx=(10,0)); self.test_imgsz=tk.StringVar(value='640')
         box=ttk.Combobox(top,textvariable=self.test_imgsz,values=['320','416','512','640','800','960','1280'],width=6); box.pack(side='left',padx=4)
         box.bind('<<ComboboxSelected>>',lambda e:self.run_predict())
@@ -523,7 +524,9 @@ class App(tk.Tk):
         choices={}
         for run in list_runs():
             for kind in ('best','last'):
-                if (run/'weights'/f'{kind}.pt').is_file(): choices[f'{run.name}  ({kind}.pt)']=run/'weights'/f'{kind}.pt'; break
+                checkpoint=run/'weights'/f'{kind}.pt'
+                if checkpoint.is_file():
+                    choices[f'{run.name}  ({kind}.pt)']=checkpoint
         for weight in sorted(WEIGHTS.glob('*.pt')): choices[f'[gốc] {weight.name}  (COCO 80 lớp)']=weight
         return choices
 
@@ -577,8 +580,8 @@ class App(tk.Tk):
 
     def ensure_predict_worker(self):
         if self.predict_process is not None and self.predict_process.poll() is None: return
-        self.predict_process=subprocess.Popen(['bash',str(ML_PYTHON),str(HERE/'predict_worker.py')],stdin=subprocess.PIPE,stdout=subprocess.PIPE,
-                                              stderr=subprocess.DEVNULL,text=True,bufsize=1,cwd=str(HERE),start_new_session=True)
+        self.predict_process=subprocess.Popen(ml_command(HERE/'predict_worker.py'),stdin=subprocess.PIPE,stdout=subprocess.PIPE,
+                                              stderr=subprocess.DEVNULL,text=True,encoding="utf-8",errors="replace",bufsize=1,cwd=str(HERE),env=worker_environment(),**process_options())
         process=self.predict_process
         def reader():
             for line in process.stdout:
@@ -586,6 +589,11 @@ class App(tk.Tk):
                 except ValueError: pass
             self.ui_queue.put((self.on_predict_reply,{'error':'Tiến trình chạy thử mô hình đã thoát.','fatal':True}))
         threading.Thread(target=reader,daemon=True).start()
+
+    def test_low_confidence(self):
+        self.conf_var.set(0.05)
+        self.conf_label.set('0.05')
+        self.run_predict()
 
     def run_predict(self):
         if self.test_image is None or not self.test_images: return
@@ -738,7 +746,7 @@ class App(tk.Tk):
         except (ValueError,AssertionError): messagebox.showerror('Xuất ONNX','imgsz phải là bội số của 32.'); return
         self.export_button.configure(state='disabled'); self.status_var.set(f'Đang xuất ONNX cho {run.name}...')
         def work():
-            result=subprocess.run(['bash',str(ML_PYTHON),str(HERE/'export_worker.py'),str(run),str(imgsz)],capture_output=True,text=True,cwd=str(HERE))
+            result=subprocess.run(ml_command(HERE/'export_worker.py',run,imgsz),capture_output=True,text=True,encoding="utf-8",errors="replace",cwd=str(HERE),env=worker_environment(),**process_options())
             line=next((l for l in result.stdout.splitlines() if l.startswith('EXPORT_OK ')),None)
             if line is None: raise RuntimeError((result.stdout+result.stderr)[-1500:])
             return json.loads(line[10:])
@@ -770,12 +778,12 @@ class App(tk.Tk):
         elif tab==str(self.tab_runs): self.refresh_runs()
 
     def refresh_system(self):
-        def work(): return gpu_info(),shutil.disk_usage(HERE)
+        def work(): return gpu_info(),shutil.disk_usage(HERE),cuda_available()
         def done(result):
             if not isinstance(result,Exception):
-                gpus,disk=result
-                devices=[f'GPU {g[0]}' for g in gpus]+(['GPU '+' + '.join(g[0] for g in gpus)] if len(gpus)>1 else [])+['CPU']
-                self.device_box.configure(values=devices); self.test_device_box.configure(values=[f'GPU {g[0]}' for g in gpus]+['CPU'])
+                gpus,disk,can_cuda=result
+                devices=([f'GPU {g[0]}' for g in gpus]+(['GPU '+' + '.join(g[0] for g in gpus)] if len(gpus)>1 else []) if can_cuda else [])+['CPU']
+                self.device_box.configure(values=devices); self.test_device_box.configure(values=([f'GPU {g[0]}' for g in gpus] if can_cuda else [])+['CPU'])
                 if self.device_var.get() not in devices: self.device_var.set(devices[0])
                 if self.test_device.get() not in self.test_device_box['values']: self.test_device.set(self.test_device_box['values'][0])
                 text='   |   '.join(f'GPU {g[0]} {g[1].replace("NVIDIA GeForce ","")}: {float(g[2])/1024:.1f}/{float(g[3])/1024:.0f} GB, {g[4]}%' for g in gpus) or 'Không thấy GPU (nvidia-smi)'
@@ -800,8 +808,7 @@ class App(tk.Tk):
             if not messagebox.askyesno('Thoát','Đang train. Thoát sẽ DỪNG lần train này (có thể "Train tiếp" sau).\n\nThoát?'): return
             self.kill_training()
         if self.predict_process is not None and self.predict_process.poll() is None:
-            try: os.killpg(self.predict_process.pid,signal.SIGTERM)
-            except ProcessLookupError: pass
+            stop_process(self.predict_process)
         self.destroy()
 
 

@@ -27,9 +27,10 @@ class SceneObstacleDetector:
             if p.GetName().startswith('Floor') and hi[2]<=.01:
                 self.floor=[lo[:2],hi[:2]]; continue
             if hi[2]<=zmin or lo[2]>=zmax: continue
-            kind='static'; dynamic=False; a=p; human_id=None
+            kind='static'; dynamic=False; a=p; human_id=None; route_test=False
             while a and not a.IsPseudoRoot():
                 name=a.GetName().lower()
+                if a.GetAttribute('navigation:routeTestObstacle').Get():route_test=True
                 attr=a.GetAttribute('navigation:kind')
                 if 'worker' in name or 'human' in name or (attr and attr.Get()=='human'):
                     kind='human'; human_id=str(a.GetPath())
@@ -40,7 +41,7 @@ class SceneObstacleDetector:
             if previous and now>previous[0]: velocity=[(center[i]-previous[1][i])/(now-previous[0]) for i in [0,1]]
             if math.hypot(*velocity)>.01: dynamic=True
             self.previous[path]=(now,center)
-            objects.append({'id':path,'kind':kind,'human_id':human_id,'dynamic':dynamic,'bounds':[lo[:2],hi[:2]],
+            objects.append({'id':path,'kind':kind,'human_id':human_id,'dynamic':dynamic,'route_test_obstacle':route_test,'bounds':[lo[:2],hi[:2]],
                             'height_range_m':[lo[2],hi[2]],'velocity':velocity,'timestamp':now})
         self.obstacles=objects; self.timestamp=now
         return objects

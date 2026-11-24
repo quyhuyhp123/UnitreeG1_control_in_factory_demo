@@ -1,0 +1,7 @@
+{
+  "map_id": 1,
+  "seed": 5101,
+  "obstacles": [],
+  "base_factory": "../factory_layout_v2_physics.usd",
+  "note": "Static collision test props. AI detection is not guaranteed; COCO has no generic box class."
+}

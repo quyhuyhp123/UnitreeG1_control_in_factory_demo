@@ -138,7 +138,10 @@ def convert(data_dir,output_dir,class_names,include_background=True):
             # Tên duy nhất (ảnh có thể nằm trong thư mục con trùng tên); ảnh chỉ là liên kết, không sao chép.
             stem=f'{number:06d}_{image.stem}'; link=images_dir/(stem+image.suffix.lower())
             if link.is_symlink() or link.exists(): link.unlink()
-            os.symlink(image,link)
+            if os.name=='nt':
+                import shutil
+                shutil.copy2(image,link) # Native Windows does not require symlink privileges.
+            else: os.symlink(image,link)
             (labels_dir/(stem+'.txt')).write_text('\n'.join(lines)+('\n' if lines else ''))
             info['images']+=1; info['boxes']+=len(lines)
         stats['splits'][split]=info

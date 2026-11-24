@@ -11,6 +11,7 @@ def preflight(cfg,flat):
         return path
     if not flat: file(cfg['factory_usd'],'USD')
     if cfg.get('factory_id')=='v2' and not flat:
+        file(f"assets/factory/factory_layout_v2/maps/map_{int(cfg.get('map_id',1))}.usda",'factory map variant')
         source=file(cfg['source_factory_usd'],'V2 source USD')
         if hashlib.sha256(source.read_bytes()).hexdigest()!=cfg['source_factory_sha256']: raise ValueError('Factory V2 source changed; rebuild physics/navigation composition')
         nav=json.loads(file(cfg['navigation_map'],'V2 navigation map').read_text())
@@ -148,6 +149,7 @@ def main():
     parser.add_argument('--config',type=Path)
     parser.add_argument('--check',action='store_true',help='Verify selected factory assets/config without starting Isaac Sim')
     parser.add_argument('--factory',choices=['v1','v2'])
+    parser.add_argument('--map',dest='map_id',type=int,choices=[1,2,3],default=1)
     parser.add_argument('--flat',action='store_true'); parser.add_argument('--self-test',action='store_true')
     parser.add_argument('--headless',action='store_true'); parser.add_argument('--duration',type=float,default=0)
     parser.add_argument('--overview',action='store_true')
@@ -161,9 +163,10 @@ def main():
     parser.add_argument('--obstacles',action='store_true',help='Enable RGB-D obstacle localisation (camera + YOLO + depth; output only)')
     parser.add_argument('--obstacles-debug',action='store_true',help='Obstacle localisation plus the debug window with distances')
     parser.add_argument('--no-obstacles',action='store_true',help='Force obstacle localisation off regardless of its config')
-    parser.add_argument('--costmap',action='store_true',help='Enable the local obstacle costmap (camera + YOLO + localisation; output only)')
+    parser.add_argument('--costmap',action='store_true',help='Enable the local obstacle costmap (camera + YOLO + localisation)')
     parser.add_argument('--costmap-debug',action='store_true',help='Local costmap plus the debug window showing it')
     parser.add_argument('--no-costmap',action='store_true',help='Force the local costmap off regardless of its config')
+    parser.add_argument('--dynamic-avoidance',action='store_true',help='Opt in to experimental Factory V2 costmap avoidance')
     args,_=parser.parse_known_args()
     (ROOT/'logs').mkdir(parents=True,exist_ok=True)
     app=runtime=None
@@ -172,6 +175,14 @@ def main():
         validate_selection(args.controller)
         from controllers.factory_selector import load_factory
         cfg=load_factory(args.factory,args.config)
+        if args.dynamic_avoidance:
+            if args.flat or args.controller!='locomotion' or not cfg.get('multi_route_enabled',False) or cfg.get('factory_id')!='v2':
+                raise ValueError('Dynamic avoidance needs Factory V2 Multi-Route and locomotion RL')
+            if args.no_costmap or args.no_obstacles or args.no_yolo or args.no_rgbd:
+                raise ValueError('Dynamic avoidance requires RGB-D, YOLO, localization and costmap')
+        cfg['dynamic_avoidance']=args.dynamic_avoidance
+        if args.map_id!=1 and cfg.get('factory_id')!='v2':raise ValueError('Map variants require Factory V2')
+        cfg['map_id']=args.map_id
         if args.overview: cfg['camera']['mode']='overview'
         if sys.platform.startswith('linux'): cfg['rendering']['graphics_api']='vulkan'
         preflight(cfg,args.flat)
@@ -184,7 +195,13 @@ def main():
         cfg['yolo']=load_yolo_config()
         obstacles=json.loads((ROOT/'configs/obstacle_localization.json').read_text())
         costmap=json.loads((ROOT/'configs/local_costmap.json').read_text())
-        if args.costmap or args.costmap_debug: costmap['enabled']=True
+        # The YOLO debug launcher can enable avoidance from Navigation without
+        # another restart. It still starts in the OFF state unless opted in.
+        if args.costmap or args.costmap_debug or args.dynamic_avoidance or (args.yolo_debug and cfg.get('multi_route_enabled',False)):
+            costmap['enabled']=True
+        if cfg.get('multi_route_enabled',False) and (args.dynamic_avoidance or args.yolo_debug):
+            costmap['size_m']=max(costmap['size_m'],8.0)
+        costmap['debug_window']=args.costmap_debug
         if args.no_costmap or args.no_obstacles or args.no_yolo or args.no_rgbd: costmap['enabled']=False
         cfg['local_costmap']=costmap
         if args.obstacles or args.obstacles_debug or costmap['enabled']: obstacles['enabled']=True

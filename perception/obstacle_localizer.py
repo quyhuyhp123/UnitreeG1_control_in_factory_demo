@@ -119,6 +119,27 @@ class ObstacleLocalizer:
         return inner&(optical[...,2]>=edges[first])&(optical[...,2]<edges[last+1])
 
     # ---- one frame --------------------------------------------------------
+    @staticmethod
+    def box_depth_geometry(frame, box, T_robot_optical):
+        """Nearest horizontal return and world bounds of every depth pixel in the box."""
+        depth = frame['depth_m']
+        height, width = depth.shape
+        x0, y0, x1, y1 = box
+        x0, y0 = max(0, math.floor(x0)), max(0, math.floor(y0))
+        x1, y1 = min(width, math.ceil(x1)), min(height, math.ceil(y1))
+        if x1 <= x0 or y1 <= y0:
+            return None
+        z = depth[y0:y1, x0:x1]
+        if not np.all(frame['valid'][y0:y1, x0:x1] & np.isfinite(z)):
+            return None
+        k = frame['intrinsics']
+        v, u = np.mgrid[y0:y1, x0:x1]
+        optical = np.stack(((u+.5-k['cx'])*z/k['fx'], (v+.5-k['cy'])*z/k['fy'], z), axis=-1)
+        robot = transform(T_robot_optical, optical)
+        world = transform(frame['T_world_optical'], optical)[...,:2]
+        return float(np.hypot(robot[...,0], robot[...,1]).min()), [
+            world.min(axis=(0,1)).tolist(), world.max(axis=(0,1)).tolist()]
+
     def process(self,frame,detections):
         """frame: dict from RgbdCamera.read(); detections: YOLO list for that same frame."""
         started=time.perf_counter(); c=self.config
@@ -142,7 +163,12 @@ class ObstacleLocalizer:
         for detection in sorted(detections,key=lambda d:-d['confidence']):
             members=self.object_points(detection['bbox_xyxy'],optical,candidates)
             if members is None:
-                detection.update(distance_m=None,position_robot_m=None,localized=False); continue
+                detection.update(distance_m=None,position_robot_m=None,localized=False)
+                if detection['class_name']=='person':
+                    geometry=self.box_depth_geometry(frame,detection['bbox_xyxy'],T_robot_optical)
+                    detection['nearest_box_depth_xy_m']=geometry[0] if geometry else None
+                    detection['box_depth_world_bounds']=geometry[1] if geometry else None
+                continue
             info=self.describe(robot,optical,world,members)
             detection.update(distance_m=info['distance_m'],position_robot_m=info['position_robot_m'],localized=True)
             kind='human' if detection['class_name']=='person' else 'static'

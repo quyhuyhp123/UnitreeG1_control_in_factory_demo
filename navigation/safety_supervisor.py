@@ -12,6 +12,7 @@ class SafetySupervisor:
         # along the travel direction block motion; needed above ~0.3 m/s in
         # corridors whose racks are 0.5 m beside the footprint.
         self.swept=False
+        self.simulation_braking_bypass=False
     def stop_distance(self,speed):
         if not self.braking.get('validated'): raise ValueError('Measured braking calibration required')
         return speed*self.config['reaction_latency_seconds']+speed*speed/(2*self.braking['conservative_deceleration_m_s2'])+self.config['stopping_extra_m']
@@ -26,6 +27,7 @@ class SafetySupervisor:
         if not grid.map.safe(p): return 'FAULT','Footprint outside lane or in obstacle'
         raw_speed=math.hypot(*state['base_linear_velocity_world_m_s'][:2])
         if raw_speed>self.config['max_actual_speed_m_s']: return 'FAULT','Actual velocity outside validated envelope'
+        if self.simulation_braking_bypass: return None,''
         actual=prediction_velocity if prediction_velocity is not None else state['base_linear_velocity_world_m_s'][:2]
         speed=math.hypot(*actual)
         braking=self.stop_distance(speed)

@@ -51,7 +51,21 @@ try:
         return float(np.median(frame['depth_m'][max(0,r-half):r+half+1,max(0,c-half):c+half+1]))
     def target_mask(frame):
         r,g,b=[frame['rgb'][:,:,i].astype(np.int32) for i in range(3)]
-        return (r>110)&(b>110)&(g<.55*np.minimum(r,b))
+        mask=(r>110)&(b>110)&(g<.55*np.minimum(r,b))
+        # New realistic workers have magenta shirts: isolate the calibration
+        # sphere near its projected test-only location, not all purple pixels.
+        import cv2
+        prim=stage.GetPrimAtPath(TARGET)
+        if not prim:return np.zeros_like(mask)
+        point=UsdGeom.XformCache().GetLocalToWorldTransform(prim).ExtractTranslation()
+        u,v,p=project(frame,point)
+        if p[2]<=0 or not 0<=u<640 or not 0<=v<360:return np.zeros_like(mask)
+        yy,xx=np.indices(mask.shape);radius=frame['intrinsics']['fx']*RADIUS/p[2]
+        mask &= (xx-u)**2+(yy-v)**2<(radius*1.8+3)**2
+        count,labels,stats,centres=cv2.connectedComponentsWithStats(mask.astype(np.uint8))
+        if count<2:return np.zeros_like(mask)
+        choice=min(range(1,count),key=lambda k:np.linalg.norm(centres[k]-[u,v]))
+        return labels==choice
     def place_target(position):
         prim=stage.GetPrimAtPath(TARGET)
         if not prim:
@@ -175,6 +189,11 @@ try:
     (ROOT/'docs/perception').mkdir(parents=True,exist_ok=True)
     (ROOT/'docs/perception/rgbd_camera_results.json').write_text(payload)
     print('RGBD_RESULT '+json.dumps({'status':report['status'],'failed_tests':report['failed_tests'],'images':str(camera.directory)}),flush=True)
+except BaseException:
+    import traceback
+    error=traceback.format_exc();print(error,flush=True)
+    (ROOT/'logs/rgbd_camera_test_error.txt').write_text(error,encoding='utf-8')
+    raise
 finally:
     if runtime: runtime.close()
     app.close()

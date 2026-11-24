@@ -62,6 +62,9 @@ class RgbdCamera:
         self.overlay=None  # optional callable(rgb) -> annotated rgb, used by the debug window only
         self.costmap_view=None  # optional callable() -> costmap picture or None, debug window only
         self.meters_per_unit=1.
+        from perception.camera_stabilizer import CameraStabilizer
+        self.stabilization=config.get('stabilization',{'enabled':False})
+        self.stabilizer=CameraStabilizer(self.stabilization)
 
     # ---- lifecycle -------------------------------------------------------
     def start(self):
@@ -70,7 +73,12 @@ class RgbdCamera:
         from isaacsim.sensors.experimental.rtx import RtxCamera,CameraSensor
         self.meters_per_unit=float(UsdGeom.GetStageMetersPerUnit(self.runtime.stage))
         camera=RtxCamera(self.path,reset_xform_op_properties=False)
+        self.stabilizer.reset()
+        self._stabilize(0.)
         self.sensor=CameraSensor(camera,resolution=(self.height,self.width),annotators=['rgb','distance_to_image_plane'])
+        import warp as wp
+        self.rgb_cpu=wp.empty((self.height,self.width,3),dtype=wp.uint8,device='cpu')
+        self.depth_cpu=wp.empty((self.height,self.width,1),dtype=wp.float32,device='cpu')
         self.poses.clear(); self.frame=None
         if self.config.get('debug_window') and self.window is None: self._build_window()
 
@@ -103,11 +111,39 @@ class RgbdCamera:
         return matrix(UsdGeom.XformCache().GetLocalToWorldTransform(prim))
 
     # ---- acquisition -----------------------------------------------------
+    def _stabilize(self,dt):
+        from pxr import UsdGeom,Gf
+        prim=self.runtime.stage.GetPrimAtPath(self.path);xf=UsdGeom.Xformable(prim)
+        ops=xf.GetOrderedXformOps()
+        if len(ops)!=1 or ops[0].GetOpType()!=UsdGeom.XformOp.TypeTransform:
+            # CameraSensor/RtxCamera can canonicalize the prim into separate
+            # translate/orient ops after creation; restore our matrix op.
+            xf.ClearXformOpOrder();op=xf.AddTransformOp()
+        else:op=ops[0]
+        if not self.stabilization.get('enabled',False):
+            xf.SetResetXformStack(False)
+            op.Set(self.mount)
+            return
+        parent=matrix(UsdGeom.XformCache().GetLocalToWorldTransform(prim.GetParent()))
+        raw=parent@matrix(self.mount)
+        w,x,y,z=self.runtime.last_state['base_orientation_wxyz']
+        yaw=math.atan2(2*(w*z+x*y),1-2*(y*y+z*z))
+        T=self.stabilizer.step(raw[:3,3],yaw,self.config['pitch_down_deg'],dt)
+        # Keep the camera prim under torso, but author a world-space gimbal
+        # pose so subsequent ancestor roll/pitch cannot shake the sensor.
+        xf.SetResetXformStack(True)
+        op.Set(Gf.Matrix4d(*T.T.ravel().tolist()))
+
     def update(self):
         """Call once per runtime tick, after physics. Returns a new frame or None."""
         if self.sensor is None: return None
         runtime=self.runtime
+        self._stabilize(1/runtime.loco_cfg['control_hz'])
+        from pxr import UsdGeom
+        parent=matrix(UsdGeom.XformCache().GetLocalToWorldTransform(runtime.stage.GetPrimAtPath(self.path).GetParent()))
+        relative=np.linalg.inv(parent)@self.world_pose()
         self.poses.append({'step':runtime.steps,'sim_time':runtime.steps/runtime.loco_cfg['control_hz'],'T':self.world_pose(),
+                           'T_parent':relative,
                            'base_position_m':list(runtime.last_state['base_position_m']),
                            'base_orientation_wxyz':list(runtime.last_state['base_orientation_wxyz'])})
         self.ticks+=1
@@ -118,7 +154,9 @@ class RgbdCamera:
 
     def read(self):
         started=time.perf_counter()
-        rgb,_=self.sensor.get_data('rgb'); depth,_=self.sensor.get_data('distance_to_image_plane')
+        # Avoid downloading a non-contiguous GPU RGB slice of the RGBA AOV;
+        # explicitly packed CPU outputs prevent intermittent striped colors.
+        rgb,_=self.sensor.get_data('rgb',out=self.rgb_cpu); depth,_=self.sensor.get_data('distance_to_image_plane',out=self.depth_cpu)
         if rgb is None or depth is None: return None
         rgb=np.array(rgb.numpy() if hasattr(rgb,'numpy') else rgb,dtype=np.uint8).reshape(self.height,self.width,-1)[:,:,:3]
         raw=np.array(depth.numpy() if hasattr(depth,'numpy') else depth,dtype=np.float32).reshape(self.height,self.width)
@@ -133,6 +171,7 @@ class RgbdCamera:
                     'T_world_camera_usd':pose['T'],'T_world_optical':pose['T']@USD_TO_OPTICAL,
                     'sim_time':pose['sim_time'],'control_step':pose['step'],'wall_time':time.time(),
                     'read_step':self.runtime.steps,'pose_lag_ticks':lag,
+                    'T_parent_camera_usd':pose['T_parent'],
                     'base_position_m':pose['base_position_m'],'base_orientation_wxyz':pose['base_orientation_wxyz']}
         return self.frame
 
@@ -148,7 +187,8 @@ class RgbdCamera:
         return {'camera_prim':self.path,'frame_index':frame['index'],'sim_time_s':frame['sim_time'],'control_step':frame['control_step'],
             'wall_time_s':frame['wall_time'],'wall_time_iso':datetime.fromtimestamp(frame['wall_time']).isoformat(),
             'pose_lag_ticks':frame['pose_lag_ticks'],'resolution_wh':[self.width,self.height],'intrinsics':frame['intrinsics'],
-            'T_parent_camera_usd':matrix(self.mount).tolist(),'parent_link':self.config['parent_link'],
+            'T_parent_camera_usd':frame['T_parent_camera_usd'].tolist(),'parent_link':self.config['parent_link'],
+            'T_parent_camera_nominal_usd':matrix(self.mount).tolist(),'stabilization':self.stabilization,
             'T_world_camera_usd':frame['T_world_camera_usd'].tolist(),'T_world_optical':frame['T_world_optical'].tolist(),
             'frames':{'world':'metres, Z up','camera_usd':'-Z forward, +Y up, +X right','optical':'+Z forward, +X right, +Y down (OpenCV)'},
             'matrix_convention':'4x4, column vectors: p_world = T_world_x @ p_x',
@@ -180,11 +220,18 @@ class RgbdCamera:
         self.window=ui.Window('G1 RGB-D Camera | DEBUG',width=2*self.width//2+24,height=self.height//2+90)
         self.window.position_x=16; self.window.position_y=440
         yolo=self.runtime.factory_cfg.get('yolo',{}).get('enabled',False)
-        costmap=self.runtime.factory_cfg.get('local_costmap',{}).get('enabled',False)
+        costmap=self.runtime.factory_cfg.get('local_costmap',{}).get('debug_window',False)
         self.providers={name:ui.ByteImageProvider() for name in ['rgb','depth']+(['yolo'] if yolo else [])+(['costmap'] if costmap else [])}
         if yolo: self.window.width=self.width+(650 if costmap else 0)+24; self.window.height=self.height//2+(self.height+140 if costmap else self.height)+100
         with self.window.frame:
             with ui.VStack(spacing=4):
+                if yolo:
+                    with ui.HStack(height=24):
+                        ui.Label('YOLO minimum score',width=155)
+                        self.yolo_score=ui.FloatField(width=80)
+                        self.yolo_score.model.set_value(self.runtime.factory_cfg['yolo']['confidence_threshold'])
+                        ui.Button('Apply score',width=90,clicked_fn=self._apply_yolo_score)
+                        self.yolo_score_status=ui.Label('Range 0.01–0.99')
                 with ui.HStack(height=self.height//2):
                     for name in ('rgb','depth'): ui.ImageWithProvider(self.providers[name],width=self.width//2,height=self.height//2)
                 with ui.HStack(height=self.height+140 if costmap else (self.height if yolo else 0)):
@@ -194,6 +241,18 @@ class RgbdCamera:
                     if costmap: ui.ImageWithProvider(self.providers['costmap'],width=630,height=498)
                 self.label=ui.Label('RGB | Depth (near red, far blue, black invalid)',height=20)
                 ui.Button('Save RGB + Depth + metadata',height=24,clicked_fn=lambda:self.save(tag='manual'))
+
+    def _apply_yolo_score(self):
+        source=self.runtime.yolo
+        if source is None:
+            return
+        try:
+            score=source.set_confidence_threshold(self.yolo_score.model.get_value_as_float())
+        except ValueError as error:
+            self.yolo_score_status.text=str(error)
+            return
+        self.yolo_score.model.set_value(score)
+        self.yolo_score_status.text=f'Accepting scores > {score:.2f}'
 
     def _show(self,frame):
         # Half-resolution previews keep the UI upload cheap; saved files stay full resolution.

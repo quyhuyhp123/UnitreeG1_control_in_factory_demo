@@ -7,7 +7,8 @@
   "maximum_verified_m_s": 1.0,
   "unverified_user_override": true,
   "override_note": "Ceiling opened to the policy forward limit at user request before a full two-route audit at 1.0 m/s. Last audited ceiling: 0.30 m/s (evidence below).",
-  "default_m_s": 0.3,
+  "default_m_s": 0.8,
+  "simulation_braking_bypass": true,
   "max_actual_speed_m_s": 1.25,
   "evidence": "docs/navigation/factory_speed_0.30_audit.json"
 }

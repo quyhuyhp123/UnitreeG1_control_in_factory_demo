@@ -1,3 +1,9 @@
+## Windows
+
+Open `D:\unitree_g1\Training_model\run_ui.bat` to use the training environment in `Training_model/.venv`. If that environment is absent, the launcher uses the project's `.venv/yolo`. Use `run_ui.ps1 -Python <isolated-python.exe>` or set `G1_TRAINING_PYTHON` to select another interpreter. Opening the UI does not install packages or start training. Labelme conversion copies images on Windows.
+
+The training environment on this machine uses PyTorch 2.7.1 and torchvision 0.22.1 with CUDA 12.8. Reopen the UI after changing environments and choose **GPU 0** under **Thiết bị**. Available GPU choices depend on CUDA support in the selected Python environment. The Linux setup scripts below apply only to Linux.
+
 # Training_model — Huấn luyện lại YOLO với dữ liệu LabelMe
 
 Giao diện Python (Tkinter) để train lại YOLO11 phát hiện vật thể theo nhãn riêng của bạn.
