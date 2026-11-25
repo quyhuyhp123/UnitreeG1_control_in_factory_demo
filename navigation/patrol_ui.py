@@ -79,7 +79,7 @@ class PatrolPanel:
                         ui.Button('Save config',clicked_fn=lambda:self.call(self.save))
                         ui.Button('Load config',clicked_fn=lambda:self.call(self.load))
                     with ui.HStack(height=24):
-                        ui.Button('Top View',clicked_fn=lambda:self.call(self.top_view))
+                        self.top_button=ui.Button('Top View',clicked_fn=lambda:self.call(self.toggle_top_view))
                         ui.Button('Show / Hide Path',clicked_fn=self.toggle_map)
                     self.monitor=ui.Label('',height=330 if hasattr(nav,'route_manager') else 210,word_wrap=True)
                     self.message=ui.Label(('Select and validate a route. ' if hasattr(nav,'route_manager') else 'B must be selected explicitly. ')+'Stop keys: '+','.join(k for k,v in self.runtime.keys.mapping.items() if v=='stop')+'. Camera follow: '+','.join(k for k,v in self.runtime.keys.mapping.items() if v=='follow_camera')+'. Resume Auto is explicit.',height=90,word_wrap=True)
@@ -158,8 +158,18 @@ class PatrolPanel:
         if self.visible_map and not self.nav.path and self.nav.b is not None and self.nav.mode=='MANUAL':
             self.call(self.nav.validate_points)
         self.draw()
+    def toggle_top_view(self):
+        if self.runtime.top_view_active(): self.runtime.exit_top_view()
+        else: self.top_view()
+        self.sync_top_button()
+    def sync_top_button(self):
+        if getattr(self,'top_button',None) is not None:
+            self.top_button.text='Exit Top View' if self.runtime.top_view_active() else 'Top View'
     def top_view(self):
         from pxr import UsdGeom,Gf
+        # Remember the normal render camera once, so Exit Top View / any
+        # Camera button can restore projection, lens and pose afterwards.
+        self.runtime.save_view_before_top()
         stage=self.runtime.stage; camera=UsdGeom.Camera.Define(stage,'/World/Navigation/TopCamera')
         xf=UsdGeom.Xformable(camera); xf.ClearXformOpOrder()
         cfg=self.runtime.factory_cfg.get('top_view',{})
@@ -169,7 +179,7 @@ class PatrolPanel:
         camera.CreateProjectionAttr(cfg.get('projection','orthographic')); camera.CreateHorizontalApertureAttr(cfg.get('horizontal_aperture',165)); camera.CreateVerticalApertureAttr(cfg.get('vertical_aperture',110))
         if cfg.get('projection')=='perspective': camera.CreateFocalLengthAttr(cfg.get('focal_length_mm',19))
         camera.CreateClippingRangeAttr(Gf.Vec2f(*cfg.get('clipping_m',[9.7,20])))
-        self.runtime.set_camera_mode('free')
+        self.runtime.set_camera_mode('free',keep_top=True)
         if cfg.get('projection')=='perspective':
             # Reuse the initialized render camera; the Kit RTX viewport can
             # render newly bound session cameras black on this installation.
@@ -180,6 +190,7 @@ class PatrolPanel:
             main.CreateClippingRangeAttr(Gf.Vec2f(*cfg['clipping_m']))
             self.runtime.context['viewport'].camera_path=str(main.GetPath())
         else: self.runtime.context['viewport'].camera_path=str(camera.GetPath())
+        self.sync_top_button()
     def draw(self):
         from pxr import UsdGeom,Gf
         stage=self.runtime.stage; root=UsdGeom.Xform.Define(stage,'/World/Navigation/Overlay')

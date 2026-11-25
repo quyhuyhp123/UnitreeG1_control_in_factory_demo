@@ -1,0 +1,82 @@
+{
+  "version": "7.11.0",
+  "flags": {},
+  "shapes": [
+    {
+      "label": "person",
+      "points": [
+        [
+          273.8236945536216,
+          41.830432341381254
+        ],
+        [
+          366.535654126895,
+          327.15328467153284
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          212.0157215047726,
+          118.37170129140932
+        ],
+        [
+          227.1083660864683,
+          209.28691746209995
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "person",
+      "points": [
+        [
+          388.815272318922,
+          120.88714205502527
+        ],
+        [
+          405.3453116226839,
+          170.1179112857945
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    },
+    {
+      "label": "table",
+      "points": [
+        [
+          365.8169567658619,
+          146.4008983717013
+        ],
+        [
+          405.70466030320046,
+          167.60247052217855
+        ]
+      ],
+      "group_id": null,
+      "description": "",
+      "shape_type": "rectangle",
+      "flags": {},
+      "mask": null
+    }
+  ],
+  "imagePath": "008_map2_person_3_aug.png",
+  "imageData": null,
+  "imageHeight": 360,
+  "imageWidth": 640
+}

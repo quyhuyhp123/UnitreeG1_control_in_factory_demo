@@ -35,10 +35,16 @@ class MultiRouteTests(unittest.TestCase):
         d['routes']['route_1_blue']['speed_limit_m_s']=load_speed_profile()['maximum_verified_m_s']+.01
         with self.assertRaisesRegex(ValueError,'velocity/tolerance'): RouteManager(self.cfg,d)
     def test_safe_actual_pose_can_connect_from_conservative_cell(self):
-        start=(-7.21,-8.)
-        self.assertTrue(self.grid.map.safe(start)); self.assertFalse(self.grid.point_free(start))
+        # The widened lane no longer has a wall inside the corridor, so put a
+        # prop beside it: the exact pose clears its footprint, its cell does not.
+        from navigation.lane_map import LaneMap
+        from navigation.occupancy_grid import OccupancyGrid
+        prop={'id':'prop','kind':'static','bounds':[[-6.2,-8.5],[-6.,-7.5]]}
+        lane=self.grid.map; grid=OccupancyGrid(LaneMap(lane.config,lane.obstacles+[prop],lane.floor))
+        start=(-6.775,-8.)
+        self.assertTrue(grid.map.safe(start)); self.assertFalse(grid.point_free(start))
         m=RouteManager(self.cfg); index=m.data['routes']['route_1_blue']['ordered_nodes'].index('LEFT_BOTTOM')
-        edge=m.edge(self.grid,'route_1_blue',index,start)
+        edge=m.edge(grid,'route_1_blue',index,start)
         self.assertEqual(tuple(edge['path'][0]),start)
         self.assertTrue(all(edge['grid'].segment_free(a,b) for a,b in zip(edge['path'],edge['path'][1:])))
     def test_alternate_only_completed_count(self):

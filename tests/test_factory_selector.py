@@ -40,7 +40,8 @@ class FactorySelectorTests(unittest.TestCase):
         c=json.loads((ROOT/'configs/navigation_map_v2.json').read_text()); lane=LaneMap(c)
         self.assertTrue(lane.safe((-8.85,-13.75)))
         self.assertFalse(lane.safe((-3.5,0))); self.assertFalse(lane.safe((4,0)))
-        self.assertEqual(len(c['forbidden_zones']),2)
+        # One red zone per narrowed island machine + its operator.
+        self.assertEqual(len(c['forbidden_zones']),8)
     def test_v2_rejects_old_saved_patrol(self):
         from types import SimpleNamespace
         from navigation.patrol_controller import PatrolController

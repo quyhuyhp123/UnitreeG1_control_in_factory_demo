@@ -47,6 +47,10 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         self.head_window=None
         self.head_widget=None
         self.last_follow_generation=0
+        self.top_view_saved=None
+        self.follow_relative=None
+        self.follow_last_matrix=None
+        self.follow_last_frame=None
         super().__init__(app,logical_test_keyboard=self_test,scene_setup=self._compose,
             runtime_config={'scene_output':cfg.get('scene_output','assets/robot/g1_factory_base.usd'),'locomotion_config':cfg['locomotion_config'],
                 'keyboard':cfg.get('keyboard_overrides',{}),'locomotion':{
@@ -340,21 +344,16 @@ class FactoryG1Runtime(G1KeyboardRuntime):
         # A free camera is initialized once; never overwrite mouse navigation
         # or a camera selection made by the user on subsequent physics ticks.
         if cfg['mode']=='free' and getattr(self,'free_camera_initialized',False): return
-        if cfg['mode']=='follow':
-            p=np.array(self.last_state['base_position_m'])
-            target=np.array([p[0],p[1],cfg['look_height_m']])
-            q=self.last_state['base_orientation_wxyz']
-            import math
-            yaw=math.atan2(2*(q[0]*q[3]+q[1]*q[2]),1-2*(q[2]*q[2]+q[3]*q[3]))
-            offset=np.array(cfg.get('follow_offset_body_m',[-2.5,-.8,1.4]))
-            eye=target+np.array([math.cos(yaw)*offset[0]-math.sin(yaw)*offset[1],math.sin(yaw)*offset[0]+math.cos(yaw)*offset[1],offset[2]])
-        elif cfg['mode']=='overview':
-            eye=cfg['overview_eye_m']; target=cfg['overview_target_m']
-        else:
-            eye=cfg['free_eye_m']; target=cfg['free_target_m']
         camera=self.context['camera']
-        self._set_camera_transform(Gf.Matrix4d().SetLookAt(Gf.Vec3d(*eye),Gf.Vec3d(*target),Gf.Vec3d(0,0,1)).GetInverse())
-        camera.CreateFocalLengthAttr(cfg['focal_length_mm'])
+        if cfg['mode']=='follow':
+            self._update_follow_camera(cfg)
+        else:
+            if cfg['mode']=='overview':
+                eye=cfg['overview_eye_m']; target=cfg['overview_target_m']
+            else:
+                eye=cfg['free_eye_m']; target=cfg['free_target_m']
+            self._set_camera_transform(Gf.Matrix4d().SetLookAt(Gf.Vec3d(*eye),Gf.Vec3d(*target),Gf.Vec3d(0,0,1)).GetInverse())
+            camera.CreateFocalLengthAttr(cfg['focal_length_mm'])
         # Reference loading may select the source USD's saved camera. Rebind
         # explicitly so the viewport actually uses the tracking transform.
         self.context['viewport'].camera_path=str(camera.GetPath())
@@ -362,6 +361,77 @@ class FactoryG1Runtime(G1KeyboardRuntime):
             self.context['viewport'].set_texture_resolution((self.factory_cfg['rendering']['width'],self.factory_cfg['rendering']['height']))
             self.viewport_resolution_set=True
         self.free_camera_initialized=True
+
+    def _robot_frame(self):
+        """Yaw-only robot frame at floor height (no gait bob/roll in the view)."""
+        from pxr import Gf
+        import math
+        p=self.last_state['base_position_m']; q=self.last_state['base_orientation_wxyz']
+        yaw=math.atan2(2*(q[0]*q[3]+q[1]*q[2]),1-2*(q[2]*q[2]+q[3]*q[3]))
+        frame=Gf.Matrix4d().SetRotate(Gf.Rotation(Gf.Vec3d(0,0,1),math.degrees(yaw)))
+        frame.SetTranslateOnly(Gf.Vec3d(float(p[0]),float(p[1]),0.))
+        return frame
+
+    def _update_follow_camera(self,cfg):
+        """Follow the robot while keeping any mouse orbit/pan/zoom the user applied.
+
+        The camera pose is stored relative to the robot's yaw frame. If the
+        viewport camera changed since our last write (right-mouse look, Alt+LMB
+        orbit, MMB pan, wheel zoom), that new pose becomes the relative offset.
+        """
+        from pxr import Gf,UsdGeom
+        import math
+        camera=self.context['camera']; xf=UsdGeom.Xformable(camera)
+        frame=self._robot_frame()
+        if self.follow_relative is None:
+            target=Gf.Vec3d(0,0,cfg['look_height_m'])
+            offset=cfg.get('follow_offset_body_m',[-2.5,-.8,1.4])
+            eye=target+Gf.Vec3d(*offset)
+            self.follow_relative=Gf.Matrix4d().SetLookAt(eye,target,Gf.Vec3d(0,0,1)).GetInverse()
+            self.follow_last_matrix=None
+            camera.CreateFocalLengthAttr(cfg['focal_length_mm'])
+        elif self.follow_last_matrix is not None and self.follow_last_frame is not None:
+            current=xf.GetLocalTransformation()
+            if any(abs(current[i][j]-self.follow_last_matrix[i][j])>1e-4 for i in range(4) for j in range(4)):
+                self.follow_relative=current*self.follow_last_frame.GetInverse()
+        matrix=self.follow_relative*frame
+        if not all(math.isfinite(matrix[i][j]) for i in range(4) for j in range(4)):
+            self.follow_relative=None; return
+        self._set_camera_transform(matrix)
+        self.follow_last_matrix=Gf.Matrix4d(matrix); self.follow_last_frame=frame
+        self.context['viewport'].camera_path=str(camera.GetPath())
+
+    def top_view_active(self):
+        return self.top_view_saved is not None or str(self.context['viewport'].camera_path)=='/World/Navigation/TopCamera'
+
+    def save_view_before_top(self):
+        from pxr import UsdGeom
+        if self.top_view_saved is not None: return
+        camera=self.context['camera']; xf=UsdGeom.Xformable(camera)
+        attrs={}
+        for name in ['projection','focalLength','horizontalAperture','verticalAperture','clippingRange']:
+            attr=camera.GetPrim().GetAttribute(name)
+            attrs[name]=attr.Get() if attr and attr.HasAuthoredValue() else None
+        self.top_view_saved={'matrix':xf.GetLocalTransformation(),'attrs':attrs,'mode':self.factory_cfg['camera']['mode']}
+
+    def exit_top_view(self):
+        """Restore the render camera exactly as it was before Top View."""
+        saved=self.top_view_saved; self.top_view_saved=None
+        camera=self.context['camera']
+        if saved is not None:
+            for name,value in saved['attrs'].items():
+                attr=camera.GetPrim().GetAttribute(name)
+                if value is None:
+                    if attr: attr.Clear()
+                else: attr.Set(value)
+            self._set_camera_transform(saved['matrix'])
+        self.context['viewport'].camera_path=str(camera.GetPath())
+        self._bind_render_camera(self.context['viewport'])
+        self.follow_last_matrix=None
+        if saved is not None and saved['mode']!='free':
+            self.set_camera_mode(saved['mode'])
+        panel=getattr(self,'patrol_panel',None)
+        if panel is not None and hasattr(panel,'sync_top_button'): panel.sync_top_button()
 
     def _set_camera_transform(self,matrix):
         from pxr import UsdGeom
@@ -384,16 +454,24 @@ class FactoryG1Runtime(G1KeyboardRuntime):
                 ui.Button('Camera: '+mode.title(),clicked_fn=lambda value=mode:self.set_camera_mode(value))
         self.label_camera=ui.Label('Camera: '+self.factory_cfg['camera']['mode'].upper()+' | mouse navigation',height=22)
 
-    def set_camera_mode(self,mode):
+    def set_camera_mode(self,mode,keep_top=False):
         if mode not in ['free','follow','overview']: raise ValueError('Invalid camera mode')
+        if not keep_top and self.top_view_active():
+            # Any Camera button / SPACE leaves Top View first.
+            # The caller chooses the new mode; do not re-apply the pre-top one.
+            if self.top_view_saved is not None: self.top_view_saved['mode']='free'
+            self.exit_top_view()
         # Switching to Free keeps the current view rather than snapping it.
+        if mode=='follow': self.follow_relative=None
         self.factory_cfg['camera']['mode']=mode
         self.free_camera_initialized=True
         if mode!='free': self.update_camera()
-        self.label_camera.text='Camera: '+mode.upper()+' | mouse navigation'
+        self.label_camera.text='Camera: '+mode.upper()+(' | right-mouse/Alt+LMB to orbit, SPACE re-centers' if mode=='follow' else ' | mouse navigation')
 
     def safe_reset(self,source='R'):
-        top_view=str(self.context['viewport'].camera_path)=='/World/Navigation/TopCamera'
+        top_view=self.top_view_active()
+        if top_view: self.exit_top_view()
+        self.follow_last_matrix=None
         nav=getattr(self,'navigation',None)
         if nav is not None:
             nav.stop('Reset cancels patrol'); nav.selector.select('MANUAL')
@@ -406,9 +484,7 @@ class FactoryG1Runtime(G1KeyboardRuntime):
                 view=(UsdGeom.XformCache().GetLocalToWorldTransform(prim),UsdGeom.Camera(prim).GetFocalLengthAttr().Get())
         if top_view:
             # The navigation camera is session-only and disappears when the
-            # initial layer is imported. Retire its viewport binding first.
-            self.context['viewport'].camera_path=str(self.context['camera'].GetPath())
-            self._bind_render_camera(self.context['viewport'])
+            # initial layer is imported; exit_top_view already rebound it.
             for _ in range(2): self.app.update()
         state=self.last_state
         safe=not self.timeline.is_playing() or (

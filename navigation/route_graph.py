@@ -11,13 +11,17 @@ class CorridorGrid:
         # safety prediction; A* planning happens before this is assigned.
         self.extra=[]
         self.detour=None
+        # Optional obstacle-bypass polyline (list of points), same allowance.
+        self.detour_path=None
     def __getattr__(self,name):
-        if name in ('base','extra'): raise AttributeError(name)
+        if name in ('base','extra','detour','detour_path'): raise AttributeError(name)
         return getattr(self.base,name)
     def contains(self,p):
         return segment_distance(p,self.a,self.b)<=self.allowance or self.in_detour(p) or any(segment_distance(p,a,b)<=self.allowance for a,b in self.extra)
     def in_detour(self,p):
-        return self.detour is not None and segment_distance(p,*self.detour)<=self.allowance
+        if self.detour is not None and segment_distance(p,*self.detour)<=self.allowance: return True
+        path=self.detour_path
+        return bool(path) and any(segment_distance(p,a,b)<=self.allowance for a,b in zip(path,path[1:]))
     def cell_to_world(self,c): return self.start if c==self.start_cell else self.base.cell_to_world(c)
     def free(self,c):
         if c==self.start_cell: return self.map.safe(self.start) and self.contains(self.start)

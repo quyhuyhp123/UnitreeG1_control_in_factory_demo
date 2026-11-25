@@ -1,0 +1,16 @@
+{
+  "version": 1,
+  "source": "costmap",
+  "min_cells": 2,
+  "min_object_depth_m": 0.30,
+  "min_human_size_m": 0.50,
+  "replan_period_s": 0.30,
+  "ramp_slope": 0.60,
+  "checkpoint_gate_half_width_m": 1.50,
+  "human_slowdown": {
+    "start_m": 2.5,
+    "end_m": 1.0,
+    "min_speed_m_s": 0.20
+  },
+  "note": "Level-1 sensor-driven bypass. source: costmap (RGB-D occupied cells, works without USD ground truth), scene (USD colliders, simulation only) or both. min_cells drops speckle; the camera only sees the near face of a box, so obstacles are extended away from the robot to min_object_depth_m, and YOLO people grow to min_human_size_m. ramp_slope = lateral metres per forward metre of the lane change (0.6 ~ 31 deg). Pass-through checkpoints are gates: crossing the checkpoint plane within checkpoint_gate_half_width_m of the node counts. Corner and EXIT nodes keep the exact waypoint tolerance. human_slowdown caps speed linearly from start_m to end_m (centre-to-person-box distance) for people ahead."
+}

@@ -11,6 +11,9 @@ from navigation.global_planner import NoValidPath
 from navigation.lane_map import segment_distance
 from navigation.speed_profile import load_speed_profile
 from navigation.dynamic_local_planner import DynamicLocalPlanner
+from navigation.obstacle_bypass import plan as plan_bypass,path_clear
+from navigation.lane_map import LaneMap,box_distance
+from navigation.costmap_obstacles import load_config as load_bypass_config,extract as extract_costmap_obstacles
 
 TURN_SLOWDOWN_START_M=2.0
 TURN_SLOWDOWN_END_M=1.2
@@ -36,6 +39,7 @@ class MultiRouteController(PatrolController):
         self.dynamic_enabled=runtime.factory_cfg.get('dynamic_avoidance',False)
         self.dynamic=DynamicLocalPlanner(self.safety)
         self.dynamic_wait=False
+        self.bypass_cfg=load_bypass_config(); self.sensor_obstacles=[]
         self.reason='Select route, PREVIEW / VALIDATE, then START. No automatic start.'
     def set_dynamic_avoidance(self, enabled):
         if self.scheduler.state not in ('IDLE','STOPPED','PAUSED','WAITING_FOR_CLEAR_PATH'):
@@ -56,30 +60,114 @@ class MultiRouteController(PatrolController):
         t=s['prediction_seconds']+s['reaction_latency_seconds']; room=distance-s['stopping_extra_m']
         return 0. if room<=0 else a*(-t+math.sqrt(t*t+2*room/a))
 
-    def chair_bypass_command(self, p, cap):
-        """Begin the Map 2 bypass before the centered approach enters inflation."""
-        guide=self.map_config.get('map_2_chair_bypass')
-        if (not self.dynamic_enabled or self.runtime.factory_cfg.get('map_id')!=2 or not guide or
-                self.edge['id']!=guide['edge'] or p[1]<guide['approach_y_m']):
-            return None
-        if not any(o['id'].endswith('/shared_left_chair/Collider') for o in self.detector.obstacles):
-            return None
-        index=self.edge.get('chair_bypass_index',0)
-        points=guide['points']
-        if index<len(points) and math.dist(p[:2],points[index])<.09:
-            index+=1
-            self.edge['chair_bypass_index']=index
+    def bypass_obstacles(self,grid,p):
+        """Obstacles the bypass planner sees: RGB-D costmap blobs and/or USD colliders."""
+        source=self.bypass_cfg['source']; found=[]
+        if source in ('scene','both'): found+=self.detector.obstacles
+        if source in ('costmap','both') and grid is not None:
+            found+=extract_costmap_obstacles(grid,p[:2],self.bypass_cfg,ignore_radius=float(self.map_config['footprint']['body_radius_m']))
+        return found
+    def bypass_frame(self):
+        """Edge frame up to the next stop/turn node, with pass-through checkpoint gates on the way."""
+        corridor=self.edge['grid']; a=corridor.a
+        end=corridor.extra[-1][1] if corridor.extra else corridor.b
+        gates=[math.dist(a,corridor.b)]+[math.dist(a,q) for _,q in corridor.extra[:-1]] if corridor.extra else []
+        return a,end,gates
+    def human_approach_cap(self,p,cap):
+        """Slow down smoothly for people ahead (comfort/early warning, independent of the safety bypass flag)."""
+        slow=self.bypass_cfg['human_slowdown']; corridor=self.edge['grid']; a,end,_=self.bypass_frame()
+        length=math.dist(a,end) or 1.; ux,uy=(end[0]-a[0])/length,(end[1]-a[1])/length
+        nearest=math.inf
+        for o in self.sensor_obstacles:
+            if o.get('kind')!='human': continue
+            lo,hi=o['bounds']; cx,cy=(lo[0]+hi[0])/2,(lo[1]+hi[1])/2
+            if (cx-p[0])*ux+(cy-p[1])*uy<-.3: continue    # already behind the robot
+            nearest=min(nearest,box_distance(p[:2],o['bounds']))
+        self.human_ahead_m=nearest if math.isfinite(nearest) else None
+        if nearest>=slow['start_m']: return cap
+        ratio=max(0.,(nearest-slow['end_m'])/(slow['start_m']-slow['end_m']))
+        return min(cap,max(slow['min_speed_m_s'],slow['min_speed_m_s']+(cap-slow['min_speed_m_s'])*ratio))
+    def obstacle_bypass_command(self, p, cap, grid=None):
+        """Lane-change around any obstacle that blocks the current straight stretch.
+
+        Obstacles come from the RGB-D costmap (config source), so things not in
+        the USD scene are bypassed too. Before the robot commits, the plan is
+        refreshed every replan_period_s so it starts early and tracks the
+        growing view of the obstacle. Once active, it is kept while it stays
+        clear and replanned from the current pose only if it becomes unsafe.
+        The costmap trace, command filter and SafetySupervisor still vet every
+        command.
+        """
+        if not self.dynamic_enabled or self.edge is None: return None
+        corridor=self.edge['grid']; a,end,gates=self.bypass_frame()
+        stamp=grid['sim_time'] if grid is not None else self.sim_time
+        obstacles=self.sensor_obstacles
+        floor=self.detector.floor
+        factory=lambda items:LaneMap(self.map_config,items,floor)
+        bypass=self.edge.get('bypass')
+        def replan(active):
+            planned=plan_bypass(a,end,p[:2],obstacles,factory,corridor.map.radius,ramp_slope=self.bypass_cfg['ramp_slope'],
+                                gates=gates,gate_half_width=self.bypass_cfg['checkpoint_gate_half_width_m'])
+            if planned:
+                corridor.detour_path=planned['path']
+                if active: self.log_event({'obstacle_bypass_replan':{'edge':self.edge['id'],'offset_m':planned['offset_m'],'points':planned['points'],'sim_time':self.sim_time}})
+            elif not active or segment_distance(p[:2],a,end)<=corridor.allowance:
+                corridor.detour_path=None
+            # A failed replan while offset keeps the old band, so the robot is not
+            # faulted for deviation while it waits or the reactive planner recovers.
+            self.edge['bypass']=dict(planned or {},stamp=stamp,index=0,active=bool(planned) and active)
+            return self.edge['bypass']
+        if bypass is not None and bypass.get('points') and bypass['active']:
+            if stamp!=bypass['stamp']:
+                bypass['stamp']=stamp
+                if not path_clear(p[:2],bypass['points'][bypass['index']:],obstacles,factory): bypass=replan(True)
+        elif bypass is None or stamp-bypass['stamp']>=self.bypass_cfg['replan_period_s'] or stamp<bypass['stamp']:
+            bypass=replan(False)
+        points=bypass.get('points')
+        if not points: return None
+        index=bypass['index']
+        length=math.dist(a,end); ux,uy=(end[0]-a[0])/length,(end[1]-a[1])/length
+        along=lambda q:(q[0]-a[0])*ux+(q[1]-a[1])*uy
+        if not bypass['active']:
+            if along(p)<bypass['start_s']-.05: return None
+            bypass['active']=True
+            self.log_event({'obstacle_bypass':{'edge':self.edge['id'],'obstacles':bypass['obstacle'],'offset_m':bypass['offset_m'],
+                                               'points':points,'source':self.bypass_cfg['source'],'sim_time':self.sim_time}})
+        # Corner points are taken within a short blend radius so the robot keeps
+        # walking through them; any point counts once the robot is level with it.
+        while index<len(points) and (math.dist(p[:2],points[index])<(.10 if index==len(points)-1 else .20) or
+                                     (along(p)>=along(points[index])-.02 and math.dist(p[:2],points[index])<.30)):
+            index=bypass['index']=index+1
             self.progress_time=self.now
+        self.sync_local_progress(p)
         if index==len(points):
+            # Back on the centreline: plan for the next obstacle on this stretch.
+            self.edge['bypass']=None; corridor.detour_path=None
             return None
         x,y=points[index]
-        err=wrap(math.atan2(y-p[1],x-p[0])-p[2])
-        yaw=max(-.30,min(.30,1.2*err))
-        if abs(err)>.35:
-            return [0.,0.,yaw]
-        guide_cap=cap if self.safety.simulation_braking_bypass else min(cap,.22)
-        speed=min(guide_cap,max(.12,math.dist(p[:2],points[index])*.7))
-        return [speed*math.cos(err),speed*math.sin(err),yaw]
+        # Hold the edge heading and walk omnidirectionally: no in-place
+        # quarter turns, and the forward RGB-D camera keeps watching the lane.
+        edge_heading=math.atan2(end[1]-a[1],end[0]-a[0])
+        yaw=max(-.30,min(.30,1.2*wrap(edge_heading-p[2])))
+        dx,dy=x-p[0],y-p[1]; distance=math.hypot(dx,dy)
+        # Constant speed through the lane change; slow only for the final rejoin point.
+        speed=min(cap,.35) if index<len(points)-1 else min(cap,.35,max(.12,distance*.7+.08))
+        vx,vy=speed*dx/distance,speed*dy/distance
+        return [math.cos(p[2])*vx+math.sin(p[2])*vy,-math.sin(p[2])*vx+math.cos(p[2])*vy,yaw]
+    def sync_local_progress(self,p):
+        """Move the path tracker past points the robot already passed while offset.
+
+        The tracker only advances within its look-ahead radius; a side-step
+        wider than that would otherwise leave it pointing back at the start.
+        """
+        corridor=self.edge['grid']; length=math.dist(corridor.a,corridor.b)
+        ux,uy=((corridor.b[i]-corridor.a[i])/length for i in (0,1))
+        along=lambda q:(q[0]-corridor.a[0])*ux+(q[1]-corridor.a[1])*uy
+        robot=along(p)
+        path=self.local.path
+        while self.local.index<len(path)-1 and along(path[self.local.index])<robot+.2: self.local.index+=1
+    def log_event(self,payload):
+        if hasattr(self,'log'): self.log.write(json.dumps(payload)+'\n')
     def selected_route(self,completed=None):
         return self.route_manager.route_id(self.route_mode,self.scheduler.completed if completed is None else completed,self.alternate_first)
     def select_route(self,mode,first=None):
@@ -118,7 +206,18 @@ class MultiRouteController(PatrolController):
     def begin_edge(self,state):
         begin=time.perf_counter()
         previous=self.edge
-        edge=self.route_manager.edge(self.grid,self.active_route,self.segment_index,pose(state)[:2])
+        route_nodes=self.route_manager.data['routes'][self.active_route]['ordered_nodes']; N=self.route_manager.data['nodes']; k=self.segment_index
+        straight=0<k<len(route_nodes)-1 and not is_corner(N[route_nodes[k-1]],N[route_nodes[k]],N[route_nodes[k+1]])
+        carried=previous.get('bypass') if straight and previous and previous['end_node']==route_nodes[k] else None
+        if carried and carried.get('active') and carried.get('points') and previous['grid'].detour_path:
+            # Crossed a pass-through gate mid-bypass: keep following the same
+            # lane change on the next collinear edge (path from the node; the
+            # robot stays inside the carried detour band).
+            edge=self.route_manager.edge(self.grid,self.active_route,self.segment_index)
+            edge['grid'].detour_path=previous['grid'].detour_path; edge['bypass']=carried
+            self.log_event({'obstacle_bypass_gate':{'from':previous['id'],'to':edge['id'],'sim_time':self.sim_time}})
+        else:
+            edge=self.route_manager.edge(self.grid,self.active_route,self.segment_index,pose(state)[:2])
         holding=bool(previous and previous['id']==edge['id'] and self.local.position_reached and math.dist(pose(state)[:2],edge['goal'])<.5)
         if not holding: self.position_recovery=False
         self.edge=edge
@@ -187,6 +286,7 @@ class MultiRouteController(PatrolController):
             perception=self.dynamic.observation(result,source.perception_epoch if source else None,self.sim_time,time.time())
             if perception is None:
                 return self.wait_for_perception(state,'stale','RGB-D costmap missing or stale')
+            self.sensor_obstacles=self.bypass_obstacles(perception,p)
             # Unlocalized RGB detections are debug output. Valid geometric
             # costmap cells and localized people still constrain movement.
         try:
@@ -213,8 +313,6 @@ class MultiRouteController(PatrolController):
         while j<len(nodes)-2 and not is_corner(N[nodes[j]],N[nodes[j+1]],N[nodes[j+2]]):
             chain.append((N[nodes[j+1]],N[nodes[j+2]])); stop_distance+=math.dist(*chain[-1]); j+=1
         self.edge['grid'].extra=chain
-        self.edge['grid'].detour=(self.map_config.get('local_detours',{}).get(self.edge['id'])
-                                  if self.dynamic_enabled else None)
         requested=min(self.config['local']['max_speed_m_s'],route['speed_limit_m_s'],self.speed_limit)
         self.local.config=dict(self.config['local'])
         cap=requested
@@ -226,24 +324,32 @@ class MultiRouteController(PatrolController):
             # Never command a speed whose predicted stopping point lies beyond
             # the turn; otherwise the supervisor would stop the robot instead.
             cap=min(cap,max(.12,self.envelope_speed(stop_distance-.2)))
+        if self.dynamic_enabled: cap=self.human_approach_cap(p,cap)
         self.local.config['max_speed_m_s']=cap
         self.local.config['slow_endpoint']=not self.safety.simulation_braking_bypass
         # The tracker commands 0.7 x look-ahead distance, so high speed needs a
         # proportionally longer look-ahead.
         self.local.config['lookahead_m']=max(self.config['local']['lookahead_m'],cap/.7+.05)
         self.local.config['max_yaw_rate']=route['turn_speed_limit_rad_s']; self.local.config['position_tolerance_m']=route['waypoint_tolerance_m']
+        # Pass-through checkpoints are gates when avoidance is on: crossing the
+        # checkpoint plane anywhere within the gate width counts as visiting it.
+        gate=self.bypass_cfg['checkpoint_gate_half_width_m'] if self.dynamic_enabled else route['waypoint_tolerance_m']
         if through:
             a=N[nodes[i]]; length=math.dist(a,goal)
             along=((p[0]-goal[0])*(goal[0]-a[0])+(p[1]-goal[1])*(goal[1]-a[1]))/length
             passed=along>=0
-            if distance<route['waypoint_tolerance_m'] or (not self.dynamic_enabled and passed and distance<self.config['safety']['max_path_deviation_m']):
+            cross_track=math.sqrt(max(0.,distance*distance-along*along))
+            if (distance<route['waypoint_tolerance_m'] or (self.dynamic_enabled and passed and cross_track<=gate) or
+                    (not self.dynamic_enabled and passed and distance<self.config['safety']['max_path_deviation_m'])):
+                if self.dynamic_enabled and distance>=route['waypoint_tolerance_m']:
+                    self.log_event({'checkpoint_gate':{'node':nodes[i+1],'cross_track_m':cross_track,'sim_time':self.sim_time}})
                 self.finish_edge(state); return self.command(dt)
         target_yaw=heading(goal,self.route_manager.data['nodes'][nodes[i+2]]) if corner else (0. if final else None)
         if corner: target_yaw=route.get('heading_at_turns_rad',{}).get(nodes[i+1],target_yaw)
         desired,arrived,self.last_distance=self.local.command(state,[*self.local.path[-1],None] if through else [*goal,target_yaw],dt)
         if through: arrived=False; self.last_distance=distance
-        cross_track=math.sqrt(max(0.,distance*distance-along*along)) if through else 0.
-        if self.dynamic_enabled and through and along>-.2 and (passed or cross_track>route['waypoint_tolerance_m']*.75):
+        if not through: cross_track=0.
+        if self.dynamic_enabled and through and along>-.2 and cross_track>gate:
             # Finish a detour at the mandatory node instead of following the
             # look-ahead target that already lies on the next straight edge.
             dx,dy=goal[0]-p[0],goal[1]-p[1]
@@ -274,8 +380,8 @@ class MultiRouteController(PatrolController):
         if self.now-self.progress_time>self.config['safety']['no_progress_seconds']: self.fail('No progress on mandatory segment'); return self.record(state,self.selector.stop())
         bypass=None
         if self.dynamic_enabled:
-            corridor=self.edge['grid']; tolerance=route['waypoint_tolerance_m']
-            bypass=self.chair_bypass_command(p,cap)
+            corridor=self.edge['grid']; tolerance=gate if through else route['waypoint_tolerance_m']
+            bypass=self.obstacle_bypass_command(p,cap,perception)
             if bypass is not None: desired=bypass
             if not self.dynamic.trace(perception,corridor,p,[0.,0.,0.],goal,tolerance,actual=velocity):
                 return self.wait_for_perception(state,'braking','Current velocity has no clear braking sweep')
@@ -305,7 +411,7 @@ class MultiRouteController(PatrolController):
         self.dynamic_wait=False
         phase='TURNING' if self.local.position_reached and corner else ('APPROACHING_TURN' if corner and distance<.6 else ('MOVING_TO_EXIT' if final else 'MOVING_SEGMENT'))
         if self.scheduler.state!=phase: self.scheduler.transition(phase,self.now)
-        self.reason=('Map 2 chair bypass' if bypass is not None else 'Following '+self.edge['id'])
+        self.reason=('Obstacle bypass' if bypass is not None else 'Following '+self.edge['id'])
         return self.record(state,command)
     def wait_for_perception(self,state,status,reason):
         self.dynamic.telemetry.update(status=status,predicted_end_xy=None,predicted_obstacle_cell_distance_m=None)
@@ -318,13 +424,18 @@ class MultiRouteController(PatrolController):
         return self.record(state,self.selector.stop())
     def snapshot(self):
         value=super().snapshot()
-        if not hasattr(self,'route_manager'): return value
+        if not hasattr(self,'route_manager') or not hasattr(self,'bypass_cfg'): return value
         rid=self.active_route or self.selected_route(); status=dict(self.route_manager.status.get(rid,{'status':'UNVALIDATED'}))
         if status.get('length_m'):
             speed=min(self.config['local']['max_speed_m_s'],self.route_manager.data['routes'][rid]['speed_limit_m_s'])
             status['estimated_travel_seconds']=status['length_m']/speed
         value.update(route_mode=self.route_mode,selected_route=rid,next_route=self.selected_route(self.scheduler.completed+1),route_validation=status,current_segment=self.edge['id'] if self.edge else None,current_waypoint=self.edge['end_node'] if self.edge else None,route_history=self.route_complete_history,route_length_m=self.route_plan['length_m'] if self.route_plan else None)
-        value['dynamic_avoidance']={'enabled':self.dynamic_enabled,**self.dynamic.telemetry}
+        bypass=(self.edge or {}).get('bypass') or {}
+        value['dynamic_avoidance']={'enabled':self.dynamic_enabled,**self.dynamic.telemetry,
+            'bypass_source':self.bypass_cfg['source'],'sensor_obstacles':len(self.sensor_obstacles),
+            'sensor_people':sum(o.get('kind')=='human' for o in self.sensor_obstacles),
+            'human_ahead_m':getattr(self,'human_ahead_m',None),
+            'bypass':{'active':bool(bypass.get('active')),'offset_m':bypass.get('offset_m'),'obstacles':bypass.get('obstacle')} if bypass.get('points') else None}
         return value
     def reset_route_configuration(self):
         if self.scheduler.state not in ('IDLE','STOPPED'): raise ValueError('STOP before resetting route settings')
@@ -337,7 +448,7 @@ class MultiRouteController(PatrolController):
     def on_robot_reset(self):
         self.edge=None; self.active_route=None; self.route_plan=None; self.path=[]; self.segment_index=0
         self.return_only=False; self.blocked_since=None; self.position_recovery=False; self.local.reset([]); self.velocity_history.clear()
-        self.dynamic_wait=False
+        self.dynamic_wait=False; self.sensor_obstacles=[]
         if self.runtime.yolo is not None: self.runtime.yolo.invalidate_costmap()
         self.scheduler.goal='ENTRY'; self.reason='Robot reset to ENTRY; route cancelled, Manual takeover'
     def save(self,path=None):

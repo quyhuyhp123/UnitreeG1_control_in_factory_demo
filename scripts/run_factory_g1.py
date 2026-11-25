@@ -200,7 +200,7 @@ def main():
         if args.costmap or args.costmap_debug or args.dynamic_avoidance or (args.yolo_debug and cfg.get('multi_route_enabled',False)):
             costmap['enabled']=True
         if cfg.get('multi_route_enabled',False) and (args.dynamic_avoidance or args.yolo_debug):
-            costmap['size_m']=max(costmap['size_m'],8.0)
+            costmap['size_m']=max(costmap['size_m'],8.0,costmap.get('avoidance_size_m',8.0))
         costmap['debug_window']=args.costmap_debug
         if args.no_costmap or args.no_obstacles or args.no_yolo or args.no_rgbd: costmap['enabled']=False
         cfg['local_costmap']=costmap

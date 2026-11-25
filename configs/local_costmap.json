@@ -9,6 +9,7 @@
   "free_memory_s": 10.0,
   "human_class_id": 0,
   "human_extra_m": 0.3,
+  "avoidance_size_m": 10.0,
   "fallback_footprint": {
     "body_radius_m": 0.35,
     "step_sway_m": 0.08,
@@ -16,5 +17,5 @@
     "margin_m": 0.1
   },
   "save_directory": "logs/costmap_runs",
-  "note": "Rolling 6x6 m world-aligned RGB-D costmap. Factory V2 avoidance expands the window to 8x8 m for the full braking sweep at the configured 1 m/s ceiling. Expired observations become UNKNOWN."
+  "note": "Rolling 6x6 m world-aligned RGB-D costmap. Factory V2 avoidance expands the window to avoidance_size_m (10x10 m, about 5 m ahead) so the sensor-driven bypass can plan the lane change early; it must stay >= 8 m for the full braking sweep at the 1 m/s ceiling. Expired observations become UNKNOWN."
 }
