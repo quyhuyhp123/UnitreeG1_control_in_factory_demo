@@ -39,7 +39,7 @@ def main():
             runtime.timeline.pause();app.update();assert runtime.safe_reset('pool regression')
             runtime.timeline.play();advance(20)
             actual=len([o for o in runtime.navigation.detector.obstacles if o.get('route_test_obstacle')])
-            assert actual==(0 if map_id==1 else 9),(map_id,actual)
+            assert actual==(0 if map_id==1 else 4),(map_id,actual)
             if map_id!=1:
                 detected={o['id'].split('/')[-2]:o for o in runtime.navigation.detector.obstacles if o.get('route_test_obstacle')}
                 for item in layout(map_id):

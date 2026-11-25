@@ -8,7 +8,7 @@ class FactoryMapsTests(unittest.TestCase):
         self.assertEqual(layout(2),layout(2));self.assertNotEqual(layout(2),layout(3))
         for number in (2,3):
             items=layout(number)
-            self.assertEqual(len(items),9)
+            self.assertEqual(len(items),4)
             self.assertEqual({i['kind'] for i in items},{'chair','person','box'})
             self.assertEqual({i['lane'] for i in items},{'shared_left','route_1_center','route_2_right'})
             for i in items:

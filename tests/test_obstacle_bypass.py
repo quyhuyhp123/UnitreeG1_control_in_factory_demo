@@ -27,6 +27,25 @@ class ObstacleBypassTest(unittest.TestCase):
     def factory(self, config):
         return lambda obstacles: LaneMap(config, obstacles)
 
+    def test_staggered_barrier_on_rejoin_ramp_both_sides(self):
+        for side in (-1,1):
+            with self.subTest(side=side):
+                cfg=lane_config(width=6.)
+                # Limit one side for the whole passage; add a short shelf
+                # across the preferred return ramp on the open side.
+                def box(name,x0,x1,y0,y1):
+                    xs=sorted((side*x0,side*x1))
+                    return {'id':name,'kind':'static','bounds':[[xs[0],y0],[xs[1],y1]]}
+                obstacles=[person(0,5),box('closed side',-2.8,-.55,4,6),
+                           box('shelf',.8,1.,7.0,7.2)]
+                lane=LaneMap(cfg,obstacles)
+                result=plan((0,0),(0,10),(0,0),obstacles,self.factory(cfg),lane.radius)
+                self.assertIsNotNone(result)
+                self.assertGreater(side*result['points'][0][0],0)
+                for a,b in zip(result['path'],result['path'][1:]):
+                    for i in range(51):
+                        self.assertTrue(lane.safe(tuple(a[j]+(b[j]-a[j])*i/50 for j in (0,1))))
+
     def test_person_on_centerline_is_bypassed_with_human_clearance(self):
         config = lane_config(); radius = LaneMap(config).radius
         human = person(0, 5)

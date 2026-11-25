@@ -1,10 +1,10 @@
 # Factory V2: Maps 1 / 2 / 3 (stage 5 scenarios)
 
-**Performance update:** runtime now keeps one shared nine-prop pool resident and switches transforms/visibility/collision, rather than replacing USD references each click. Map1 disables hidden prop collision. The standalone map USD wrappers remain valid. Reset metadata is edited without recomposing assets; baseline navigation grid is reused when only test props change. See [measured map-switch timings](map_switch_performance.md).
+**Performance update:** runtime now keeps one shared four-prop pool resident and switches transforms/visibility/collision, rather than replacing USD references each click. Map1 disables hidden prop collision. The standalone map USD wrappers remain valid. Reset metadata is edited without recomposing assets; baseline navigation grid is reused when only test props change. See [measured map-switch timings](map_switch_performance.md).
 
 Original Blender export and factory_physics.usd are unchanged. Three lightweight USD wrappers in assets/factory/factory_layout_v2/maps reference the same base factory and add static test props. Runtime references only each wrapper's Obstacles subtree under /World/MapObstacles; it does not load a duplicate factory/floor. Map1 adds no new lane props; existing factory machines/workers remain.
 
-Map2 seed5102 and Map3 seed5103 each add nine props: chair, worker and box on shared left corridor, Route1 center branch and Route2 right branch. Positions/yaw are seeded-random within long straight lane interiors, away from ENTRY/door/corners. Both variants are intentionally reproducible; no obstacle appears suddenly under a moving robot. Exact coordinates/types/seeds in map_2.json / map_3.json. Chair/person use existing realistic USD assets; simple static box proxies supply collision. Cardboard box is a low-poly cube. No robot pose writes or kinematic robot tricks.
+Map2 seed5102 and Map3 seed5103 each add four props: a chair and worker in the shared left corridor, one box on the Route 1 center branch and one chair on the Route 2 right branch. Positions/yaw are seeded-random within long straight lane interiors, away from ENTRY/door/corners. Both variants are intentionally reproducible; no obstacle appears suddenly under a moving robot. Exact coordinates/types/seeds in map_2.json / map_3.json. Chair/person use existing realistic USD assets; simple static box proxies supply collision. Cardboard box is a low-poly cube. No robot pose writes or kinematic robot tricks.
 
 ## Usage
 

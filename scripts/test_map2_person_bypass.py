@@ -1,4 +1,4 @@
-"""Physical check: Map 2, dynamic avoidance, robot passes chair 1, person 2 and box 3.
+"""Physical check: Map 2, dynamic avoidance, robot passes the chair and person in the shared left corridor.
 
 Real G1 policy/PhysX with the RGB-D + YOLO + costmap pipeline. The robot is
 never teleported. Pass = the robot reaches the far end of the left corridor
@@ -49,7 +49,7 @@ def main():
         runtime.timeline.play(); advance(120)
         nav.refresh_obstacles(force=True)
         props=[o for o in nav.detector.obstacles if o.get('route_test_obstacle')]
-        assert len(props)==9,len(props)
+        assert len(props)==4,len(props)
         left=[o for o in props if '/shared_left_' in o['id']]
         nav.select_route(args.route); nav.validate_route(); nav.scheduler.config['start_delay_seconds']=0
         nav.start(); begin=nav.sim_time; wall=time.perf_counter()

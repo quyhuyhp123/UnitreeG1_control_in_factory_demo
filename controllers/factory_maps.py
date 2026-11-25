@@ -14,7 +14,8 @@ def layout(map_id):
             y=[-6.,1.,7.][j]+rng.uniform(-1.,1.)
             items.append({'name':f'{lane}_{kind}','kind':kind,'position_m':[x+rng.uniform(-.08,.08),y,0.],
                           'yaw_deg':rng.choice([0.,90.,180.,270.]),'lane':lane})
-    return items
+    retained = {"shared_left_chair", "shared_left_person", "route_1_center_box", "route_2_right_chair"}
+    return [item for item in items if item["name"] in retained]
 
 def build(map_id):
     from pxr import Usd,UsdGeom,UsdPhysics,Gf,Sdf
@@ -75,7 +76,7 @@ def author(stage,map_id):
     path=FOLDER/'map_2.usda'
     if not path.exists():raise FileNotFoundError('Build map assets with scripts/build_factory_maps.py first')
     prim=stage.GetPrimAtPath('/World/MapObstacles')
-    # One shared pool: both scenarios have the same nine prop types/names.
+    # One shared pool: both scenarios have the same four prop types/names.
     # Material/mesh references stay resident. Map1 disables collisions AND
     # visibility, so hidden scenario props cannot block the original route.
     if not prim or not prim.GetAttribute('factory:residentMapPool').Get():

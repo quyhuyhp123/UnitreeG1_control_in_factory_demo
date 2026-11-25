@@ -19,7 +19,7 @@ def main():
             grid=runtime.navigation.grid;start=time.perf_counter();runtime.set_obstacle_map(map_id);committed=time.perf_counter()
             app.update();runtime.tick();end=time.perf_counter()
             props=[o for o in runtime.navigation.detector.obstacles if o.get('route_test_obstacle')]
-            assert len(props)==(0 if map_id==1 else 9)
+            assert len(props)==(0 if map_id==1 else 4)
             rows.append({'map_id':map_id,'switch_ms':(committed-start)*1000,'switch_plus_update_ms':(end-start)*1000,
                          'grid_reused':runtime.navigation.grid is grid,'props':len(props)})
         report={'label':args.label,'run_directory':str(runtime.directory),'rows':rows,'policy_fault':runtime.fault,'patrol_mode':runtime.navigation.mode}

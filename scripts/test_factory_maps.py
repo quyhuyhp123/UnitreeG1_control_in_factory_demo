@@ -30,7 +30,7 @@ def main():
             reset();runtime.set_obstacle_map(map_id)
             nav.refresh_obstacles(force=True)
             props=[o for o in nav.detector.obstacles if o.get('route_test_obstacle')]
-            assert len(props)==(0 if map_id==1 else 9),(map_id,len(props))
+            assert len(props)==(0 if map_id==1 else 4),(map_id,len(props))
             assert not any(p.HasAPI(UsdPhysics.RigidBodyAPI) for p in runtime.stage.Traverse() if str(p.GetPath()).startswith('/World/MapObstacles'))
             for route in ['route_1_blue','route_2_brown']:
                 nav.select_route(route);plan=nav.validate_route();nav.scheduler.config['start_delay_seconds']=0

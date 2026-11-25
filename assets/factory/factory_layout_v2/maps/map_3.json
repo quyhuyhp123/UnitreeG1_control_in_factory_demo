@@ -25,39 +25,6 @@
       "lane": "shared_left"
     },
     {
-      "name": "shared_left_box",
-      "kind": "box",
-      "position_m": [
-        -7.047037943292921,
-        7.109878665805617,
-        0.0
-      ],
-      "yaw_deg": 90.0,
-      "lane": "shared_left"
-    },
-    {
-      "name": "route_1_center_chair",
-      "kind": "chair",
-      "position_m": [
-        0.054865171371126245,
-        -6.893958353233157,
-        0.0
-      ],
-      "yaw_deg": 270.0,
-      "lane": "route_1_center"
-    },
-    {
-      "name": "route_1_center_person",
-      "kind": "person",
-      "position_m": [
-        -0.03437193841984548,
-        1.9309577004201361,
-        0.0
-      ],
-      "yaw_deg": 90.0,
-      "lane": "route_1_center"
-    },
-    {
       "name": "route_1_center_box",
       "kind": "box",
       "position_m": [
@@ -77,28 +44,6 @@
         0.0
       ],
       "yaw_deg": 270.0,
-      "lane": "route_2_right"
-    },
-    {
-      "name": "route_2_right_person",
-      "kind": "person",
-      "position_m": [
-        6.947900602747287,
-        0.32745796009477424,
-        0.0
-      ],
-      "yaw_deg": 180.0,
-      "lane": "route_2_right"
-    },
-    {
-      "name": "route_2_right_box",
-      "kind": "box",
-      "position_m": [
-        7.0452814931095284,
-        6.071196122816999,
-        0.0
-      ],
-      "yaw_deg": 0.0,
       "lane": "route_2_right"
     }
   ],

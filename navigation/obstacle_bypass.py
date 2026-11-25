@@ -105,17 +105,38 @@ def plan(a, b, robot_xy, obstacles, lane_map_factory, radius, ramp_slope=None, g
                    for i in range(int((pass_end-pass_start)/SAMPLE_M)+1)):
                 feasible.append(d)
             elif feasible:
-                break
+                options.append((feasible[-1]-feasible[0], -feasible[0], side, feasible[0], feasible[-1]))
+                feasible = []
             d += OFFSET_STEP_M
         if feasible:
             near, far = feasible[0], feasible[-1]
             options.append((far-near, -near, side, near, far))
-    for _, _, side, near, far in sorted(options, reverse=True):
+    ranked = sorted(options, reverse=True)
+    # A shelf at the rejoin point can require staying alongside the lane
+    # longer. Keep the normal rejoin first and never pass the next turn.
+    for extension in (0., .6, 1.2, 1.8, 2.4):
+        rejoin_start = pass_end + extension
+        if rejoin_start >= frame.length-.05:
+            break
+        result = _choose_path(ranked, frame, robot_xy, robot_s, safe, pass_start, rejoin_start,
+                              group, gates, gate_half_width, ramp_slope)
+        if result is not None:
+            return result
+    return None
+
+
+def _choose_path(options, frame, robot_xy, robot_s, safe, pass_start, pass_end, group,
+                 gates, gate_half_width, ramp_slope):
+    for _, _, side, near, far in options:
         preferred = near+min(.20, (far-near)/2)
         offsets = [side*preferred]
         if gate_half_width is not None and near <= gate_half_width < preferred:
             offsets.append(side*gate_half_width)
-        for offset in offsets:
+        # A clear parallel stretch does not guarantee that its entry and
+        # exit ramps fit. Try other clear offsets before declaring a dead end.
+        samples = [near+i*OFFSET_STEP_M for i in range(round((far-near)/OFFSET_STEP_M)+1)]
+        offsets.extend(side*d for d in sorted(samples,key=lambda d:abs(d-preferred)))
+        for offset in dict.fromkeys(offsets):
             ramps = [max(RAMP_MIN_M, abs(offset))]
             if ramp_slope:
                 ramps.insert(0, max(RAMP_MIN_M, abs(offset)/ramp_slope))
