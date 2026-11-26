@@ -49,8 +49,8 @@ def Xform "FactoryVariant"
         {
             custom string navigation:kind = "human"
             custom bool navigation:routeTestObstacle = 1
-            float xformOp:rotateZ = 0
-            double3 xformOp:translate = (-6.998815315605848, 1.2900055846582659, 0)
+            float xformOp:rotateZ = 180
+            double3 xformOp:translate = (6.947900602747287, 0.32745796009477424, 0)
             uniform token[] xformOpOrder = ["xformOp:translate", "xformOp:rotateZ"]
 
             def Xform "Visual" (

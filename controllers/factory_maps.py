@@ -15,6 +15,11 @@ def layout(map_id):
             items.append({'name':f'{lane}_{kind}','kind':kind,'position_m':[x+rng.uniform(-.08,.08),y,0.],
                           'yaw_deg':rng.choice([0.,90.,180.,270.]),'lane':lane})
     retained = {"shared_left_chair", "shared_left_person", "route_1_center_box", "route_2_right_chair"}
+    if map_id == 3:
+        person = next(item for item in items if item["name"] == "shared_left_person")
+        right = next(item for item in items if item["name"] == "route_2_right_person")
+        # Keep the shared USD prim name so map switches reuse the same asset.
+        person.update(position_m=right["position_m"], yaw_deg=right["yaw_deg"], lane=right["lane"])
     return [item for item in items if item["name"] in retained]
 
 def build(map_id):

@@ -17,12 +17,12 @@
       "name": "shared_left_person",
       "kind": "person",
       "position_m": [
-        -6.998815315605848,
-        1.2900055846582659,
+        6.947900602747287,
+        0.32745796009477424,
         0.0
       ],
-      "yaw_deg": 0.0,
-      "lane": "shared_left"
+      "yaw_deg": 180.0,
+      "lane": "route_2_right"
     },
     {
       "name": "route_1_center_box",
